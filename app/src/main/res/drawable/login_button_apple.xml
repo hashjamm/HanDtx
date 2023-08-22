@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#ECE9EC" />
+            <size
+                android:width="52dp"
+                android:height="52dp" />
+        </shape>
+    </item>
+    <item>
+        <inset
+            android:insetTop="10dp"
+            android:insetBottom="10dp"
+            android:insetLeft="10dp"
+            android:insetRight="10dp">
+            <bitmap
+                android:gravity="center"
+                android:src="@drawable/apple_logo" />
+        </inset>
+    </item>
+</layer-list>

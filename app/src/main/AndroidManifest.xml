@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.techtown.handtxver1">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.HanDtxVer1"
+        tools:targetApi="31">
+        <activity
+            android:name=".MainPage"
+            android:exported="false" />
+        <activity
+            android:name=".GoingToMain"
+            android:exported="false" />
+        <activity
+            android:name=".TodayCheckIn"
+            android:exported="false" />
+        <activity
+            android:name=".CheckIn"
+            android:exported="false" />
+        <activity
+            android:name=".DrinkingQuestionnaire"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionnaireType8"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionnaireType7"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionnaireType6"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionnaireType5"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionnaireType4"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionnaireType3"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionnaireType2"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionnaireType1"
+            android:exported="false" />
+        <activity
+            android:name=".EmotionDiaryEachDateViewer"
+            android:exported="false"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".EmotionDiary"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionnaireMainPage"
+            android:exported="false" />
+        <activity
+            android:name=".CbtPage1"
+            android:exported="false" />
+        <activity
+            android:name=".MyDataLoading"
+            android:exported="false" />
+        <activity
+            android:name=".PreviousMainMenu"
+            android:exported="false" />
+        <activity
+            android:name=".LifeLogData1"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".EmotionDiaryMenuSetting"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".SideBar"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".Login"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".FirstPage"
+            android:exported="true"
+            tools:ignore="Instantiatable">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

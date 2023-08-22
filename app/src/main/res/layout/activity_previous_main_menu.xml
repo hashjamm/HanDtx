@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PreviousMainMenu">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="26.67dp"
+        android:layout_height="23.33dp"
+        android:layout_marginStart="306.67dp"
+        android:layout_marginTop="23.33dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/line_shape" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/line_shape" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/line_shape" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/emotion_diary"
+        android:layout_width="271dp"
+        android:layout_height="330dp"
+        android:layout_marginTop="117.5dp"
+        android:background="@drawable/main_menu_slide_1"
+        android:gravity="center"
+        android:text="감정 다이어리"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/plusButton"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginLeft="284dp"
+        android:layout_marginTop="524dp"
+        android:background="@drawable/white_plus_in_black_circle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginLeft="284dp"
+        android:layout_marginTop="524dp"
+        android:background="@drawable/satellite_background"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="데이터 연동"
+        android:textColor="@color/black"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintCircle="@id/plusButton"
+        app:layout_constraintCircleAngle="270"
+        app:layout_constraintCircleRadius="99dp"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginLeft="284dp"
+        android:layout_marginTop="524dp"
+        android:background="@drawable/satellite_background"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="촬영하기"
+        android:textColor="@color/black"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintCircle="@id/plusButton"
+        app:layout_constraintCircleAngle="315"
+        app:layout_constraintCircleRadius="99dp"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginLeft="284dp"
+        android:layout_marginTop="524dp"
+        android:background="@drawable/satellite_background"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="직접입력"
+        android:textColor="@color/black"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintCircle="@id/plusButton"
+        app:layout_constraintCircleAngle="0"
+        app:layout_constraintCircleRadius="99dp"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

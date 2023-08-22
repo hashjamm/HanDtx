@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="test"
+            type="org.techtown.handtxver1.QType7ContentPage2" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="당신은 30분 이상 걷기를 1주일에 보통 몇\n회나 하고 계십니까?"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="290dp"
+            android:layout_height="290dp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="80dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/radioButtonsBackground"
+                android:layout_width="230dp"
+                android:layout_height="230dp"
+                android:layout_margin="30dp"
+                android:background="@drawable/circular_radio_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/circleAnchor"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="0"
+                app:layout_constraintCircleRadius="130dp" />
+
+            <RadioButton
+                android:id="@+id/button1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
+                android:button="@null"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="0"
+                app:layout_constraintCircleRadius="100dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="51.43"
+                app:layout_constraintCircleRadius="130dp" />
+
+            <RadioButton
+                android:id="@+id/button2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
+                android:button="@null"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="51.43"
+                app:layout_constraintCircleRadius="100dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number3"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="102.86"
+                app:layout_constraintCircleRadius="130dp" />
+
+            <RadioButton
+                android:id="@+id/button3"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
+                android:button="@null"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="102.86"
+                app:layout_constraintCircleRadius="100dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number4"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="4"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="154.29"
+                app:layout_constraintCircleRadius="130dp" />
+
+            <RadioButton
+                android:id="@+id/button4"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
+                android:button="@null"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="154.29"
+                app:layout_constraintCircleRadius="100dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number5"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="5"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="205.71"
+                app:layout_constraintCircleRadius="130dp" />
+
+            <RadioButton
+                android:id="@+id/button5"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
+                android:button="@null"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="205.71"
+                app:layout_constraintCircleRadius="100dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number6"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="6"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="257.14"
+                app:layout_constraintCircleRadius="130dp" />
+
+            <RadioButton
+                android:id="@+id/button6"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
+                android:button="@null"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="257.14"
+                app:layout_constraintCircleRadius="100dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number7"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="7"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="308.57"
+                app:layout_constraintCircleRadius="130dp" />
+
+            <RadioButton
+                android:id="@+id/button7"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
+                android:button="@null"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="308.57"
+                app:layout_constraintCircleRadius="100dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

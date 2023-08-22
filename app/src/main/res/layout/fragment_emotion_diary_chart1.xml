@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="emotion_diary_chart_layout_1"
+            type="org.techtown.handtxver1.EmotionDiaryChart1" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lineBox"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@drawable/upper_border"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/line1"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/thick_upper_border"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/line2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/line2"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toRightOf="@+id/line1"
+                app:layout_constraintRight_toLeftOf="@+id/line3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/line3"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toRightOf="@+id/line2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:id="@+id/emotionDiaryChart1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineBox">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/date"
+                    android:layout_width="186dp"
+                    android:layout_height="27dp"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="23dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/prevButton"
+                    android:layout_width="15.5dp"
+                    android:layout_height="15.5dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
+                    app:layout_constraintBottom_toBottomOf="@+id/date"
+                    app:layout_constraintRight_toLeftOf="@+id/date"
+                    app:layout_constraintTop_toTopOf="@+id/date" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/nextButton"
+                    android:layout_width="15.5dp"
+                    android:layout_height="15.5dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_baseline_arrow_forward_ios_24"
+                    app:layout_constraintBottom_toBottomOf="@id/date"
+                    app:layout_constraintLeft_toRightOf="@+id/date"
+                    app:layout_constraintTop_toTopOf="@id/date" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/howRU"
+                    android:layout_width="163dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="100dp"
+                    android:background="@drawable/round_rectangle_gray_2"
+                    android:gravity="center"
+                    android:text="오늘 하루 어땠나요?"
+                    android:textColor="@color/black"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/reverse_triangle"
+                    app:layout_constraintLeft_toLeftOf="@id/howRU"
+                    app:layout_constraintTop_toBottomOf="@+id/howRU" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/chart"
+                    android:layout_width="260dp"
+                    android:layout_height="260dp"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/howRU">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/radioButtonsBackground"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="30dp"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/circleAnchor"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number0"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="0"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button0"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="0"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="36"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button1"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="36"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="2"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="72"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button2"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="72"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number3"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="108"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button3"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="108"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number4"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="4"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="144"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button4"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="144"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number5"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="5"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="180"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button5"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="180"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number6"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="6"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="216"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button6"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="216"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number7"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="7"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="252"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button7"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="252"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number8"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="8"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="288"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button8"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="288"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number9"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="9"
+                        android:textColor="#000000"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="324"
+                        app:layout_constraintCircleRadius="115dp" />
+
+                    <RadioButton
+                        android:id="@+id/button9"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/emotion_pages_circle_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintCircle="@id/circleAnchor"
+                        app:layout_constraintCircleAngle="324"
+                        app:layout_constraintCircleRadius="88dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="40dp"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/chart">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bottom_border">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="82dp"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:text="수면 시간"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="76dp"
+                            android:layout_height="17dp"
+                            android:layout_marginRight="1dp"
+                            android:layout_marginBottom="3dp"
+                            android:gravity="center"
+                            android:text="시간 선택"
+                            android:textSize="13dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bottom_border">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="82dp"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:text="월경"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="23dp"
+                            android:layout_marginBottom="7dp"
+                            android:thumb="@drawable/switch_thumb"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:switchPadding="8dp"
+                            app:track="@drawable/selector_switch" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bottom_border">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="82dp"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:text="자살 충동"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="23dp"
+                            android:layout_marginBottom="7dp"
+                            android:thumb="@drawable/switch_thumb"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:switchPadding="8dp"
+                            app:track="@drawable/selector_switch" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bottom_border">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="82dp"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:text="폭식"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="23dp"
+                            android:layout_marginBottom="7dp"
+                            android:thumb="@drawable/switch_thumb"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:switchPadding="8dp"
+                            app:track="@drawable/selector_switch" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/bottom_border">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="128dp"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:text="오늘의 감정 글쓰기"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="173dp"
+                            android:layout_height="17dp"
+                            android:layout_marginRight="1dp"
+                            android:layout_marginBottom="3dp"
+                            android:gravity="center"
+                            android:text="오늘 왜 이런 감정이 들었나요?"
+                            android:textSize="13dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

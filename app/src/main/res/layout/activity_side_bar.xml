@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SideBar">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="21dp"
+        android:layout_height="15.56dp"
+        android:layout_marginTop="27.22dp"
+        android:layout_marginRight="24.5dp"
+        android:src="@drawable/ic_baseline_arrow_forward_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="83dp"
+        android:layout_marginRight="140dp"
+        android:src="@drawable/logo_for_side_bar_profile"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="105dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="114dp"
+        android:layout_marginRight="35dp"
+        android:gravity="center"
+        android:text="니니됴됴님"
+        android:textColor="@color/black"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="98dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="143dp"
+        android:layout_marginRight="21dp"
+        android:gravity="center"
+        android:text="tkeo12@naver.com"
+        android:textColor="#80000000"
+        android:textSize="10dp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="267dp"
+        android:layout_height="102dp"
+        android:layout_marginTop="218dp"
+        android:layout_marginRight="6dp"
+        android:background="@drawable/round_rectangle_gray"
+        android:orientation="vertical"
+        android:paddingLeft="26.7dp"
+        android:paddingTop="18dp"
+        android:paddingRight="27.97dp"
+        android:paddingBottom="17dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="구독중"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="다음 결제일  "
+                android:textColor="#80000000"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2023-06-24"
+                android:textColor="#58b5a7"
+                android:textStyle="bold" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="352dp"
+        android:layout_marginRight="229dp"
+        android:src="@drawable/ic_outline_settings_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="22.88dp"
+        android:layout_height="20.44dp"
+        android:layout_marginTop="417dp"
+        android:layout_marginRight="229.56dp"
+        android:src="@drawable/heart"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="22.12dp"
+        android:layout_height="22.12dp"
+        android:layout_marginTop="477.88dp"
+        android:layout_marginRight="229.88dp"
+        android:src="@drawable/unknown_side_bar_menu_icon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="18dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="540dp"
+        android:layout_marginRight="232dp"
+        android:src="@drawable/test_result_icon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="192dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="341dp"
+        android:layout_marginRight="21dp"
+        android:gravity="center_vertical"
+        android:text="계정 관리"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="192dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="405dp"
+        android:layout_marginRight="21dp"
+        android:gravity="center_vertical"
+        android:text="건강 관리"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="192dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="468dp"
+        android:layout_marginRight="21dp"
+        android:gravity="center_vertical"
+        android:text="——"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="192dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="531dp"
+        android:layout_marginRight="21dp"
+        android:gravity="center_vertical"
+        android:text="검사 결과"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="15.5dp"
+        android:layout_height="15.5dp"
+        android:layout_marginTop="261.22dp"
+        android:layout_marginRight="28.62dp"
+        android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="15.5dp"
+        android:layout_height="15.5dp"
+        android:layout_marginTop="352.22dp"
+        android:layout_marginRight="28.62dp"
+        android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="15.5dp"
+        android:layout_height="15.5dp"
+        android:layout_marginTop="417.22dp"
+        android:layout_marginRight="28.62dp"
+        android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="15.5dp"
+        android:layout_height="15.5dp"
+        android:layout_marginTop="480.22dp"
+        android:layout_marginRight="28.62dp"
+        android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="15.5dp"
+        android:layout_height="15.5dp"
+        android:layout_marginTop="543.22dp"
+        android:layout_marginRight="28.62dp"
+        android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

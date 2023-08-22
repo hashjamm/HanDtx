@@ -1,0 +1,65 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+android {
+    compileSdkVersion 33
+//    buildToolsVersion "33.0.0"
+    // Recommended action: Update this project to use a newer compileSdkVersion of at least 33, for example 33. 해결을 위해 값을 32에서 33으로 수정
+
+    buildFeatures.viewBinding true // 추가함
+
+    dataBinding {
+        enabled = true
+    }
+
+    defaultConfig {
+        applicationId "org.techtown.handtxver1"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+//    sourceSets {
+//        main {
+//            manifest.srcFile 'src/main/AndroidManifest.xml'
+//        }
+//    }
+
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.databinding:databinding-runtime:8.1.0'
+    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.9.8'// 추가함
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'androidx.core:core-ktx:1.10.1' // 추가함
+    implementation 'androidx.activity:activity-ktx:1.7.2'
+    implementation 'androidx.fragment:fragment-ktx:1.6.1'// ViewModel 사용을 위해 추가함
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1' // kotlin serialization 사용을 위해 추가함
+}
