@@ -38,11 +38,21 @@ class CommonUserDefinedObjectSet {
     // json String 으로 encoding 하기 위해 데이터를 묶기 위한 데이터 클래스 생성
     // 설문지 부분
     @Serializable
-    data class SurveyData(
-        @SerialName("typeNum") val typeNum: Int? = null,
-        @SerialName("results") val results: List<Int?>? = null,
-        @SerialName("totalScore") val totalScore: Int? = null
+    data class OneSurveyResult(
+        @SerialName("results") val results: MutableList<Int>? = null,
+        @SerialName("comment") val comment: String? = null // 설문 타입 1을 제외하고는 모두 null
     )
+
+    @Serializable
+    data class OneDateSurveyData(
+        @SerialName("surveyData") val surveyData: Map<Int, OneSurveyResult>? = null
+    )
+
+    @Serializable
+    data class OneUserSurveyData(
+        @SerialName("dates") val dates: Map<String, OneDateSurveyData>? = null
+    )
+
 
     // 기분, 불안, 비만 탭에서 그래프 최적화를 위해 점수마다 부여해줄 그래프 백그라운드 배열 생성
     val graphBackgroundArray = arrayOf(

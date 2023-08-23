@@ -8,15 +8,28 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
+import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
 
 class QuestionnaireType1 : AppCompatActivity() {
 
     // 체크박스 배열 변수 선언, 작업해줄 내용을 하나의 함수로 지정하고 인스턴스를 직접사용하는 것이 필요한 경우를 파라미터로 지정해서 작성
 
     private lateinit var checkBoxes: Array<CheckBox>
-    private fun checkBoxChangedTracking(sharedPreferences: SharedPreferences, checkBoxes: Array<CheckBox>) {
 
-        val editor = sharedPreferences.edit()
+    // 제출 완료 버튼을 누름과 동시에 QuestionnaireSharedPreferences 에 전송해줄 설문 결과 데이터 인스턴스 선언
+
+    private lateinit var surveyResults: MutableList<Int>
+
+    // CommonUserDefinedObjectSet.OneSurveyResult() 데이터 클래스의 디폴트 값을 가져옴
+    private val finalSurveyResults = CommonUserDefinedObjectSet.OneSurveyResult()
+
+    // 전체 체크박스에 대하여 체크 상태를 추적하고, 체크된 결과를 하나의 리스트로 업로드하는 함수
+    // 마지막 체크박스에 대해서는 별도로 작업 : 유저가 체크박스를 직접 누르는게 아닌, editText 뷰에 내용이 들어가면 자동으로 체크상태로 전환
+
+    private fun checkBoxChangedTracking(
+        sharedPreferences: SharedPreferences,
+        checkBoxes: Array<CheckBox>
+    ) {
 
         checkBoxes.forEachIndexed { index, it ->
 
@@ -82,17 +95,26 @@ class QuestionnaireType1 : AppCompatActivity() {
     // Int 타입인 checkSumChange 는 선언만 해둘 수가 없어서 우선 초기화를 해두었으나 onCreate 와 onResume 에서 다시 초기화해줄 예정
 
     private lateinit var sharedPreferences: SharedPreferences
+
     var checkSumChange = 0 // 체크가 추가되거나 해제된 개수를 QuestionnairePage1 액티비티에 전달해주기 위한 정수 인스턴스 초기화
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_type1)
 
+        // sharedPreferences 초기화
         sharedPreferences = getSharedPreferences(
-            "QType1SharedPreference",
+            "QuestionnaireSharedPreference",
             Context.MODE_PRIVATE
         )
 
+        // editor 생성
+        val editor = sharedPreferences.edit()
+
+        // editText 뷰 인스턴스 생성
+        val editTextBox = findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.box22_text)
+
+        // checkBoxes 초기화
         checkBoxes = arrayOf(
             findViewById(R.id.box1),
             findViewById(R.id.box2),
@@ -118,16 +140,70 @@ class QuestionnaireType1 : AppCompatActivity() {
             findViewById(R.id.box22)
         )
 
-        checkSumChange = 0
+        // surveyResults 초기화
+        // 사이즈가 22개이고 모든 요소를 0으로 초기화해두어 생성
+        // 어차피 모든 체크박스를 체크 해제된 상태로 초기화할 것이라 문제 없음.
+        surveyResults = MutableList(22) { 0 }
 
-        checkBoxChangedTracking(sharedPreferences, checkBoxes)
+        // 해당 설문지 액티비티에 새롭게 들어온 순간 모든 체크박스 상태 초기화
 
-        val submitButton = findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.submitButton)
+        checkBoxes.forEach {
+            it.isChecked = false
+        }
+
+        checkBoxes.forEachIndexed { index, checkBox ->
+            checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    surveyResults[index] = 1
+                } else {
+                    surveyResults[index] = 0
+                }
+            }
+        }
+
+        val checkBoxText = editTextBox.text.toString()
+
+        editTextBox.addTextChangedListener(object : TextWatcher {
+
+            val checkBoxText = editTextBox.text.toString()
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            // 우리는 Text 가 입력되는 동안, text 입력 여부를 바탕으로 체크박스 체트 상태를 동적으로 변경
+            // 또한 commonUserDefinedObject 의 oneSurveyResult 데이터 클래스의 내용을 업데이트
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                // 22번째 텍스트 입력내용이 비는 경우 체크박스 해제, 무엇이라도 입력되면 체크 상태 적용
+                if (checkBoxText.isEmpty()) {
+                    checkBoxes[21].isChecked = false
+                } else {
+                    checkBoxes[21].isChecked
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                // 22번째 텍스트 입력내용을 데이터 클래스에 업데이트
+                finalSurveyResults.copy(comment = checkBoxText)
+            }
+        })
+
+        val submitButton =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.submitButton)
 
         submitButton.setOnClickListener {
             val intent = Intent(this, QuestionnaireMainPage::class.java)
             intent.putExtra("scoreOfType1", checkSumChange.toString())
             startActivity(intent)
+
+            val checkBoxText = editTextBox.text.toString()
+
+            finalSurveyResults.copy(results = surveyResults, comment = checkBoxText)
+
+            editor.putString()
+
         }
     }
 
@@ -169,7 +245,8 @@ class QuestionnaireType1 : AppCompatActivity() {
 
         checkBoxChangedTracking(sharedPreferences, checkBoxes)
 
-        val submitButton = findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.submitButton)
+        val submitButton =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.submitButton)
 
         submitButton.setOnClickListener {
             val intent = Intent(this, QuestionnaireMainPage::class.java)
