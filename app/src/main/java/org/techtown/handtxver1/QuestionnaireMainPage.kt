@@ -124,11 +124,6 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
             val scoreOfType = sharedPreferences.getInt("ScoreOfType$typeNumber", 0)
 
-            Log.d(
-                "aaaaa",
-                "$typeNumber 번 설문 : ${sharedPreferences.getInt("ScoreOfType$typeNumber", 0)}"
-            )
-
             val viewId = resources.getIdentifier("qTypeCheckBox$typeNumber", "id", packageName)
             val textView = findViewById<TextView>(viewId)
             // 찾은 textView 를 사용하여 원하는 작업을 수행
@@ -137,17 +132,11 @@ class QuestionnaireMainPage : AppCompatActivity() {
                 val scoreOfDrinkingQuestionnaire =
                     sharedPreferences.getInt("ScoreOfDrinkingQuestionnaire", 0)
 
-                Log.d("bb", "$scoreOfType")
-                Log.d("bb", "$scoreOfDrinkingQuestionnaire")
-
                 if (scoreOfType == 0 && scoreOfDrinkingQuestionnaire == 0) {
-
-                    Log.d("bb", "포인트1")
 
                     textView.background = textViewBackGroundDrawable1
                 } else {
 
-                    Log.d("bb", "포인트2")
                     textView.background = textViewBackGroundDrawable2
 
                 }

@@ -30,8 +30,6 @@ class Login : AppCompatActivity() {
         val userPW =
             findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.userPW)
 
-        val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
-
         sharedPreferences = getSharedPreferences(
             "LoginDataSharedPreferences", Context.MODE_PRIVATE
         )

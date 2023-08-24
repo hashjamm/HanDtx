@@ -1,18 +1,12 @@
 package org.techtown.handtxver1
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
-import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
-import java.util.logging.Handler
 
 class QuestionnaireType1 : AppCompatActivity() {
 
@@ -64,6 +58,9 @@ class QuestionnaireType1 : AppCompatActivity() {
             findViewById(R.id.box22)
         )
 
+        // 마지막 체크박스는 사용자가 직접 상호작용할 수 없게 설정
+        checkBoxes[21].isEnabled = false
+
         // surveyResults 초기화
         // 사이즈가 22개이고 모든 요소를 0으로 초기화해두어 생성
         // 어차피 모든 체크박스를 체크 해제된 상태로 초기화할 것이라 문제 없음.
@@ -75,28 +72,16 @@ class QuestionnaireType1 : AppCompatActivity() {
             it.isChecked = false
         }
 
-        val handler = android.os.Handler(Looper.getMainLooper())
+        // 설문 페이지 들어왔을 때, editTextView 부분 클릭 횟수를 0회부터 추적 관찰
+        // 이는 마지막 체크박스가 editTextView가 아예 입력되지 않았을 때는 체크 해제되도록 하려고 함
 
         checkBoxes.forEachIndexed { index, checkBox ->
             checkBox.setOnCheckedChangeListener { _, isChecked ->
-                handler.removeCallbacksAndMessages(null)
-                handler.postDelayed({
-                    if (isChecked) {
-                        if (index != 21) {
-                            surveyResults[index] = 1
-                        } else {
-                            val editTextValue = editTextBox.text.toString()
-                            if (editTextValue.isEmpty()) {
-                                checkBox.isChecked = false
-                                surveyResults[index] = 0
-                            } else {
-                                surveyResults[index] = 1
-                            }
-                        }
-                    } else {
-                        surveyResults[index] = 0
-                    }
-                }, 200)
+                if (isChecked) {
+                    surveyResults[index] = 1
+                } else {
+                    surveyResults[index] = 0
+                }
             }
         }
 
@@ -106,7 +91,7 @@ class QuestionnaireType1 : AppCompatActivity() {
 
             }
 
-            // 우리는 Text 가 입력되는 동안, text 입력 여부를 바탕으로 체크박스 체트 상태를 동적으로 변경
+            // 우리는 Text 가 입력되는 동안, text 입력 여부를 바탕으로 체크박스 체크 상태를 동적으로 변경
             // 또한 commonUserDefinedObject 의 oneSurveyResult 데이터 클래스의 내용을 업데이트
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -168,6 +153,9 @@ class QuestionnaireType1 : AppCompatActivity() {
             findViewById(R.id.box22)
         )
 
+        // 마지막 체크박스는 사용자가 직접 상호작용할 수 없게 설정
+        checkBoxes[21].isEnabled = false
+
         // editText 뷰 인스턴스 생성
         val editTextBox = findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.box22_text)
 
@@ -198,25 +186,6 @@ class QuestionnaireType1 : AppCompatActivity() {
 
         }
 
-        checkBoxes.forEachIndexed { index, checkBox ->
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    if (index != 21) {
-                        surveyResults[index] = 1
-                    } else {
-                        val editTextValue = editTextBox.text.toString()
-                        if (editTextValue.isEmpty()) {
-                            checkBox.isChecked = false
-                            surveyResults[index] = 0
-                        } else {
-                            surveyResults[index] = 1
-                        }
-                    }
-                } else {
-                    surveyResults[index] = 0
-                }
-            }
-        }
 
         checkBoxes.forEachIndexed { index, checkBox ->
             checkBox.setOnCheckedChangeListener { _, isChecked ->

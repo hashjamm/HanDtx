@@ -1,14 +1,28 @@
 package org.techtown.handtxver1.org.techtown.handtxver1
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.techtown.handtxver1.QuestionnaireMainPage
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.SharedDateViewModel
+import org.techtown.handtxver1.ViewModelForQType2
+import java.lang.StringBuilder
+import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -492,5 +506,96 @@ class CommonUserDefinedObjectSet {
 
     }
 
+    // 설문 각 페이지 컨트롤을 위한 함수 작성
+
+    private fun getPreviousPageDrawable(context: Context): Drawable? {
+        return ContextCompat.getDrawable(context, R.drawable.previous_page)
+    }
+
+    private fun getNextPageDrawable(context: Context): Drawable? {
+        return ContextCompat.getDrawable(context, R.drawable.next_page)
+    }
+
+    private fun getSubmitButtonDrawable(context: Context): Drawable? {
+        return ContextCompat.getDrawable(context, R.drawable.submit_button)
+    }
+
+    fun ButtonDrawableOn(
+        context: Context,
+        textView: androidx.appcompat.widget.AppCompatTextView,
+        type: Int
+    ) {
+        textView.background =
+            when (type) {
+                -1 -> getPreviousPageDrawable(context)
+                1 -> getNextPageDrawable(context)
+                else -> null
+            }
+
+    }
+
+    fun ButtonDrawableOff(textView: androidx.appcompat.widget.AppCompatTextView) {
+        textView.setBackgroundColor(Color.parseColor("#00FF0000"))
+    }
+
+    fun submitButtonOn(
+        context: Context,
+        textView: androidx.appcompat.widget.AppCompatTextView,
+        responseSequence: Array<Int?>
+    ) {
+        textView.background = ApplicationClass.submitButtonDrawable
+        textView.setText("제출 완료")
+
+        textView.setOnClickListener {
+
+            if (responseSequence.any { it == null }) {
+
+                val nullIndices = responseSequence.indices.filter { responseSequence[it] == null }
+                val missingQuestions =
+                    nullIndices.map { (it + 1).toString() + "번" }.joinToString(", ", "", " 질문")
+
+                val dialogOfResponses = AlertDialog.Builder(context)
+                    .setTitle("작성되지 않은 문항이 있습니다.")
+                    .setMessage(
+                        "모든 문항에 대하여 응답해주십시오. \n $missingQuestions"
+                    )
+
+                dialogOfResponses.show()
+
+            } else {
+
+                val messageBuilder = StringBuilder()
+
+                for (i in responseSequence.indices) {
+                    val response = responseSequence[i]
+                    messageBuilder.append("${i + 1}번 : $response\n")
+                }
+
+                val dialogOfResponses = AlertDialog.Builder(context)
+                    .setTitle("응답한 내용")
+                    .setMessage(messageBuilder.toString())
+                    .setPositiveButton("완료") { _, _ ->
+                        Toast.makeText(context, "설문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
+
+                        val intent = Intent(context, QuestionnaireMainPage::class.java)
+
+                        updateSurveyData(
+                            responseSequence.filterNotNull().toMutableList(),
+                            null,
+                            2,
+                            dateToday
+                        )
+
+                        context.startActivity(intent)
+
+                    }
+                    .setNeutralButton("수정", null)
+
+                dialogOfResponses.show()
+
+            }
+
+        }
+    }
 
 }
