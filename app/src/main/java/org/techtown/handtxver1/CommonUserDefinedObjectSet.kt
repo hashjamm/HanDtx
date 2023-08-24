@@ -1,9 +1,10 @@
 package org.techtown.handtxver1.org.techtown.handtxver1
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.util.Log
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.techtown.handtxver1.R
@@ -12,10 +13,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class CommonUserDefinedObjectSet {
-
-    // 유저의 id와 pw를 Login 클래스에서 로그인 버튼을 눌렀을 때 가져오기 위하여 우선 null 로 초기화
-    var userID: String? = null
-    var userPW: String? = null
 
     // 각 DB 파일로 사용된 sharedPreferences 에서 userID 밑으로 주요 분류 값으로 사용될 오늘 날짜에 대한 값을 미리 작성
     val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
@@ -26,6 +23,15 @@ class CommonUserDefinedObjectSet {
     // 2 : "불안" 텝
     // 3 : "식이" 텝
     // 이외 : null
+
+    // json String 으로 encoding 하기 위해 데이터를 묶기 위한 데이터 클래스 생성
+    // 유저 로그인 정보
+    @Serializable
+    data class LoginInfo(
+        val userID: String,
+        val userPW: String,
+        val loginTime: String
+    )
 
     // json String 으로 encoding 하기 위해 데이터를 묶기 위한 데이터 클래스 생성
     // 감정다이어리 부분
@@ -114,6 +120,22 @@ class CommonUserDefinedObjectSet {
         "8점 내용",
         "9점 내용"
     )
+
+    // 유저의 id와 pw를 Login 클래스에서 LoginInfo sharedPreferences 에 저장하고, 이를 여기에서도 불러오는 함수
+    // sharedPreferences 는 user info 를 담고 잇는 sharedPreferences 파일 명을 적어줘야 함
+    fun getUserInfo(): LoginInfo? {
+
+        val sharedPreferences = ApplicationClass.loginSharedPreferences
+
+        val jsonUserInfo = sharedPreferences.getString("userInfo", null)
+
+        return if (jsonUserInfo != null) {
+            Json.decodeFromString<LoginInfo>(jsonUserInfo)
+        } else {
+            null
+        }
+
+    }
 
     // MixedData 의 default 값에 대한 encoded json String
     val defaultJsonMixedData = Json.encodeToString(MixedData())
@@ -285,11 +307,23 @@ class CommonUserDefinedObjectSet {
         comment: String? = null,
         surveyNumber: Int,
         date: String,
-        sharedPreferences: SharedPreferences // sharedPreferences 를 context 없이 함수 내부에서 쓰면 오류 발생 여지가 있어서 파라미터로 적는 것으로..
     ) {
+
+        // sharedPreferences 를 ApplicationClass 에서 가져옴
+        val sharedPreferences = ApplicationClass.questionnaireSharedPreferences
 
         // editor 생성
         val editor = sharedPreferences.edit()
+
+        // userID 가져옴
+        val jsonUserInfo = ApplicationClass.loginSharedPreferences.getString("userInfo", null)
+
+        val userID =
+            if (jsonUserInfo != null) {
+                Json.decodeFromString<LoginInfo>(jsonUserInfo).userID
+            } else {
+                null
+            }
 
         // QuestionnaireSharedPreferences 파일 내부에서 유저의 기존 데이터를 가져옴
         val getOneUserSurveyData = sharedPreferences.getString(userID, "{}")
@@ -375,8 +409,20 @@ class CommonUserDefinedObjectSet {
     fun getOneSurveyResults(
         surveyNumber: Int,
         date: String,
-        sharedPreferences: SharedPreferences // sharedPreferences 를 context 없이 함수 내부에서 쓰면 오류 발생 여지가 있어서 파라미터로 적는 것으로..
     ): OneSurveyResult? {
+
+        // sharedPreferences 를 ApplicationClass 에서 가져옴
+        val sharedPreferences = ApplicationClass.questionnaireSharedPreferences
+
+        // userID 가져옴
+        val jsonUserInfo = ApplicationClass.loginSharedPreferences.getString("userInfo", null)
+
+        val userID =
+            if (jsonUserInfo != null) {
+                Json.decodeFromString<LoginInfo>(jsonUserInfo).userID
+            } else {
+                null
+            }
 
         // QuestionnaireSharedPreferences 파일 내부에서 유저의 기존 데이터를 가져옴
         val getOneUserSurveyData = sharedPreferences.getString(userID, "{}")
@@ -410,9 +456,21 @@ class CommonUserDefinedObjectSet {
     // QuestionnaireSharedPreferences 에서 특정 설문지의 설문 데이터 결과를 가져오는 함수
 
     fun getOneDateSurveyData(
-        date: String,
-        sharedPreferences: SharedPreferences // sharedPreferences 를 context 없이 함수 내부에서 쓰면 오류 발생 여지가 있어서 파라미터로 적는 것으로..
+        date: String
     ): OneDateSurveyData? {
+
+        // sharedPreferences 를 ApplicationClass 에서 가져옴
+        val sharedPreferences = ApplicationClass.questionnaireSharedPreferences
+
+        // userID 가져옴
+        val jsonUserInfo = ApplicationClass.loginSharedPreferences.getString("userInfo", null)
+
+        val userID =
+            if (jsonUserInfo != null) {
+                Json.decodeFromString<LoginInfo>(jsonUserInfo).userID
+            } else {
+                null
+            }
 
         // QuestionnaireSharedPreferences 파일 내부에서 유저의 기존 데이터를 가져옴
         val getOneUserSurveyData = sharedPreferences.getString(userID, "{}")

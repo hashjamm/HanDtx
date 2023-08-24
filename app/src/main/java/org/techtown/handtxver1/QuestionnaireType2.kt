@@ -10,11 +10,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
 
 class QuestionnaireType2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_type2)
+
+        // CommonUserDefinedObjectSet 클래스 인스턴스 생성
+        val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
 
         // ViewModel 에 접근 및 로딩
         val viewModel = ViewModelProvider(this).get(ViewModelForQType2::class.java)
@@ -27,8 +31,8 @@ class QuestionnaireType2 : AppCompatActivity() {
         val toNextPage = findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.next_page)
         val pageNumberBox1 =
             findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.pageNumberBox1)
-        val pageNumberBox2 =
-            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.pageNumberBox2)
+//        val pageNumberBox2 =
+//            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.pageNumberBox2)
         val submitButton =
             findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.submitButton)
 
@@ -95,18 +99,18 @@ class QuestionnaireType2 : AppCompatActivity() {
                                     "9번 : ${viewModel.responseSequence[8]}\n" +
                                     "10번 : ${viewModel.responseSequence[9]}\n"
                         )
-                        .setPositiveButton("완료") { dialog, which ->
+                        .setPositiveButton("완료") { _, _ ->
                             Toast.makeText(this, "설문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
 
                             val intent = Intent(this, QuestionnaireMainPage::class.java)
-                            intent.putExtra(
-                                "scoreOfType2",
-                                viewModel.responseSequence.filterNotNull().sum().toString()
+
+                            commonUserDefinedObjectSet.updateSurveyData(
+                                viewModel.responseSequence.filterNotNull().toMutableList(),
+                                null,
+                                2,
+                                commonUserDefinedObjectSet.dateToday
                             )
-                            intent.putExtra(
-                                "resultOfType2",
-                                viewModel.responseSequence
-                            )
+
                             startActivity(intent)
                         }
                         .setNeutralButton("수정", null)
@@ -133,7 +137,6 @@ class QuestionnaireType2 : AppCompatActivity() {
 
         fun pageNumberBoxSetting(pageNum: Int, wholePageNum: Int) {
             pageNumberBox1.setText("$pageNum of $wholePageNum")
-            pageNumberBox2.setText("$pageNum of $wholePageNum")
         }
 
         val page1 = QType2ContentPage1()

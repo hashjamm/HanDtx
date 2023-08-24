@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
+import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
+import java.util.logging.Handler
 
 class QuestionnaireType1 : AppCompatActivity() {
 
@@ -28,21 +31,9 @@ class QuestionnaireType1 : AppCompatActivity() {
     // sharedPreferences 를 선언만 함 -> 이후에 onCreate 와 onResume 에서 초기화
     // Int 타입인 checkSumChange 는 선언만 해둘 수가 없어서 우선 초기화를 해두었으나 onCreate 와 onResume 에서 다시 초기화해줄 예정
 
-    private lateinit var sharedPreferences: SharedPreferences
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_type1)
-
-        // sharedPreferences 초기화
-        sharedPreferences = getSharedPreferences(
-            "QuestionnaireSharedPreference",
-            Context.MODE_PRIVATE
-        )
-
-        // editor 생성
-        // val editor = sharedPreferences.edit() -> commonUserDefinedObjectSet.updateSurveyData 내부에 에디터 있음
 
         // editText 뷰 인스턴스 생성
         val editTextBox = findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.box22_text)
@@ -84,13 +75,28 @@ class QuestionnaireType1 : AppCompatActivity() {
             it.isChecked = false
         }
 
+        val handler = android.os.Handler(Looper.getMainLooper())
+
         checkBoxes.forEachIndexed { index, checkBox ->
-            checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-                if (isChecked) {
-                    surveyResults[index] = 1
-                } else {
-                    surveyResults[index] = 0
-                }
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
+                    if (isChecked) {
+                        if (index != 21) {
+                            surveyResults[index] = 1
+                        } else {
+                            val editTextValue = editTextBox.text.toString()
+                            if (editTextValue.isEmpty()) {
+                                checkBox.isChecked = false
+                                surveyResults[index] = 0
+                            } else {
+                                surveyResults[index] = 1
+                            }
+                        }
+                    } else {
+                        surveyResults[index] = 0
+                    }
+                }, 200)
             }
         }
 
@@ -105,10 +111,7 @@ class QuestionnaireType1 : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-                val checkBoxText = editTextBox.text.toString()
-
-                // 22번째 텍스트 입력내용이 비는 경우 체크박스 해제, 무엇이라도 입력되면 체크 상태 적용
-                checkBoxes[21].isChecked = checkBoxText.isNotEmpty()
+                checkBoxes[21].isChecked = !p0.isNullOrEmpty()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -121,7 +124,6 @@ class QuestionnaireType1 : AppCompatActivity() {
 
         submitButton.setOnClickListener {
             val intent = Intent(this, QuestionnaireMainPage::class.java)
-            startActivity(intent)
 
             val checkBoxText = editTextBox.text.toString()
 
@@ -129,9 +131,10 @@ class QuestionnaireType1 : AppCompatActivity() {
                 surveyResults,
                 checkBoxText,
                 1,
-                commonUserDefinedObjectSet.dateToday,
-                sharedPreferences
+                commonUserDefinedObjectSet.dateToday
             )
+
+            startActivity(intent)
 
         }
     }
@@ -139,11 +142,6 @@ class QuestionnaireType1 : AppCompatActivity() {
     override fun onResume() {
 
         super.onResume()
-
-        sharedPreferences = getSharedPreferences(
-            "QuestionnaireSharedPreference",
-            Context.MODE_PRIVATE
-        )
 
         checkBoxes = arrayOf(
             findViewById(R.id.box1),
@@ -176,8 +174,7 @@ class QuestionnaireType1 : AppCompatActivity() {
         val getSurveyResults =
             commonUserDefinedObjectSet.getOneSurveyResults(
                 1,
-                commonUserDefinedObjectSet.dateToday,
-                sharedPreferences
+                commonUserDefinedObjectSet.dateToday
             )?.results
 
         surveyResults =
@@ -202,9 +199,19 @@ class QuestionnaireType1 : AppCompatActivity() {
         }
 
         checkBoxes.forEachIndexed { index, checkBox ->
-            checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    surveyResults[index] = 1
+                    if (index != 21) {
+                        surveyResults[index] = 1
+                    } else {
+                        val editTextValue = editTextBox.text.toString()
+                        if (editTextValue.isEmpty()) {
+                            checkBox.isChecked = false
+                            surveyResults[index] = 0
+                        } else {
+                            surveyResults[index] = 1
+                        }
+                    }
                 } else {
                     surveyResults[index] = 0
                 }
@@ -212,7 +219,7 @@ class QuestionnaireType1 : AppCompatActivity() {
         }
 
         checkBoxes.forEachIndexed { index, checkBox ->
-            checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     surveyResults[index] = 1
                 } else {
@@ -232,10 +239,7 @@ class QuestionnaireType1 : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-                val checkBoxText = editTextBox.text.toString()
-
-                // 22번째 텍스트 입력내용이 비는 경우 체크박스 해제, 무엇이라도 입력되면 체크 상태 적용
-                checkBoxes[21].isChecked = checkBoxText.isNotEmpty()
+                checkBoxes[21].isChecked = !p0.isNullOrEmpty()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -251,15 +255,12 @@ class QuestionnaireType1 : AppCompatActivity() {
             startActivity(intent)
 
             val checkBoxText = editTextBox.text.toString()
-
             commonUserDefinedObjectSet.updateSurveyData(
                 surveyResults,
                 checkBoxText,
                 1,
-                commonUserDefinedObjectSet.dateToday,
-                sharedPreferences
+                commonUserDefinedObjectSet.dateToday
             )
-
         }
 
     }
