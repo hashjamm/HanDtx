@@ -1,5 +1,6 @@
 package org.techtown.handtxver1.org.techtown.handtxver1
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,12 +8,18 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.SharedDateViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CommonUserDefinedObjectSet {
 
     // 유저의 id와 pw를 Login 클래스에서 로그인 버튼을 눌렀을 때 가져오기 위하여 우선 null 로 초기화
     var userID: String? = null
     var userPW: String? = null
+
+    // 각 DB 파일로 사용된 sharedPreferences 에서 userID 밑으로 주요 분류 값으로 사용될 오늘 날짜에 대한 값을 미리 작성
+    val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
+    val dateToday = dateFormat.format(Calendar.getInstance().time)
 
     // munuNum 에 따라 아래와 같이 정의
     // 1 : "기분" 텝
@@ -270,5 +277,162 @@ class CommonUserDefinedObjectSet {
         editor.putString(key, jsonUpdateData)
         editor.apply()
     }
+
+    // QuestionnaireSharedPreferences 에 설문 데이터 결과를 Json String 으로 업데이트하는 함수
+
+    fun updateSurveyData(
+        results: MutableList<Int>,
+        comment: String? = null,
+        surveyNumber: Int,
+        date: String,
+        sharedPreferences: SharedPreferences // sharedPreferences 를 context 없이 함수 내부에서 쓰면 오류 발생 여지가 있어서 파라미터로 적는 것으로..
+    ) {
+
+        // editor 생성
+        val editor = sharedPreferences.edit()
+
+        // QuestionnaireSharedPreferences 파일 내부에서 유저의 기존 데이터를 가져옴
+        val getOneUserSurveyData = sharedPreferences.getString(userID, "{}")
+
+        if (getOneUserSurveyData != null && getOneUserSurveyData != "{}") {
+
+            val obtainedOneUserSurveyData =
+                Json.decodeFromString<OneUserSurveyData>(getOneUserSurveyData)
+
+            val obtainedOneDateSurveyData = obtainedOneUserSurveyData.dates?.get(date)
+
+            if (obtainedOneDateSurveyData != null) {
+
+                val obtainedOneSurveyResult =
+                    obtainedOneDateSurveyData.surveyData?.get(surveyNumber)
+
+                val updateOneSurveyResult =
+                    obtainedOneSurveyResult?.copy(results = results, comment = comment)
+                        ?: OneSurveyResult(results, comment)
+
+                // 해당 번호의 설문 데이터가 있을 때를 가정하고 있기 때문에 null safe 가 아닌 non null 처리함.
+                // 명시해주길 코틀린이 바라고 있었음.
+
+                val updateOneDateSurveyData =
+                    obtainedOneDateSurveyData.surveyData!!.toMutableMap()
+
+                updateOneDateSurveyData[surveyNumber] = updateOneSurveyResult
+
+                val classModifiedUpdateOneDateSurveyData =
+                    OneDateSurveyData(updateOneDateSurveyData)
+
+                val updateOneUserSurveyData = obtainedOneUserSurveyData.dates.toMutableMap()
+                updateOneUserSurveyData[date] = classModifiedUpdateOneDateSurveyData
+                val classModifiedUpdateOneUserSurveyData =
+                    OneUserSurveyData(updateOneUserSurveyData)
+
+                val jsonUpdateData = Json.encodeToString(classModifiedUpdateOneUserSurveyData)
+
+                editor.putString(userID, jsonUpdateData)
+                editor.apply()
+
+            } else {
+
+                val updateOneSurveyData = OneSurveyResult(results, comment)
+                val updateOneDateSurveyData =
+                    OneDateSurveyData(mapOf(surveyNumber to updateOneSurveyData))
+
+                // 해당 유저의 설문 데이터가 있을 때를 가정하고 있기 때문에 null safe 가 아닌 non null 처리함.
+                // 명시해주길 코틀린이 바라고 있었음.
+
+                val updateOneUserSurveyData = obtainedOneUserSurveyData.dates!!.toMutableMap()
+                updateOneUserSurveyData[date] = updateOneDateSurveyData
+                val classModifiedUpdateOneUserSurveyData =
+                    OneUserSurveyData(updateOneUserSurveyData)
+
+                val jsonUpdateData = Json.encodeToString(classModifiedUpdateOneUserSurveyData)
+
+                editor.putString(userID, jsonUpdateData)
+                editor.apply()
+
+            }
+
+
+        } else {
+
+            val updateOneSurveyData = OneSurveyResult(results, comment)
+            val updateOneDateSurveyData =
+                OneDateSurveyData(mapOf(surveyNumber to updateOneSurveyData))
+            val updateOneUserSurveyData = OneUserSurveyData(mapOf(date to updateOneDateSurveyData))
+
+            val jsonUpdateData = Json.encodeToString(updateOneUserSurveyData)
+
+            editor.putString(userID, jsonUpdateData)
+            editor.apply()
+
+        }
+
+
+    }
+
+    // QuestionnaireSharedPreferences 에서 특정 설문지의 설문 데이터 결과를 가져오는 함수
+
+    fun getOneSurveyResults(
+        surveyNumber: Int,
+        date: String,
+        sharedPreferences: SharedPreferences // sharedPreferences 를 context 없이 함수 내부에서 쓰면 오류 발생 여지가 있어서 파라미터로 적는 것으로..
+    ): OneSurveyResult? {
+
+        // QuestionnaireSharedPreferences 파일 내부에서 유저의 기존 데이터를 가져옴
+        val getOneUserSurveyData = sharedPreferences.getString(userID, "{}")
+
+        if (getOneUserSurveyData != null && getOneUserSurveyData != "{}") {
+
+            val obtainedOneUserSurveyData =
+                Json.decodeFromString<OneUserSurveyData>(getOneUserSurveyData)
+
+            val obtainedOneDateSurveyData = obtainedOneUserSurveyData.dates?.get(date)
+
+            return if (obtainedOneDateSurveyData != null) {
+
+                obtainedOneDateSurveyData.surveyData?.get(surveyNumber)
+
+            } else {
+
+                null
+
+            }
+
+
+        } else {
+
+            return null
+
+        }
+
+    }
+
+    // QuestionnaireSharedPreferences 에서 특정 설문지의 설문 데이터 결과를 가져오는 함수
+
+    fun getOneDateSurveyData(
+        date: String,
+        sharedPreferences: SharedPreferences // sharedPreferences 를 context 없이 함수 내부에서 쓰면 오류 발생 여지가 있어서 파라미터로 적는 것으로..
+    ): OneDateSurveyData? {
+
+        // QuestionnaireSharedPreferences 파일 내부에서 유저의 기존 데이터를 가져옴
+        val getOneUserSurveyData = sharedPreferences.getString(userID, "{}")
+
+        return if (getOneUserSurveyData != null && getOneUserSurveyData != "{}") {
+
+            val obtainedOneUserSurveyData =
+                Json.decodeFromString<OneUserSurveyData>(getOneUserSurveyData)
+
+            val obtainedOneDateSurveyData = obtainedOneUserSurveyData.dates?.get(date)
+
+            obtainedOneDateSurveyData
+
+        } else {
+
+            null
+
+        }
+
+    }
+
 
 }
