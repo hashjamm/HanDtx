@@ -64,64 +64,21 @@ class QType2ContentPage5 : Fragment() {
         // onRadioButtonClicked 메서드를 직접 구현해주는 코드를 작성.
         // 각 radioButton 에 대하여 클릭된 버튼의 글씨 색만을 하얀색, 나머지는 검은색으로 지정.
         // 이후 ViewModel 에 체크상태 전달을 위한 장소이기도 함.
+
+        val radioButtonMap = mapOf(
+            R.id.button1 to 1,
+            R.id.button2 to 2,
+            R.id.button3 to 3,
+            R.id.button4 to 4,
+            R.id.button5 to 5
+        )
+
         if (view is RadioButton) {
             val checked = view.isChecked
-            when (view.id) {
-                R.id.button1 -> {
-                    if (checked) {
-                        view.setTextColor(Color.parseColor("#FFFFFF"))
-                        binding.button2.setTextColor(Color.parseColor("#000000"))
-                        binding.button3.setTextColor(Color.parseColor("#000000"))
-                        binding.button4.setTextColor(Color.parseColor("#000000"))
-                        binding.button5.setTextColor(Color.parseColor("#000000"))
-                        viewModel.updateResponse(5,1)
-                    }
-                }
+            val responseValue = radioButtonMap[view.id]
 
-                R.id.button2 -> {
-                    if (checked) {
-                        view.setTextColor(Color.parseColor("#FFFFFF"))
-                        binding.button1.setTextColor(Color.parseColor("#000000"))
-                        binding.button3.setTextColor(Color.parseColor("#000000"))
-                        binding.button4.setTextColor(Color.parseColor("#000000"))
-                        binding.button5.setTextColor(Color.parseColor("#000000"))
-                        viewModel.updateResponse(5,2)
-                    }
-                }
-
-                R.id.button3 -> {
-                    if (checked) {
-                        view.setTextColor(Color.parseColor("#FFFFFF"))
-                        binding.button1.setTextColor(Color.parseColor("#000000"))
-                        binding.button2.setTextColor(Color.parseColor("#000000"))
-                        binding.button4.setTextColor(Color.parseColor("#000000"))
-                        binding.button5.setTextColor(Color.parseColor("#000000"))
-                        viewModel.updateResponse(5,3)
-                    }
-                }
-
-                R.id.button4 -> {
-                    if (checked) {
-                        view.setTextColor(Color.parseColor("#FFFFFF"))
-                        binding.button1.setTextColor(Color.parseColor("#000000"))
-                        binding.button2.setTextColor(Color.parseColor("#000000"))
-                        binding.button3.setTextColor(Color.parseColor("#000000"))
-                        binding.button5.setTextColor(Color.parseColor("#000000"))
-                        viewModel.updateResponse(5,4)
-                    }
-                }
-
-                R.id.button5 -> {
-                    if (checked) {
-                        view.setTextColor(Color.parseColor("#FFFFFF"))
-                        binding.button1.setTextColor(Color.parseColor("#000000"))
-                        binding.button2.setTextColor(Color.parseColor("#000000"))
-                        binding.button3.setTextColor(Color.parseColor("#000000"))
-                        binding.button4.setTextColor(Color.parseColor("#000000"))
-                        viewModel.updateResponse(5,5)
-                    }
-                }
-
+            if (checked && responseValue != null) {
+                viewModel.updateResponse(5, responseValue)
             }
         }
 

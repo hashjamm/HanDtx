@@ -6,10 +6,17 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.Log
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.serialization.SerialName
@@ -506,21 +513,25 @@ class CommonUserDefinedObjectSet {
 
     }
 
-    // 설문 각 페이지 컨트롤을 위한 함수 작성
+    // 설문 (2번 타입부터)) 각 페이지 컨트롤을 위한 함수 작성
 
+    // 이전페이지로 가는 버튼 drawable 파일 가져오기
     private fun getPreviousPageDrawable(context: Context): Drawable? {
         return ContextCompat.getDrawable(context, R.drawable.previous_page)
     }
 
+    // 이후페이지로 가는 버튼 drawable 파일 가져오기
     private fun getNextPageDrawable(context: Context): Drawable? {
         return ContextCompat.getDrawable(context, R.drawable.next_page)
     }
 
+    // 제출 완료 버튼 drawable 파일 가져오기
     private fun getSubmitButtonDrawable(context: Context): Drawable? {
         return ContextCompat.getDrawable(context, R.drawable.submit_button)
     }
 
-    fun ButtonDrawableOn(
+    // 이전 및 이후페이지로 가는 버튼을 활성화하는 함수
+    fun buttonDrawableOn(
         context: Context,
         textView: androidx.appcompat.widget.AppCompatTextView,
         type: Int
@@ -534,16 +545,20 @@ class CommonUserDefinedObjectSet {
 
     }
 
-    fun ButtonDrawableOff(textView: androidx.appcompat.widget.AppCompatTextView) {
+    // 이전 및 이후페이지로 가는 버튼을 비활성화하는 함수
+    fun buttonDrawableOff(textView: androidx.appcompat.widget.AppCompatTextView) {
         textView.setBackgroundColor(Color.parseColor("#00FF0000"))
     }
+
+    // 설문 완료 버튼을 기능과 함께 활성화하는 함수
 
     fun submitButtonOn(
         context: Context,
         textView: androidx.appcompat.widget.AppCompatTextView,
         responseSequence: Array<Int?>
     ) {
-        textView.background = ApplicationClass.submitButtonDrawable
+        textView.background = getSubmitButtonDrawable(context)
+
         textView.setText("제출 완료")
 
         textView.setOnClickListener {
@@ -596,6 +611,131 @@ class CommonUserDefinedObjectSet {
             }
 
         }
+    }
+
+    // 설문 완료 버튼을 비활성화하는 함수
+
+    fun submitButtonOff(textView: androidx.appcompat.widget.AppCompatTextView) {
+        textView.setBackgroundColor(Color.parseColor("#00FF0000"))
+        textView.setText("")
+        textView.setOnClickListener(null)
+    }
+
+    // pageBar 를 동적으로 설정해주기 위한 함수
+
+    fun pageBarLengthSetting(
+        pageBar: ConstraintLayout,
+        presentPageBar: androidx.appcompat.widget.AppCompatImageView,
+        pageNum: Int,
+        wholePageNum: Int
+    ) {
+
+        pageBar.post {
+            val pageBarWidth = pageBar.width
+
+            val presentPageBarLayoutParams = LinearLayout.LayoutParams(
+                pageBarWidth * pageNum / wholePageNum,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+
+            presentPageBar.layoutParams = presentPageBarLayoutParams
+        }
+    }
+
+    fun pageNumberBoxSetting(
+        pageNumberBox: androidx.appcompat.widget.AppCompatTextView,
+        pageNum: Int,
+        wholePageNum: Int
+    ) {
+        pageNumberBox.setText("$pageNum of $wholePageNum")
+    }
+
+    // 설문 페이지 액티비티 전체에 대해서 기능을 모두 구현하는 함수 생성
+
+    fun questionnaireActivityFunction(
+        context: AppCompatActivity,
+        frameLayoutID: Int,
+        pageSequence: Array<Fragment>,
+        pageBar: ConstraintLayout,
+        presentPageBar: AppCompatImageView,
+        pageNumberBox: AppCompatTextView,
+        toPreviousPage: AppCompatTextView,
+        toNextPage: AppCompatTextView,
+        submitButton: AppCompatTextView,
+        responseSequence: Array<Int?>
+    ) {
+
+        // frameLayoutID = R.id.pageFrame 라는 코드를 함수 외부에서 작성해서 가져올 것
+
+        context.supportFragmentManager.beginTransaction().add(frameLayoutID, pageSequence[0])
+            .commitNow()
+        pageBarLengthSetting(pageBar, presentPageBar, 1, pageSequence.size)
+        pageNumberBoxSetting(pageNumberBox, 1, pageSequence.size)
+        buttonDrawableOff(toPreviousPage)
+
+        toNextPage.setOnClickListener {
+
+            val currentPage = context.supportFragmentManager.findFragmentById(frameLayoutID)
+            val currentPageIndex = pageSequence.indexOf(currentPage)
+            val currentPageNumber = currentPageIndex + 1
+
+            if (currentPageNumber in 1 until pageSequence.size) {
+
+                val nextPage = pageSequence[currentPageIndex + 1]
+                context.supportFragmentManager.beginTransaction().replace(frameLayoutID, nextPage)
+                    .commitNow()
+                pageBarLengthSetting(
+                    pageBar,
+                    presentPageBar,
+                    currentPageNumber + 1,
+                    pageSequence.size
+                )
+                pageNumberBoxSetting(pageNumberBox, currentPageNumber + 1, pageSequence.size)
+
+                if (currentPageIndex == 0) {
+                    buttonDrawableOn(context, toPreviousPage, -1)
+                }
+
+                if (currentPageNumber + 1 == pageSequence.size) {
+                    submitButtonOn(context, submitButton, responseSequence)
+                    buttonDrawableOff(toNextPage)
+                }
+
+            }
+        }
+
+        toPreviousPage.setOnClickListener {
+
+            val currentPage = context.supportFragmentManager.findFragmentById(frameLayoutID)
+            val currentPageIndex = pageSequence.indexOf(currentPage)
+            val currentPageNumber = currentPageIndex + 1
+
+            if (currentPageNumber in 2 until pageSequence.size + 1) {
+
+                val previousPage = pageSequence[currentPageIndex - 1]
+                context.supportFragmentManager.beginTransaction()
+                    .replace(frameLayoutID, previousPage).commitNow()
+                pageBarLengthSetting(
+                    pageBar,
+                    presentPageBar,
+                    currentPageNumber - 1,
+                    pageSequence.size
+                )
+                pageNumberBoxSetting(pageNumberBox, currentPageNumber - 1, pageSequence.size)
+
+                if (currentPageIndex == 1) {
+                    buttonDrawableOff(toPreviousPage)
+                }
+
+                if (currentPageNumber == pageSequence.size) {
+                    submitButtonOff(submitButton)
+                    buttonDrawableOn(context, toNextPage, 1)
+                }
+
+            }
+
+        }
+
     }
 
 }
