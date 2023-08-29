@@ -50,7 +50,7 @@
                 android:gravity="center"
                 android:onClick="onRadioButtonClicked"
                 android:text="전혀 방해받지 않았다."
-                android:textColor="#000000"
+                android:textColor="@drawable/questionnaire_pages_radio_button_color_selector"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
@@ -66,7 +66,7 @@
                 android:gravity="center"
                 android:onClick="onRadioButtonClicked"
                 android:text="며칠동안 방해 받았다."
-                android:textColor="#000000"
+                android:textColor="@drawable/questionnaire_pages_radio_button_color_selector"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
@@ -82,7 +82,7 @@
                 android:gravity="center"
                 android:onClick="onRadioButtonClicked"
                 android:text="2주 중 절반 이상은 방해받았다."
-                android:textColor="#000000"
+                android:textColor="@drawable/questionnaire_pages_radio_button_color_selector"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
@@ -97,7 +97,7 @@
                 android:gravity="center"
                 android:onClick="onRadioButtonClicked"
                 android:text="거의 매일 방해받았다."
-                android:textColor="#000000"
+                android:textColor="@drawable/questionnaire_pages_radio_button_color_selector"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 

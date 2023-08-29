@@ -5,8 +5,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.util.Log
-import android.widget.FrameLayout
+import android.text.Layout
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.AlignmentSpan
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -15,21 +17,14 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.techtown.handtxver1.QuestionnaireMainPage
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.SharedDateViewModel
-import org.techtown.handtxver1.ViewModelForQType2
-import java.lang.StringBuilder
-import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -569,11 +564,29 @@ class CommonUserDefinedObjectSet {
                 val missingQuestions =
                     nullIndices.map { (it + 1).toString() + "번" }.joinToString(", ", "", " 질문")
 
+                // 기획팀 요청 : 팝업 메세지 중앙 정렬을 위한 spannableStringBuilder 객체 사용 코드
+                val title = "작성되지 않은 문항이 있습니다."
+                val message = "모든 문항에 대하여 응답해주십시오. \n $missingQuestions"
+
+                val spannableStringBuilderTitle = SpannableStringBuilder(title)
+                spannableStringBuilderTitle.setSpan(
+                    AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                    0,
+                    title.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                val spannableStringBuilderMessage = SpannableStringBuilder(message)
+                spannableStringBuilderMessage.setSpan(
+                    AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                    0,
+                    message.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
                 val dialogOfResponses = AlertDialog.Builder(context)
-                    .setTitle("작성되지 않은 문항이 있습니다.")
-                    .setMessage(
-                        "모든 문항에 대하여 응답해주십시오. \n $missingQuestions"
-                    )
+                    .setTitle(spannableStringBuilderTitle)
+                    .setMessage(spannableStringBuilderMessage)
 
                 dialogOfResponses.show()
 
