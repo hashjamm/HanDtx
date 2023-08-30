@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import org.techtown.handtxver1.*
+import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type2.QuestionnaireType2
@@ -37,37 +38,46 @@ class QuestionnaireMainPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_page1)
 
+//        ApplicationClass.questionnaireSharedPreferences.edit().clear().apply()
+
         // CommonUserDefinedObjectSet 클래스 인스턴스 생성
         val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
 
         // 체크상태 표기
-        for (typeNumber in 1..8) {
 
+        val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)
+        val checkBox2 = findViewById<RadioButton>(R.id.qTypeCheckBox2)
+        val checkBox3 = findViewById<RadioButton>(R.id.qTypeCheckBox3)
+        val checkBox4 = findViewById<RadioButton>(R.id.qTypeCheckBox4)
+        val checkBox5 = findViewById<RadioButton>(R.id.qTypeCheckBox5)
+        val checkBox6 = findViewById<RadioButton>(R.id.qTypeCheckBox6)
+        val checkBox7 = findViewById<RadioButton>(R.id.qTypeCheckBox7)
+        val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
+
+        val checkBoxes = arrayOf(
+            checkBox1,
+            checkBox2,
+            checkBox3,
+            checkBox4,
+            checkBox5,
+            checkBox6,
+            checkBox7,
+            checkBox8
+        )
+
+        checkBoxes.forEachIndexed { index, buttonBox ->
+
+            val typeNumber = index + 1
             val scoreOfType = commonUserDefinedObjectSet.getOneSurveyResults(typeNumber, commonUserDefinedObjectSet.dateToday)
 
-            val viewId = resources.getIdentifier("qTypeCheckBox$typeNumber", "id", packageName)
-            val buttonBox = findViewById<RadioButton>(viewId)
-
             buttonBox.isEnabled = false
-
-            // 찾은 textView 를 사용하여 원하는 작업을 수행
 
             if (typeNumber == 8) {
                 val scoreOfDrinkingQuestionnaire = commonUserDefinedObjectSet.getOneSurveyResults(80, commonUserDefinedObjectSet.dateToday)
 
-                if (scoreOfType == null && scoreOfDrinkingQuestionnaire == null) {
-                    buttonBox.isChecked = false
-                } else {
-                    buttonBox.isChecked
-                }
+                buttonBox.isChecked = !(scoreOfType == null && scoreOfDrinkingQuestionnaire == null)
             } else {
-                if (scoreOfType == null) {
-                    buttonBox.isChecked = false
-
-                    Log.d("aaaa", "$scoreOfType")
-                } else {
-                    buttonBox.isChecked
-                }
+                buttonBox.isChecked = scoreOfType != null
             }
         }
 
