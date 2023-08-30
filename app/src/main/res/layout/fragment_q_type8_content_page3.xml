@@ -7,7 +7,7 @@
 
         <variable
             name="test"
-            type="org.techtown.handtxver1.QType8ContentPage3" />
+            type="org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type8.QType8ContentPage3" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +60,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/circleAnchor"
                 android:layout_width="60dp"
@@ -79,7 +78,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="1"
+                android:text="0"
                 android:textColor="#000000"
                 android:textSize="15dp"
                 android:textStyle="bold"
@@ -102,12 +101,12 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="2"
+                android:text="1"
                 android:textColor="#000000"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="51.43"
+                app:layout_constraintCircleAngle="45"
                 app:layout_constraintCircleRadius="120dp" />
 
             <RadioButton
@@ -117,7 +116,7 @@
                 android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
                 android:button="@null"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="51.43"
+                app:layout_constraintCircleAngle="45"
                 app:layout_constraintCircleRadius="90dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -125,12 +124,12 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="3"
+                android:text="2"
                 android:textColor="#000000"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="102.86"
+                app:layout_constraintCircleAngle="90"
                 app:layout_constraintCircleRadius="120dp" />
 
             <RadioButton
@@ -140,7 +139,7 @@
                 android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
                 android:button="@null"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="102.86"
+                app:layout_constraintCircleAngle="90"
                 app:layout_constraintCircleRadius="90dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -148,12 +147,12 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="4"
+                android:text="3"
                 android:textColor="#000000"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="154.29"
+                app:layout_constraintCircleAngle="135"
                 app:layout_constraintCircleRadius="120dp" />
 
             <RadioButton
@@ -163,7 +162,7 @@
                 android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
                 android:button="@null"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="154.29"
+                app:layout_constraintCircleAngle="135"
                 app:layout_constraintCircleRadius="90dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -171,12 +170,12 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="5"
+                android:text="4"
                 android:textColor="#000000"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="205.71"
+                app:layout_constraintCircleAngle="180"
                 app:layout_constraintCircleRadius="120dp" />
 
             <RadioButton
@@ -186,7 +185,7 @@
                 android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
                 android:button="@null"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="205.71"
+                app:layout_constraintCircleAngle="180"
                 app:layout_constraintCircleRadius="90dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -194,12 +193,12 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="6"
+                android:text="5"
                 android:textColor="#000000"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="257.14"
+                app:layout_constraintCircleAngle="225"
                 app:layout_constraintCircleRadius="120dp" />
 
             <RadioButton
@@ -209,7 +208,7 @@
                 android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
                 android:button="@null"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="257.14"
+                app:layout_constraintCircleAngle="225"
                 app:layout_constraintCircleRadius="90dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -217,12 +216,12 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="7"
+                android:text="6"
                 android:textColor="#000000"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="308.57"
+                app:layout_constraintCircleAngle="270"
                 app:layout_constraintCircleRadius="120dp" />
 
             <RadioButton
@@ -232,7 +231,30 @@
                 android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
                 android:button="@null"
                 app:layout_constraintCircle="@id/circleAnchor"
-                app:layout_constraintCircleAngle="308.57"
+                app:layout_constraintCircleAngle="270"
+                app:layout_constraintCircleRadius="90dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number8"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="7"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="315"
+                app:layout_constraintCircleRadius="120dp" />
+
+            <RadioButton
+                android:id="@+id/button8"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/questionnaire_pages_circle_radio_button_selector"
+                android:button="@null"
+                app:layout_constraintCircle="@id/circleAnchor"
+                app:layout_constraintCircleAngle="315"
                 app:layout_constraintCircleRadius="90dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

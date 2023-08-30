@@ -7,7 +7,7 @@
 
         <variable
             name="test"
-            type="org.techtown.handtxver1.DrinkingQuestionnaireContentPage9" />
+            type="org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.drinking.DrinkingQuestionnaireContentPage9" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

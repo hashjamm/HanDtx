@@ -50,6 +50,8 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/logo_for_side_bar_profile.xml" value="0.2125" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/main_menu_side_bar_profile.xml" value="0.2125" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/main_menu_slide_1.xml" value="0.2125" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/main_page_black_all_border_round.xml" value="0.3005" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/main_page_filled_black_all_border_round.xml" value="0.3005" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/meal_radio_button_1_selector.xml" value="0.147" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/meal_radio_button_2_selector.xml" value="0.147" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/meal_radio_button_3_selector.xml" value="0.147" />
@@ -59,6 +61,7 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnair_check_box_unclicked.xml" value="0.154" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_check_box_clicked.xml" value="0.168" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_check_box_unclicked.xml" value="0.169" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_main_page_radio_button_selector.xml" value="0.3005" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_paged_boolean_radio_button_color_selector.xml" value="0.1385" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_pages_boolean_false_shape.xml" value="0.1385" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_pages_boolean_radio_button_color_selector.xml" value="0.3515" />

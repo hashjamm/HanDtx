@@ -27,31 +27,31 @@
             android:name=".CheckIn"
             android:exported="false" />
         <activity
-            android:name=".DrinkingQuestionnaire"
+            android:name=".org.techtown.handtxver1.questionnaires.drinking.DrinkingQuestionnaire"
             android:exported="false" />
         <activity
-            android:name=".QuestionnaireType8"
+            android:name=".org.techtown.handtxver1.questionnaires.type8.QuestionnaireType8"
             android:exported="false" />
         <activity
-            android:name=".QuestionnaireType7"
+            android:name=".org.techtown.handtxver1.questionnaires.type7.QuestionnaireType7"
             android:exported="false" />
         <activity
-            android:name=".QuestionnaireType6"
+            android:name=".org.techtown.handtxver1.questionnaires.type6.QuestionnaireType6"
             android:exported="false" />
         <activity
-            android:name=".QuestionnaireType5"
+            android:name=".org.techtown.handtxver1.questionnaires.type5.QuestionnaireType5"
             android:exported="false" />
         <activity
-            android:name=".QuestionnaireType4"
+            android:name=".org.techtown.handtxver1.questionnaires.type4.QuestionnaireType4"
             android:exported="false" />
         <activity
-            android:name=".QuestionnaireType3"
+            android:name=".org.techtown.handtxver1.questionnaires.type3.QuestionnaireType3"
             android:exported="false" />
         <activity
-            android:name=".QuestionnaireType2"
+            android:name=".org.techtown.handtxver1.questionnaires.type2.QuestionnaireType2"
             android:exported="false" />
         <activity
-            android:name=".QuestionnaireType1"
+            android:name=".org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1"
             android:exported="false" />
         <activity
             android:name=".EmotionDiaryEachDateViewer"
@@ -61,7 +61,7 @@
             android:name=".EmotionDiary"
             android:exported="false" />
         <activity
-            android:name=".QuestionnaireMainPage"
+            android:name=".org.techtown.handtxver1.questionnaires.QuestionnaireMainPage"
             android:exported="false" />
         <activity
             android:name=".CbtPage1"

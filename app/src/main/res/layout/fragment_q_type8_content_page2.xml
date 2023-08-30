@@ -7,7 +7,7 @@
 
         <variable
             name="test"
-            type="org.techtown.handtxver1.QType8ContentPage2" />
+            type="org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type8.QType8ContentPage2" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +50,7 @@
                 android:gravity="center"
                 android:onClick="onRadioButtonClicked"
                 android:text="없음"
-                android:textColor="#000000"
+                android:textColor="@drawable/questionnaire_pages_radio_button_color_selector"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
@@ -66,7 +66,7 @@
                 android:gravity="center"
                 android:onClick="onRadioButtonClicked"
                 android:text="1개월 내"
-                android:textColor="#000000"
+                android:textColor="@drawable/questionnaire_pages_radio_button_color_selector"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
@@ -82,7 +82,7 @@
                 android:gravity="center"
                 android:onClick="onRadioButtonClicked"
                 android:text="6개월 내"
-                android:textColor="#000000"
+                android:textColor="@drawable/questionnaire_pages_radio_button_color_selector"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
@@ -97,7 +97,7 @@
                 android:gravity="center"
                 android:onClick="onRadioButtonClicked"
                 android:text="언젠가는 금연할 생각이 있다"
-                android:textColor="#000000"
+                android:textColor="@drawable/questionnaire_pages_radio_button_color_selector"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 

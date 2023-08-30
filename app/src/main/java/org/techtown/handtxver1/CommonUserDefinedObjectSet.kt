@@ -22,7 +22,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.techtown.handtxver1.QuestionnaireMainPage
+import kotlinx.serialization.json.JsonNull.content
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.SharedDateViewModel
 import java.text.SimpleDateFormat
@@ -69,7 +70,8 @@ class CommonUserDefinedObjectSet {
     @Serializable
     data class OneSurveyResult(
         @SerialName("results") val results: MutableList<Int>? = null,
-        @SerialName("comment") val comment: String? = null // 설문 타입 1을 제외하고는 모두 null
+        @SerialName("comment") val comment: String? = null, // 설문 타입 1을 제외하고는 모두 null
+        @SerialName("checkedStateArray") val checkedStateArray: MutableList<Int>? = null // 설문 타입 7을 제외하고는 모두 null
     )
 
     @Serializable
@@ -319,10 +321,11 @@ class CommonUserDefinedObjectSet {
     // QuestionnaireSharedPreferences 에 설문 데이터 결과를 Json String 으로 업데이트하는 함수
 
     fun updateSurveyData(
+        surveyNumber: Int, // 절주 설문지 번호는 금연 설문지(8)에서 연결되기 때문에 80으로 함
+        date: String,
         results: MutableList<Int>,
         comment: String? = null,
-        surveyNumber: Int,
-        date: String,
+        checkedStateArray: MutableList<Int>? = null
     ) {
 
         // sharedPreferences 를 ApplicationClass 에서 가져옴
@@ -357,8 +360,12 @@ class CommonUserDefinedObjectSet {
                     obtainedOneDateSurveyData.surveyData?.get(surveyNumber)
 
                 val updateOneSurveyResult =
-                    obtainedOneSurveyResult?.copy(results = results, comment = comment)
-                        ?: OneSurveyResult(results, comment)
+                    obtainedOneSurveyResult?.copy(
+                        results = results,
+                        comment = comment,
+                        checkedStateArray = checkedStateArray
+                    )
+                        ?: OneSurveyResult(results, comment, checkedStateArray)
 
                 // 해당 번호의 설문 데이터가 있을 때를 가정하고 있기 때문에 null safe 가 아닌 non null 처리함.
                 // 명시해주길 코틀린이 바라고 있었음.
@@ -383,7 +390,7 @@ class CommonUserDefinedObjectSet {
 
             } else {
 
-                val updateOneSurveyData = OneSurveyResult(results, comment)
+                val updateOneSurveyData = OneSurveyResult(results, comment, checkedStateArray)
                 val updateOneDateSurveyData =
                     OneDateSurveyData(mapOf(surveyNumber to updateOneSurveyData))
 
@@ -405,7 +412,7 @@ class CommonUserDefinedObjectSet {
 
         } else {
 
-            val updateOneSurveyData = OneSurveyResult(results, comment)
+            val updateOneSurveyData = OneSurveyResult(results, comment, checkedStateArray)
             val updateOneDateSurveyData =
                 OneDateSurveyData(mapOf(surveyNumber to updateOneSurveyData))
             val updateOneUserSurveyData = OneUserSurveyData(mapOf(date to updateOneDateSurveyData))
@@ -424,7 +431,7 @@ class CommonUserDefinedObjectSet {
 
     fun getOneSurveyResults(
         surveyNumber: Int,
-        date: String,
+        date: String
     ): OneSurveyResult? {
 
         // sharedPreferences 를 ApplicationClass 에서 가져옴
@@ -546,11 +553,14 @@ class CommonUserDefinedObjectSet {
     }
 
     // 설문 완료 버튼을 기능과 함께 활성화하는 함수
+    // 1번 설문을 제외한 설문지에서 사용
 
     fun submitButtonOn(
         context: Context,
-        textView: androidx.appcompat.widget.AppCompatTextView,
-        responseSequence: Array<Int?>
+        textView: AppCompatTextView,
+        surveyNumber: Int,
+        responseSequence: Array<Int?>,
+        checkedStateArray: Array<Int>? = null
     ) {
         textView.background = getSubmitButtonDrawable(context)
 
@@ -607,12 +617,23 @@ class CommonUserDefinedObjectSet {
 
                         val intent = Intent(context, QuestionnaireMainPage::class.java)
 
-                        updateSurveyData(
-                            responseSequence.filterNotNull().toMutableList(),
-                            null,
-                            2,
-                            dateToday
-                        )
+                        checkedStateArray?.let {
+                            updateSurveyData(
+                                surveyNumber,
+                                dateToday,
+                                responseSequence.filterNotNull().toMutableList(),
+                                null,
+                                checkedStateArray.toMutableList()
+                            )
+                        } ?: run {
+                            updateSurveyData(
+                                surveyNumber,
+                                dateToday,
+                                responseSequence.filterNotNull().toMutableList(),
+                                null,
+                                null
+                            )
+                        }
 
                         context.startActivity(intent)
 
@@ -664,6 +685,7 @@ class CommonUserDefinedObjectSet {
     }
 
     // 설문 페이지 액티비티 전체에 대해서 기능을 모두 구현하는 함수 생성
+    // 1번 설문을 제외한 설문지에서 사용
 
     fun questionnaireActivityFunction(
         context: AppCompatActivity,
@@ -675,7 +697,11 @@ class CommonUserDefinedObjectSet {
         toPreviousPage: AppCompatTextView,
         toNextPage: AppCompatTextView,
         submitButton: AppCompatTextView,
-        responseSequence: Array<Int?>
+        surveyNumber: Int,
+        responseSequence: Array<Int?>,
+        checkedStateArray: Array<Int>? = null, // 7번 설문지 13번 질문을 위한 파라미터
+        switchActivityPageIndex: Int? = null, // 8번 설문지에서 절주 습관 평가 설문지로 전환하기 위한 파라미터
+        newActivityName: String? = null // 8번 설문지에서 전환에 필요한 새로운 절주 습관 액티비티 클래스 명 = 클래스 풀 네임을 적어야 함
     ) {
 
         // frameLayoutID = R.id.pageFrame 라는 코드를 함수 외부에서 작성해서 가져올 것
@@ -692,29 +718,54 @@ class CommonUserDefinedObjectSet {
             val currentPageIndex = pageSequence.indexOf(currentPage)
             val currentPageNumber = currentPageIndex + 1
 
-            if (currentPageNumber in 1 until pageSequence.size) {
+            if (switchActivityPageIndex == null || responseSequence[switchActivityPageIndex] != 0) {
+                if (currentPageNumber in 1 until pageSequence.size) {
 
-                val nextPage = pageSequence[currentPageIndex + 1]
-                context.supportFragmentManager.beginTransaction().replace(frameLayoutID, nextPage)
-                    .commitNow()
-                pageBarLengthSetting(
-                    pageBar,
-                    presentPageBar,
-                    currentPageNumber + 1,
-                    pageSequence.size
-                )
-                pageNumberBoxSetting(pageNumberBox, currentPageNumber + 1, pageSequence.size)
+                    val nextPage = pageSequence[currentPageIndex + 1]
+                    context.supportFragmentManager.beginTransaction()
+                        .replace(frameLayoutID, nextPage)
+                        .commitNow()
+                    pageBarLengthSetting(
+                        pageBar,
+                        presentPageBar,
+                        currentPageNumber + 1,
+                        pageSequence.size
+                    )
+                    pageNumberBoxSetting(pageNumberBox, currentPageNumber + 1, pageSequence.size)
 
-                if (currentPageIndex == 0) {
-                    buttonDrawableOn(context, toPreviousPage, -1)
+                    if (currentPageIndex == 0) {
+                        buttonDrawableOn(context, toPreviousPage, -1)
+                    }
+
+                    if (currentPageNumber + 1 == pageSequence.size) {
+
+                        submitButtonOn(
+                            context,
+                            submitButton,
+                            surveyNumber,
+                            responseSequence,
+                            checkedStateArray
+                        )
+
+                        buttonDrawableOff(toNextPage)
+                    }
+
                 }
+            } else if (switchActivityPageIndex + 1 in 1 until pageSequence.size) {
 
-                if (currentPageNumber + 1 == pageSequence.size) {
-                    submitButtonOn(context, submitButton, responseSequence)
-                    buttonDrawableOff(toNextPage)
+                if (currentPageIndex == switchActivityPageIndex && responseSequence[switchActivityPageIndex] == 0) {
+
+                    val newActivity =
+                        newActivityName?.let { name ->
+                            Class.forName(name)
+                        } // switchActivityPageIndex 를 적었으면 반드시 newActivityName 를 작성했을 것
+
+                    val intentToSwitchActivity = Intent(context, newActivity)
+                    context.startActivity(intentToSwitchActivity)
                 }
 
             }
+
         }
 
         toPreviousPage.setOnClickListener {

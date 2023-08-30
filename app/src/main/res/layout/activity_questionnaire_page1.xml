@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QuestionnaireMainPage">
+    tools:context=".org.techtown.handtxver1.questionnaires.QuestionnaireMainPage">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
@@ -50,12 +50,13 @@
                     android:layout_height="70dp"
                     android:layout_weight="1">
 
-                    <TextView
+                    <RadioButton
                         android:id="@+id/qTypeCheckBox1"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/questionnaire_check_box_unclicked"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/qTypeBox1"
@@ -87,12 +88,13 @@
                     android:layout_height="70dp"
                     android:layout_weight="1">
 
-                    <TextView
+                    <RadioButton
                         android:id="@+id/qTypeCheckBox2"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/questionnaire_check_box_unclicked"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/qTypeBox2"
@@ -124,12 +126,13 @@
                     android:layout_height="70dp"
                     android:layout_weight="1">
 
-                    <TextView
+                    <RadioButton
                         android:id="@+id/qTypeCheckBox3"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/questionnaire_check_box_unclicked"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/qTypeBox3"
@@ -161,12 +164,13 @@
                     android:layout_height="70dp"
                     android:layout_weight="1">
 
-                    <TextView
+                    <RadioButton
                         android:id="@+id/qTypeCheckBox4"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/questionnaire_check_box_unclicked"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/qTypeBox4"
@@ -198,12 +202,13 @@
                     android:layout_height="70dp"
                     android:layout_weight="1">
 
-                    <TextView
+                    <RadioButton
                         android:id="@+id/qTypeCheckBox5"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/questionnaire_check_box_unclicked"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/qTypeBox5"
@@ -235,12 +240,13 @@
                     android:layout_height="70dp"
                     android:layout_weight="1">
 
-                    <TextView
+                    <RadioButton
                         android:id="@+id/qTypeCheckBox6"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/questionnaire_check_box_unclicked"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/qTypeBox6"
@@ -272,12 +278,13 @@
                     android:layout_height="70dp"
                     android:layout_weight="1">
 
-                    <TextView
+                    <RadioButton
                         android:id="@+id/qTypeCheckBox7"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/questionnaire_check_box_unclicked"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/qTypeBox7"
@@ -309,12 +316,13 @@
                     android:layout_height="70dp"
                     android:layout_weight="1">
 
-                    <TextView
+                    <RadioButton
                         android:id="@+id/qTypeCheckBox8"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/questionnaire_check_box_unclicked"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/qTypeBox8"
