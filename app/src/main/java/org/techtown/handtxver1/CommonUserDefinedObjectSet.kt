@@ -5,10 +5,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.support.v4.os.IResultReceiver
 import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AlignmentSpan
+import android.util.Log
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -26,6 +28,17 @@ import kotlinx.serialization.json.JsonNull.content
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.SharedDateViewModel
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.drinking.DrinkingQuestionnaire
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type2.QuestionnaireType2
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type3.QuestionnaireType3
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type4.QuestionnaireType4
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type5.QuestionnaireType5
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type6.QuestionnaireType6
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type7.QuestionnaireType7
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type8.QuestionnaireType8
+import org.techtown.handtxver1.questionnaires.type10.QuestionnaireType10
+import org.techtown.handtxver1.questionnaires.type9.QuestionnaireType9
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -70,8 +83,10 @@ class CommonUserDefinedObjectSet {
     @Serializable
     data class OneSurveyResult(
         @SerialName("results") val results: MutableList<Int>? = null,
-        @SerialName("comment") val comment: String? = null, // 설문 타입 1을 제외하고는 모두 null
-        @SerialName("checkedStateArray") val checkedStateArray: MutableList<Int>? = null // 설문 타입 7을 제외하고는 모두 null
+        @SerialName("issueComment") val issueComment: String? = null, // 설문 타입 1을 제외하고는 모두 null
+        @SerialName("checkedStateArray") val checkedStateArray: MutableList<Int>? = null, // 설문 타입 7을 제외하고는 모두 null
+        @SerialName("snackType") val snackType: String? = null, // 설문 타입 10을 제외하고는 모두 null
+        @SerialName("snackConsumedNumber") val snackConsumedNumber: Int? = null // 설문 타입 10을 제외하고는 모두 null
     )
 
     @Serializable
@@ -324,8 +339,10 @@ class CommonUserDefinedObjectSet {
         surveyNumber: Int, // 절주 설문지 번호는 금연 설문지(8)에서 연결되기 때문에 80으로 함
         date: String,
         results: MutableList<Int>,
-        comment: String? = null,
-        checkedStateArray: MutableList<Int>? = null
+        issueComment: String? = null,
+        checkedStateArray: MutableList<Int>? = null,
+        snackType: String? = null,
+        snackConsumedNumber: Int? = null
     ) {
 
         // sharedPreferences 를 ApplicationClass 에서 가져옴
@@ -362,10 +379,18 @@ class CommonUserDefinedObjectSet {
                 val updateOneSurveyResult =
                     obtainedOneSurveyResult?.copy(
                         results = results,
-                        comment = comment,
-                        checkedStateArray = checkedStateArray
+                        issueComment = issueComment,
+                        checkedStateArray = checkedStateArray,
+                        snackType = snackType,
+                        snackConsumedNumber = snackConsumedNumber
                     )
-                        ?: OneSurveyResult(results, comment, checkedStateArray)
+                        ?: OneSurveyResult(
+                            results,
+                            issueComment,
+                            checkedStateArray,
+                            snackType,
+                            snackConsumedNumber
+                        )
 
                 // 해당 번호의 설문 데이터가 있을 때를 가정하고 있기 때문에 null safe 가 아닌 non null 처리함.
                 // 명시해주길 코틀린이 바라고 있었음.
@@ -390,7 +415,13 @@ class CommonUserDefinedObjectSet {
 
             } else {
 
-                val updateOneSurveyData = OneSurveyResult(results, comment, checkedStateArray)
+                val updateOneSurveyData = OneSurveyResult(
+                    results,
+                    issueComment,
+                    checkedStateArray,
+                    snackType,
+                    snackConsumedNumber
+                )
                 val updateOneDateSurveyData =
                     OneDateSurveyData(mapOf(surveyNumber to updateOneSurveyData))
 
@@ -412,7 +443,13 @@ class CommonUserDefinedObjectSet {
 
         } else {
 
-            val updateOneSurveyData = OneSurveyResult(results, comment, checkedStateArray)
+            val updateOneSurveyData = OneSurveyResult(
+                results,
+                issueComment,
+                checkedStateArray,
+                snackType,
+                snackConsumedNumber
+            )
             val updateOneDateSurveyData =
                 OneDateSurveyData(mapOf(surveyNumber to updateOneSurveyData))
             val updateOneUserSurveyData = OneUserSurveyData(mapOf(date to updateOneDateSurveyData))
@@ -560,7 +597,9 @@ class CommonUserDefinedObjectSet {
         textView: AppCompatTextView,
         surveyNumber: Int,
         responseSequence: Array<Int?>,
-        checkedStateArray: Array<Int>? = null
+        checkedStateArray: Array<Int>? = null,
+        snackType: String? = null,
+        snackConsumedNumber: Int? = null
     ) {
         textView.background = getSubmitButtonDrawable(context)
 
@@ -609,6 +648,10 @@ class CommonUserDefinedObjectSet {
                     messageBuilder.append("${i + 1}번 : $response\n")
                 }
 
+                Log.d("tracking1", "${responseSequence.toMutableList()}")
+                Log.d("tracking1", "$snackType")
+                Log.d("tracking1", "$snackConsumedNumber")
+
                 val dialogOfResponses = AlertDialog.Builder(context)
                     .setTitle("응답한 내용")
                     .setMessage(messageBuilder.toString())
@@ -617,23 +660,18 @@ class CommonUserDefinedObjectSet {
 
                         val intent = Intent(context, QuestionnaireMainPage::class.java)
 
-                        checkedStateArray?.let {
-                            updateSurveyData(
-                                surveyNumber,
-                                dateToday,
-                                responseSequence.filterNotNull().toMutableList(),
-                                null,
-                                checkedStateArray.toMutableList()
-                            )
-                        } ?: run {
-                            updateSurveyData(
-                                surveyNumber,
-                                dateToday,
-                                responseSequence.filterNotNull().toMutableList(),
-                                null,
-                                null
-                            )
-                        }
+                        Log.d("tracking2", "$snackType")
+                        Log.d("tracking2", "$snackConsumedNumber")
+
+                        updateSurveyData(
+                            surveyNumber,
+                            dateToday,
+                            responseSequence.filterNotNull().toMutableList(),
+                            null,
+                            checkedStateArray?.toMutableList(),
+                            snackType,
+                            snackConsumedNumber
+                        )
 
                         context.startActivity(intent)
 
@@ -701,7 +739,9 @@ class CommonUserDefinedObjectSet {
         responseSequence: Array<Int?>,
         checkedStateArray: Array<Int>? = null, // 7번 설문지 13번 질문을 위한 파라미터
         switchActivityPageIndex: Int? = null, // 8번 설문지에서 절주 습관 평가 설문지로 전환하기 위한 파라미터
-        newActivityName: String? = null // 8번 설문지에서 전환에 필요한 새로운 절주 습관 액티비티 클래스 명 = 클래스 풀 네임을 적어야 함
+        newSurveyNumber: Int? = null, // 8번 설문지에서 전환에 필요한 새로운 절주 습관 액티비티 클래스 명 = 클래스 풀 네임을 적어야 함 -> 풀 네임을 적지 않고 코드 번호만 입력하도록 코드를 수정
+        snackType: String? = null, // 11번 설문지에서 필요
+        snackConsumedNumber: Int? = null // 11번 설문지에서 필요
     ) {
 
         // frameLayoutID = R.id.pageFrame 라는 코드를 함수 외부에서 작성해서 가져올 것
@@ -744,8 +784,12 @@ class CommonUserDefinedObjectSet {
                             submitButton,
                             surveyNumber,
                             responseSequence,
-                            checkedStateArray
+                            checkedStateArray,
+                            snackType,
+                            snackConsumedNumber
                         )
+
+                        Log.d("tracking", "$snackType")
 
                         buttonDrawableOff(toNextPage)
                     }
@@ -755,13 +799,33 @@ class CommonUserDefinedObjectSet {
 
                 if (currentPageIndex == switchActivityPageIndex && responseSequence[switchActivityPageIndex] == 0) {
 
-                    val newActivity =
-                        newActivityName?.let { name ->
-                            Class.forName(name)
-                        } // switchActivityPageIndex 를 적었으면 반드시 newActivityName 를 작성했을 것
+                    val intent1 = Intent(context, QuestionnaireType1::class.java)
+                    val intent2 = Intent(context, QuestionnaireType2::class.java)
+                    val intent3 = Intent(context, QuestionnaireType3::class.java)
+                    val intent4 = Intent(context, QuestionnaireType4::class.java)
+                    val intent5 = Intent(context, QuestionnaireType5::class.java)
+                    val intent6 = Intent(context, QuestionnaireType6::class.java)
+                    val intent7 = Intent(context, QuestionnaireType7::class.java)
+                    val intent8 = Intent(context, QuestionnaireType8::class.java)
+                    val intent80 = Intent(context, DrinkingQuestionnaire::class.java)
+                    val intent9 = Intent(context, QuestionnaireType9::class.java)
+                    val intent10= Intent(context, QuestionnaireType10::class.java)
 
-                    val intentToSwitchActivity = Intent(context, newActivity)
-                    context.startActivity(intentToSwitchActivity)
+                    val intentMap = mapOf<Int, Intent>(
+                        1 to intent1,
+                        2 to intent2,
+                        3 to intent3,
+                        4 to intent4,
+                        5 to intent5,
+                        6 to intent6,
+                        7 to intent7,
+                        8 to intent8,
+                        80 to intent80,
+                        9 to intent9,
+                        10 to intent10
+                    )
+
+                    context.startActivity(intentMap[newSurveyNumber]!!)
                 }
 
             }

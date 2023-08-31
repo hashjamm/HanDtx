@@ -75,6 +75,8 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_pages_radio_button_color_selector.xml" value="0.3515" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_pages_radio_button_selector.xml" value="0.1425" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background1.xml" value="0.19" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background10.xml" value="0.3005" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background11.xml" value="0.3005" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background2.xml" value="0.19" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background3.xml" value="0.19" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background4.xml" value="0.19" />
@@ -82,6 +84,7 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background6.xml" value="0.19" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background7.xml" value="0.19" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background8.xml" value="0.1145" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/questionnaire_type_button_background9.xml" value="0.3005" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/reverse_triangle.xml" value="0.2125" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/right_arrow.xml" value="0.2125" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/round_rectangle_gray.xml" value="0.2125" />
@@ -131,6 +134,7 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_previous_main_menu.xml" value="0.29375" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_page1.xml" value="0.4942857142857143" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_type1.xml" value="0.30625" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_type10.xml" value="0.51875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_type1_page1.xml" value="0.49140625" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_type2.xml" value="0.49765625" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_type2_page1.xml" value="0.45666666666666667" />
@@ -140,6 +144,7 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_type6.xml" value="0.51875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_type7.xml" value="0.30510752688172044" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_type8.xml" value="0.49765625" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_questionnaire_type9.xml" value="0.51875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_quetionnaire_type3.xml" value="0.3125" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_quetionnaire_type7.xml" value="0.49765625" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_side_bar.xml" value="0.5" />
@@ -168,6 +173,17 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_emotion_diary_each_date_record3.xml" value="0.47109375" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_main_menu.xml" value="0.50859375" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_page_changer_type1.xml" value="0.49765625" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page1.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page10.xml" value="0.49296875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page11.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page2.xml" value="0.5053475935828877" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page3.xml" value="0.49296875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page4.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page5.xml" value="0.49296875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page6.xml" value="0.49296875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page7.xml" value="0.49296875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page8.xml" value="0.49296875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type10_content_page9.xml" value="0.51875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type2_content_page1.xml" value="0.3472803347280335" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type2_content_page10.xml" value="0.5" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type2_content_page2.xml" value="0.471875" />
@@ -233,6 +249,16 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type8_content_page7.xml" value="0.49765625" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type8_content_page8.xml" value="0.49765625" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type8_content_page9.xml" value="0.48324022346368717" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page1.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page10.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page2.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page3.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page4.xml" value="0.49296875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page5.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page6.xml" value="0.49296875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page7.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page8.xml" value="0.49296875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page9.xml" value="0.51875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type_content_page7.xml" value="0.49296875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_un_clicked_emotion_date_record_window.xml" value="0.50859375" />
       </map>

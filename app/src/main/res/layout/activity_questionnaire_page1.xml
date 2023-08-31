@@ -347,6 +347,120 @@
 
             </TableRow>
 
+            <TableRow>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1">
+
+                    <RadioButton
+                        android:id="@+id/qTypeCheckBox9"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/qTypeBox9"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/qTypeBox9"
+                        android:layout_width="300dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/questionnaire_type_button_background9"
+                        android:gravity="center_vertical|left"
+                        android:paddingLeft="10dp"
+                        android:text="건강관리 문진표 (스트레스)"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/qTypeCheckBox9"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </TableRow>
+
+            <TableRow>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1">
+
+                    <RadioButton
+                        android:id="@+id/qTypeCheckBox10"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/qTypeBox10"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/qTypeBox10"
+                        android:layout_width="300dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/questionnaire_type_button_background10"
+                        android:gravity="center_vertical|left"
+                        android:paddingLeft="10dp"
+                        android:text="건강관리 문진표 (영양)"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/qTypeCheckBox10"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </TableRow>
+
+            <TableRow>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1">
+
+                    <RadioButton
+                        android:id="@+id/qTypeCheckBox11"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                        android:button="@null"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/qTypeBox11"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/qTypeBox11"
+                        android:layout_width="300dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/questionnaire_type_button_background11"
+                        android:gravity="center_vertical|left"
+                        android:paddingLeft="10dp"
+                        android:text="건강관리 문진표 종합 결과"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/qTypeCheckBox11"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </TableRow>
+
         </TableLayout>
 
     </ScrollView>

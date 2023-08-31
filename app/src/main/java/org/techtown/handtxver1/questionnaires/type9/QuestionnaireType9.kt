@@ -1,4 +1,4 @@
-package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type8
+package org.techtown.handtxver1.questionnaires.type9
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -6,17 +6,18 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type9.ViewModelForQType9
 
-class QuestionnaireType8 : AppCompatActivity() {
+class QuestionnaireType9 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_questionnaire_type8)
+        setContentView(R.layout.activity_questionnaire_type9)
 
         // CommonUserDefinedObjectSet 클래스 인스턴스 생성
         val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
 
         // ViewModel 에 접근 및 로딩
-        val viewModel = ViewModelProvider(this).get(ViewModelForQType8::class.java)
+        val viewModel = ViewModelProvider(this).get(ViewModelForQType9::class.java)
 
         val presentPageBar =
             findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.presentPageBar)
@@ -29,18 +30,19 @@ class QuestionnaireType8 : AppCompatActivity() {
         val submitButton =
             findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.submitButton)
 
-        val page1 = QType8ContentPage1()
-        val page2 = QType8ContentPage2()
-        val page3 = QType8ContentPage3()
-        val page4 = QType8ContentPage4()
-        val page5 = QType8ContentPage5()
-        val page6 = QType8ContentPage6()
-        val page7 = QType8ContentPage7()
-        val page8 = QType8ContentPage8()
-        val page9 = QType8ContentPage9()
+        val page1 = QType9ContentPage1()
+        val page2 = QType9ContentPage2()
+        val page3 = QType9ContentPage3()
+        val page4 = QType9ContentPage4()
+        val page5 = QType9ContentPage5()
+        val page6 = QType9ContentPage6()
+        val page7 = QType9ContentPage7()
+        val page8 = QType9ContentPage8()
+        val page9 = QType9ContentPage9()
+        val page10 = QType9ContentPage10()
 
         val pageSequence = arrayOf(
-            page1, page2, page3, page4, page5, page6, page7, page8, page9
+            page1, page2, page3, page4, page5, page6, page7, page8, page9, page10
         )
 
         val frameLayoutID = R.id.pageFrame
@@ -57,15 +59,9 @@ class QuestionnaireType8 : AppCompatActivity() {
             toPreviousPage,
             toNextPage,
             submitButton,
-            8,
-            responseSequence,
-            null,
-            0,
-            80
+            9,
+            responseSequence
         )
+
     }
 }
-
-
-
-

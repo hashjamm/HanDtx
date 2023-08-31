@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.CheckBox
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
@@ -110,6 +111,7 @@ class QuestionnaireType1 : AppCompatActivity() {
             findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.submitButton)
 
         submitButton.setOnClickListener {
+
             val intent = Intent(this, QuestionnaireMainPage::class.java)
 
             val checkBoxText = editTextBox.text.toString()
@@ -120,6 +122,8 @@ class QuestionnaireType1 : AppCompatActivity() {
                 surveyResults,
                 checkBoxText
             )
+
+            Toast.makeText(this, "설문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
 
             startActivity(intent)
 
@@ -188,51 +192,8 @@ class QuestionnaireType1 : AppCompatActivity() {
 
         }
 
-
-        checkBoxes.forEachIndexed { index, checkBox ->
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    surveyResults[index] = 1
-                } else {
-                    surveyResults[index] = 0
-                }
-            }
-        }
-
-        editTextBox.addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            // 우리는 Text 가 입력되는 동안, text 입력 여부를 바탕으로 체크박스 체트 상태를 동적으로 변경
-            // 또한 commonUserDefinedObject 의 oneSurveyResult 데이터 클래스의 내용을 업데이트
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-                checkBoxes[21].isChecked = !p0.isNullOrEmpty()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-        })
-
-        val submitButton =
-            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.submitButton)
-
-        submitButton.setOnClickListener {
-            val intent = Intent(this, QuestionnaireMainPage::class.java)
-            startActivity(intent)
-
-            val checkBoxText = editTextBox.text.toString()
-            commonUserDefinedObjectSet.updateSurveyData(
-                1,
-                commonUserDefinedObjectSet.dateToday,
-                surveyResults,
-                checkBoxText
-            )
-        }
+        // 리스너의 경우, onResume과 onCreate 모두에 적혀있을 경우 리스너 충돌 문제가 발생할 수 있음.
+        // 필요한 경우에만 작성해주도록 하자.
 
     }
 
