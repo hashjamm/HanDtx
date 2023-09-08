@@ -1,8 +1,6 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.emotionDiary
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +11,9 @@ import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEmotionDiaryChart2Binding
-import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
+import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
 import java.util.*
 
 /**
@@ -33,7 +32,7 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
     // SharedPreferences 추가 내용 : 일별기록부분에서 날짜 각각에 대하여 입력한 내용또한 저장해야하는 것으로 나타남
     // 이에 따라, 날짜를 key 로, 사용자가 입력한 점수(Int)와 일별기록 부분에서 입력한 내용(String)을 json 포맷으로 묶어둔 문자열을 value 로 갖도록 설정
 
-    private lateinit var sharedPreferences: SharedPreferences
+    val sharedPreferences = ApplicationClass.emotionDiarySharedPreferences
 
     // sharedPreferences 에 넣어줄 데이터 클래스 선언. score 와 inputString 두 개를 하나로 묶어서 가지고 있도록 설정.
     // JSON 직렬화 가능하도록 해당 클래스를 설정
@@ -55,7 +54,7 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
 
     // CommonUserDefinedObjectSet 클래스 인스턴스를 생성하고, 해당 클래스에 보관하는 함수들과 데이터를 사용할 준비
 
-    private val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
+    private val objectSet = EmotionDiaryUserDefinedObjectSet()
 
     // textView 내부의 날짜 부분을 key 로 갖는 value 가 sharedPreferences 에 등록이 되어있는 경우
     // 그래프를 해당 값에 맞게 구현해주는 코드 작성
@@ -104,12 +103,6 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
         // 뒤에 updateTextView 메서드 구현
         updateTextView()
 
-        // SharedPreferences 인스턴스를 생성함
-        // 프래그먼트 자체에서 requireContext() 메서드를 사용하여 프래그먼트의 Context 를 가져와서 SharedPreferences 를 생성
-        sharedPreferences = requireContext().getSharedPreferences(
-            "EmotionDiarySharedPreferences", Context.MODE_PRIVATE
-        )
-
         // 초기화가 필요할 때만 실행할 것
         // val editor = sharedPreferences.edit()
         // editor.clear()
@@ -134,7 +127,7 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
 
         fun optimizingGraph(menuNum: Int) {
 
-            val score = commonUserDefinedObjectSet.getScore(sharedPreferences, menuNum, viewModel)
+            val score = objectSet.getScore(sharedPreferences, menuNum, viewModel)
 
             if (score != null) {
 
@@ -144,9 +137,9 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
                     binding.radioButtonsBackground.background =
                         ContextCompat.getDrawable(
                             requireContext(),
-                            commonUserDefinedObjectSet.graphBackgroundArray[score]
+                            objectSet.graphBackgroundArray[score]
                         )
-                    binding.howRU.text = commonUserDefinedObjectSet.graphTextArray2[score]
+                    binding.howRU.text = objectSet.graphTextArray2[score]
 
                     // 라디오 그룹 기능 구현
                     radioGroup.forEachIndexed { index, radioButton ->
@@ -226,7 +219,7 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
                         // viewModel 에 업데이트된 날짜를 key 로 갖고, 선택된 점수를 value 로 갖도록 editor 에 데이터 저장
                         // 예) "2023.08.03" : 2
 
-                        commonUserDefinedObjectSet.updateScore(
+                        objectSet.updateScore(
                             index,
                             sharedPreferences,
                             2,
@@ -284,7 +277,7 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
 
         fun optimizingGraph(menuNum: Int) {
 
-            val score = commonUserDefinedObjectSet.getScore(sharedPreferences, menuNum, viewModel)
+            val score = objectSet.getScore(sharedPreferences, menuNum, viewModel)
 
             if (score != null) {
 
@@ -294,9 +287,9 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
                     binding.radioButtonsBackground.background =
                         ContextCompat.getDrawable(
                             requireContext(),
-                            commonUserDefinedObjectSet.graphBackgroundArray[score]
+                            objectSet.graphBackgroundArray[score]
                         )
-                    binding.howRU.text = commonUserDefinedObjectSet.graphTextArray2[score]
+                    binding.howRU.text = objectSet.graphTextArray2[score]
 
                     // 라디오 그룹 기능 구현
                     radioGroup.forEachIndexed { index, radioButton ->

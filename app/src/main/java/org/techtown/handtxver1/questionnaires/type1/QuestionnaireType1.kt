@@ -8,8 +8,8 @@ import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
-import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
+import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 
 class QuestionnaireType1 : AppCompatActivity() {
 
@@ -21,9 +21,8 @@ class QuestionnaireType1 : AppCompatActivity() {
 
     private lateinit var surveyResults: MutableList<Int>
 
-    // CommonUserDefinedObjectSet 데이터 클래스 인스턴스를 가져옴
-
-    private val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
+    // QuestionnaireUserDefinedObjectSet 클래스 인스턴스 생성
+    private val objectSet = QuestionnaireUserDefinedObjectSet()
 
     // sharedPreferences 를 선언만 함 -> 이후에 onCreate 와 onResume 에서 초기화
     // Int 타입인 checkSumChange 는 선언만 해둘 수가 없어서 우선 초기화를 해두었으나 onCreate 와 onResume 에서 다시 초기화해줄 예정
@@ -116,9 +115,9 @@ class QuestionnaireType1 : AppCompatActivity() {
 
             val checkBoxText = editTextBox.text.toString()
 
-            commonUserDefinedObjectSet.updateSurveyData(
+            objectSet.updateSurveyData(
                 1,
-                commonUserDefinedObjectSet.dateToday,
+                objectSet.dateToday,
                 surveyResults,
                 checkBoxText
             )
@@ -166,9 +165,9 @@ class QuestionnaireType1 : AppCompatActivity() {
         val editTextBox = findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.box22_text)
 
         val getSurveyResults =
-            commonUserDefinedObjectSet.getOneSurveyResults(
+            objectSet.getOneSurveyResults(
                 1,
-                commonUserDefinedObjectSet.dateToday
+                objectSet.dateToday
             )?.results
 
         surveyResults =

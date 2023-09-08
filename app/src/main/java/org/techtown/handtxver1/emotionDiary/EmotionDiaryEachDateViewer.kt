@@ -1,9 +1,11 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.emotionDiary
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.ViewModelProvider
+import org.techtown.handtxver1.BottomMenuBar
+import org.techtown.handtxver1.R
 
 class EmotionDiaryEachDateViewer : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

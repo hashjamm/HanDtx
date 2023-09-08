@@ -1,24 +1,19 @@
-package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires
+package org.techtown.handtxver1.questionnaires
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AlignmentSpan
-import android.util.Log
 import android.widget.RadioButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import org.techtown.handtxver1.*
-import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
-import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
+import org.techtown.handtxver1.BottomMenuBar
+import org.techtown.handtxver1.R
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type2.QuestionnaireType2
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type3.QuestionnaireType3
@@ -43,7 +38,7 @@ class QuestionnaireMainPage : AppCompatActivity() {
 //        ApplicationClass.questionnaireSharedPreferences.edit().clear().apply()
 
         // CommonUserDefinedObjectSet 클래스 인스턴스 생성
-        val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
+        val objectSet = QuestionnaireUserDefinedObjectSet()
 
         // 체크상태 표기
 
@@ -74,12 +69,12 @@ class QuestionnaireMainPage : AppCompatActivity() {
         checkBoxes.forEachIndexed { index, buttonBox ->
 
             val typeNumber = index + 1
-            val scoreOfType = commonUserDefinedObjectSet.getOneSurveyResults(typeNumber, commonUserDefinedObjectSet.dateToday)
+            val scoreOfType = objectSet.getOneSurveyResults(typeNumber, objectSet.dateToday)
 
             buttonBox.isEnabled = false
 
             if (typeNumber == 8) {
-                val scoreOfDrinkingQuestionnaire = commonUserDefinedObjectSet.getOneSurveyResults(80, commonUserDefinedObjectSet.dateToday)
+                val scoreOfDrinkingQuestionnaire = objectSet.getOneSurveyResults(80, objectSet.dateToday)
 
                 buttonBox.isChecked = !(scoreOfType == null && scoreOfDrinkingQuestionnaire == null)
             } else {
@@ -232,11 +227,11 @@ class QuestionnaireMainPage : AppCompatActivity() {
         toQuestionnaireArray.forEachIndexed { index, view ->
 
             val surveyNumber = index + 1
-            val date = commonUserDefinedObjectSet.dateToday
+            val date = objectSet.dateToday
 
             val intent = intentMap[surveyNumber]
 
-            val result = commonUserDefinedObjectSet.getOneSurveyResults(surveyNumber, date)
+            val result = objectSet.getOneSurveyResults(surveyNumber, date)
 
             view.setOnClickListener{
 
@@ -249,8 +244,8 @@ class QuestionnaireMainPage : AppCompatActivity() {
                     }
 
                 } else if (surveyNumber == 8) {
-                    val previousSurveyResult = commonUserDefinedObjectSet.getOneSurveyResults(surveyNumber - 1, date)
-                    val drinkingResult = commonUserDefinedObjectSet.getOneSurveyResults(80, date)
+                    val previousSurveyResult = objectSet.getOneSurveyResults(surveyNumber - 1, date)
+                    val drinkingResult = objectSet.getOneSurveyResults(80, date)
 
                     if (result == null && drinkingResult == null) {
 
@@ -267,8 +262,8 @@ class QuestionnaireMainPage : AppCompatActivity() {
                     }
 
                 } else if (surveyNumber == 9) {
-                    val previousSurveyResult = commonUserDefinedObjectSet.getOneSurveyResults(surveyNumber - 1, date)
-                    val drinkingResult = commonUserDefinedObjectSet.getOneSurveyResults(80, date)
+                    val previousSurveyResult = objectSet.getOneSurveyResults(surveyNumber - 1, date)
+                    val drinkingResult = objectSet.getOneSurveyResults(80, date)
 
                     if (result == null) {
 
@@ -289,7 +284,7 @@ class QuestionnaireMainPage : AppCompatActivity() {
                     }
 
                 } else {
-                    val previousSurveyResult = commonUserDefinedObjectSet.getOneSurveyResults(surveyNumber - 1, date)
+                    val previousSurveyResult = objectSet.getOneSurveyResults(surveyNumber - 1, date)
 
                     if (result == null) {
 
@@ -323,7 +318,7 @@ class QuestionnaireMainPage : AppCompatActivity() {
         supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
 
         // CommonUserDefinedObjectSet 클래스 인스턴스 생성
-        val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
+        val objectSet = QuestionnaireUserDefinedObjectSet()
 
         // 체크상태 표기
 
@@ -354,12 +349,12 @@ class QuestionnaireMainPage : AppCompatActivity() {
         checkBoxes.forEachIndexed { index, buttonBox ->
 
             val typeNumber = index + 1
-            val scoreOfType = commonUserDefinedObjectSet.getOneSurveyResults(typeNumber, commonUserDefinedObjectSet.dateToday)
+            val scoreOfType = objectSet.getOneSurveyResults(typeNumber, objectSet.dateToday)
 
             buttonBox.isEnabled = false
 
             if (typeNumber == 8) {
-                val scoreOfDrinkingQuestionnaire = commonUserDefinedObjectSet.getOneSurveyResults(80, commonUserDefinedObjectSet.dateToday)
+                val scoreOfDrinkingQuestionnaire = objectSet.getOneSurveyResults(80, objectSet.dateToday)
 
                 buttonBox.isChecked = !(scoreOfType == null && scoreOfDrinkingQuestionnaire == null)
             } else {

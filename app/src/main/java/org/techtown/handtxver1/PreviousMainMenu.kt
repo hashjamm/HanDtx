@@ -3,6 +3,7 @@ package org.techtown.handtxver1
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
+import org.techtown.handtxver1.emotionDiary.EmotionDiary
 import android.content.Intent as Intent
 
 class PreviousMainMenu : AppCompatActivity() {

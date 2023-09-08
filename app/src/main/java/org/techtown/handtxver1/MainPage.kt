@@ -4,15 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
+import org.techtown.handtxver1.emotionDiary.EmotionDiaryUserDefinedObjectSet
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainPage : AppCompatActivity() {
 
     // 데이터 관련 공통 도구 클래스에 대한 인스턴스 생성
-    private val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
+    private val emotionDiaryUserDefinedObjectSet = EmotionDiaryUserDefinedObjectSet()
 
     // 감정 다이어리 부분 데이터 베이스 인스턴스 선언
     private lateinit var emotionDiarySharedPreferences: SharedPreferences
@@ -33,7 +32,7 @@ class MainPage : AppCompatActivity() {
 
         when (menuNum) {
             1 -> {
-                emotionDiaryScore = commonUserDefinedObjectSet.getScore(
+                emotionDiaryScore = emotionDiaryUserDefinedObjectSet.getScore(
                     emotionDiarySharedPreferences,
                     1,
                     null,
@@ -44,10 +43,10 @@ class MainPage : AppCompatActivity() {
                     findViewById(R.id.emotionDiaryText1)
                 emotionDiaryComplete =
                     findViewById(R.id.emotionDiaryComplete1)
-                graphTextArray = commonUserDefinedObjectSet.graphTextArray1
+                graphTextArray = emotionDiaryUserDefinedObjectSet.graphTextArray1
             }
             2 -> {
-                emotionDiaryScore = commonUserDefinedObjectSet.getScore(
+                emotionDiaryScore = emotionDiaryUserDefinedObjectSet.getScore(
                     emotionDiarySharedPreferences,
                     2,
                     null,
@@ -58,10 +57,10 @@ class MainPage : AppCompatActivity() {
                     findViewById(R.id.emotionDiaryText2)
                 emotionDiaryComplete =
                     findViewById(R.id.emotionDiaryComplete2)
-                graphTextArray = commonUserDefinedObjectSet.graphTextArray2
+                graphTextArray = emotionDiaryUserDefinedObjectSet.graphTextArray2
             }
             3 -> {
-                emotionDiaryScore = commonUserDefinedObjectSet.getScore(
+                emotionDiaryScore = emotionDiaryUserDefinedObjectSet.getScore(
                     emotionDiarySharedPreferences,
                     3,
                     null,
@@ -72,7 +71,7 @@ class MainPage : AppCompatActivity() {
                     findViewById(R.id.emotionDiaryText3)
                 emotionDiaryComplete =
                     findViewById(R.id.emotionDiaryComplete3)
-                graphTextArray = commonUserDefinedObjectSet.graphTextArray3
+                graphTextArray = emotionDiaryUserDefinedObjectSet.graphTextArray3
             }
             else -> {
                 emotionDiaryScore = null

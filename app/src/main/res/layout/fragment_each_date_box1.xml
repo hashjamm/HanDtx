@@ -8,7 +8,7 @@
 
         <variable
             name="each_date_box1_layout"
-            type="org.techtown.handtxver1.EachDateBox1" />
+            type="org.techtown.handtxver1.emotionDiary.EachDateBox1" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat

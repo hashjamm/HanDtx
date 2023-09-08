@@ -1,4 +1,4 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.emotionDiary
 
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
@@ -34,13 +34,13 @@ open class SharedDateViewModel : ViewModel() {
         })
     }
 
-    public fun addDate() {
+    fun addDate() {
         val currentCalendar = date.value
         currentCalendar?.add(Calendar.DAY_OF_YEAR, 1)
         date.value = currentCalendar!!
     }
 
-    public fun substractDate() {
+    fun substractDate() {
         val currentCalendar = date.value
         currentCalendar?.add(Calendar.DAY_OF_YEAR, -1)
         date.value = currentCalendar!!

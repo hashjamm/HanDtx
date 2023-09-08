@@ -1,9 +1,7 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.emotionDiary
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,20 +13,21 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.setMargins
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import org.techtown.handtxver1.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-
 /**
  * A simple [Fragment] subclass.
- * Use the [EmotionDiaryEachDateRecord3.newInstance] factory method to
+ * Use the [EmotionDiaryEachDateRecord1.newInstance] factory method to
  * create an instance of this fragment.
  */
-class EmotionDiaryEachDateRecord3 : Fragment() {
+
+// , View.OnClickListener
+
+class EmotionDiaryEachDateRecord1 : Fragment() {
 
     // 감정다이어리에서 날짜 값을 지정하고 있는 ViewModel 을 EmotionDiaryEachDateViewer 액티비티에서 사용할 수 있도록 하고
     // 본 fragment 에서 date 를 가져옴
@@ -139,9 +138,9 @@ class EmotionDiaryEachDateRecord3 : Fragment() {
 //        val line2BackgroundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.thick_upper_border)
 //        val line3BackgroundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.thick_upper_border)
 
-//        line1.background = lineBackgroundDrawable
+        line1.background = lineBackgroundDrawable
 //        line2.background = lineBackgroundDrawable
-        line3.background = lineBackgroundDrawable
+//        line3.background = lineBackgroundDrawable
 
         // 상단 ConstraintLayout 에 생성된 line 들을 넣어줌
 
@@ -254,7 +253,7 @@ class EmotionDiaryEachDateRecord3 : Fragment() {
             // val eachDateBox1 = EachDateBox1(key, dayOfWeek)
             // val eachDateBox2 = EachDateBox2(key)
 
-            childFragmentManager.beginTransaction().add(frameLayout.id, EachDateBox1(key, dayOfWeek, 3)).commit()
+            childFragmentManager.beginTransaction().add(frameLayout.id, EachDateBox1(key, dayOfWeek, 1)).commit()
 
             // dayLinearLayout 을 누를 때마다 내부의 frameLayout 에 들어오는 Fragment 클래스를 바꿔주는 작업
             // 을 위한 Listener 설정
@@ -273,11 +272,11 @@ class EmotionDiaryEachDateRecord3 : Fragment() {
                 }
 
                 if (currentFragment is EachDateBox1) {
-                    val fragmentToAdd = EachDateBox2(key, 3)
+                    val fragmentToAdd = EachDateBox2(key, 1)
                     childFragmentManager.beginTransaction().add(frameLayout.id, fragmentToAdd)
                         .commit()
                 } else {
-                    val fragmentToAdd = EachDateBox1(key, dayOfWeek, 3)
+                    val fragmentToAdd = EachDateBox1(key, dayOfWeek, 1)
                     childFragmentManager.beginTransaction().add(frameLayout.id, fragmentToAdd)
                         .commit()
                 }

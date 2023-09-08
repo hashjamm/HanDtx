@@ -1,7 +1,9 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.emotionDiary
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import org.techtown.handtxver1.BottomMenuBar
+import org.techtown.handtxver1.R
 
 class EmotionDiaryMenuSetting : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

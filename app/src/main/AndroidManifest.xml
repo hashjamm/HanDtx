@@ -60,14 +60,14 @@
             android:name=".org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1"
             android:exported="false" />
         <activity
-            android:name=".EmotionDiaryEachDateViewer"
+            android:name=".emotionDiary.EmotionDiaryEachDateViewer"
             android:exported="false"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name=".EmotionDiary"
+            android:name=".emotionDiary.EmotionDiary"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.QuestionnaireMainPage"
+            android:name=".questionnaires.QuestionnaireMainPage"
             android:exported="false" />
         <activity
             android:name=".CbtPage1"
@@ -83,7 +83,7 @@
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".EmotionDiaryMenuSetting"
+            android:name=".emotionDiary.EmotionDiaryMenuSetting"
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity

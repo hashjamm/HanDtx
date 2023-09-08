@@ -12,7 +12,8 @@ import android.content.Intent // activity 전환을 위한 Intent 메서드 생�
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.core.content.ContextCompat
-import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
+import org.techtown.handtxver1.emotionDiary.EmotionDiary
+import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 
 /**
  * A simple [Fragment] subclass.

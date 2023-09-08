@@ -8,7 +8,7 @@
 
         <variable
             name="emotion_each_date_record_layout_1"
-            type="org.techtown.handtxver1.EmotionDiaryEachDateRecord1" />
+            type="org.techtown.handtxver1.emotionDiary.EmotionDiaryEachDateRecord1" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

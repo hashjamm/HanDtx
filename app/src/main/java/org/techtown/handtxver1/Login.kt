@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
+import org.techtown.handtxver1.emotionDiary.EmotionDiaryUserDefinedObjectSet
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,7 +52,7 @@ class Login : AppCompatActivity() {
                 val loginTime = loginTimeFormat.format(Calendar.getInstance().time)
 
                 val loginInfo =
-                CommonUserDefinedObjectSet.LoginInfo(
+                EmotionDiaryUserDefinedObjectSet.LoginInfo(
                     userID.text.toString(),
                     userPW.text.toString(),
                     loginTime

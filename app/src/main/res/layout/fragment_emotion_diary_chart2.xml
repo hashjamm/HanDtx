@@ -7,7 +7,7 @@
 
         <variable
             name="emotion_diary_chart_layout_2"
-            type="org.techtown.handtxver1.EmotionDiaryChart2" />
+            type="org.techtown.handtxver1.emotionDiary.EmotionDiaryChart2" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

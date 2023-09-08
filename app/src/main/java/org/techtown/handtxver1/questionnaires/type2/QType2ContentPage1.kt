@@ -9,8 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.ViewModelForQType2
 import org.techtown.handtxver1.databinding.FragmentQType2ContentPage1Binding
+import org.techtown.handtxver1.questionnaires.type2.ViewModelForQType2
 
 
 // TODO: Rename parameter arguments, choose names that match

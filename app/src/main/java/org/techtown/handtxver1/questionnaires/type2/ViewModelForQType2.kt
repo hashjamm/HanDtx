@@ -1,4 +1,4 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.questionnaires.type2
 
 import androidx.lifecycle.ViewModel
 

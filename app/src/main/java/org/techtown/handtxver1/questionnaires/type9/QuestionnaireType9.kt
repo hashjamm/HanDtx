@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type9.ViewModelForQType9
 
 class QuestionnaireType9 : AppCompatActivity() {
@@ -13,8 +13,8 @@ class QuestionnaireType9 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_type9)
 
-        // CommonUserDefinedObjectSet 클래스 인스턴스 생성
-        val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
+        // QuestionnaireUserDefinedObjectSet 클래스 인스턴스 생성
+        val objectSet = QuestionnaireUserDefinedObjectSet()
 
         // ViewModel 에 접근 및 로딩
         val viewModel = ViewModelProvider(this).get(ViewModelForQType9::class.java)
@@ -49,7 +49,7 @@ class QuestionnaireType9 : AppCompatActivity() {
 
         val responseSequence = viewModel.responseSequence
 
-        commonUserDefinedObjectSet.questionnaireActivityFunction(
+        objectSet.questionnaireActivityFunction(
             this,
             frameLayoutID,
             pageSequence,

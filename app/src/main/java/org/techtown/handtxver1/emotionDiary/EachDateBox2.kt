@@ -1,7 +1,5 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.emotionDiary
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,10 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEachDateBox2Binding
-import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
+import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
 import java.util.*
 
 
@@ -32,7 +29,7 @@ class EachDateBox2(val key: String, val menuNum: Int) : Fragment() {
 
     // 감정다이어리에서 생성한 sharedPreferences 에서 날짜에 해당하는 점수를 넘겨받기 위해 해당 파일에 접근
 
-    private lateinit var sharedPreferences: SharedPreferences
+    val sharedPreferences = ApplicationClass.emotionDiarySharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +53,6 @@ class EachDateBox2(val key: String, val menuNum: Int) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // shaeredPreferenes 인스턴스 초기화
-
-        val sharedPreferences = requireContext().getSharedPreferences(
-            "EmotionDiarySharedPreferences", Context.MODE_PRIVATE
-        )
-
         // sharedPreferences 에 이후 초기화될 key 를 바탕으로 값을 올리고 내려받는 함수들을 생성
         // -> CommonUserDefinedObjectSet 에서 가져옴
 
@@ -71,10 +62,10 @@ class EachDateBox2(val key: String, val menuNum: Int) : Fragment() {
 
         // CommonUserDefinedObjectSet 클래스 인스턴스를 생성하고, 해당 클래스에 보관하는 함수들과 데이터를 사용할 준비
 
-        val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
+        val objectSet = EmotionDiaryUserDefinedObjectSet()
 
         binding.inputText.setText(
-            commonUserDefinedObjectSet.getInputText(
+            objectSet.getInputText(
                 sharedPreferences,
                 menuNum,
                 givenKey = key
@@ -89,7 +80,7 @@ class EachDateBox2(val key: String, val menuNum: Int) : Fragment() {
             // 우리는 Text 가 입력되는 동안, 변동되는 모든 text 를 동적으로 sharedPreferences 에 계속 재지정한다.
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                commonUserDefinedObjectSet.updateInputText(
+                objectSet.updateInputText(
                     binding.inputText.text.toString(),
                     sharedPreferences,
                     menuNum,

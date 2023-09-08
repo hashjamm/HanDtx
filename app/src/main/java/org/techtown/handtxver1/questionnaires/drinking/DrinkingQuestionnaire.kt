@@ -1,22 +1,11 @@
 package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.drinking
 
-import android.content.Intent
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Layout
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.AlignmentSpan
-import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 
 class DrinkingQuestionnaire : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +13,7 @@ class DrinkingQuestionnaire : AppCompatActivity() {
         setContentView(R.layout.activity_drinking_questionnaire)
 
         // CommonUserDefinedObjectSet 클래스 인스턴스 생성
-        val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
+        val objectSet = QuestionnaireUserDefinedObjectSet()
 
         // ViewModel 에 접근 및 로딩
         val viewModel = ViewModelProvider(this).get(ViewModelForDrinkingQuestionnaire::class.java)
@@ -59,7 +48,7 @@ class DrinkingQuestionnaire : AppCompatActivity() {
 
         val responseSequence = viewModel.responseSequence
 
-        commonUserDefinedObjectSet.questionnaireActivityFunction(
+        objectSet.questionnaireActivityFunction(
             this,
             frameLayoutID,
             pageSequence,

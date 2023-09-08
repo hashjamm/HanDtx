@@ -1,11 +1,11 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.emotionDiary
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
+import org.techtown.handtxver1.BottomMenuBar
+import org.techtown.handtxver1.R
 
 class EmotionDiary : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.emotionDiary
 
 import androidx.lifecycle.ViewModel
 
