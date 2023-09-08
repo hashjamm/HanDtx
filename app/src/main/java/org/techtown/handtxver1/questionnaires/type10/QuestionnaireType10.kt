@@ -53,55 +53,6 @@ class QuestionnaireType10 : AppCompatActivity() {
 
         val responseSequence = viewModel.responseSequence
 
-
-        viewModel.snackType.observe(this) { newSnackType ->
-            // snackType 의 값이 변경될 때 호출되는 옵저버 블록
-
-            commonUserDefinedObjectSet.questionnaireActivityFunction(
-                this,
-                frameLayoutID,
-                pageSequence,
-                pageBar,
-                presentPageBar,
-                pageNumberBox,
-                toPreviousPage,
-                toNextPage,
-                submitButton,
-                10,
-                responseSequence,
-                null,
-                null,
-                null,
-                newSnackType,
-                viewModel.snackConsumedNumber.value
-            )
-
-        }
-
-        viewModel.snackConsumedNumber.observe(this) { snackConsumedNumber ->
-            // snackConsumedNumber 의 값이 변경될 때 호출되는 옵저버 블록
-
-            commonUserDefinedObjectSet.questionnaireActivityFunction(
-                this,
-                frameLayoutID,
-                pageSequence,
-                pageBar,
-                presentPageBar,
-                pageNumberBox,
-                toPreviousPage,
-                toNextPage,
-                submitButton,
-                10,
-                responseSequence,
-                null,
-                null,
-                null,
-                viewModel.snackType.value,
-                snackConsumedNumber
-            )
-
-        }
-
         commonUserDefinedObjectSet.questionnaireActivityFunction(
             this,
             frameLayoutID,
@@ -117,8 +68,7 @@ class QuestionnaireType10 : AppCompatActivity() {
             null,
             null,
             null,
-            viewModel.snackType.value,
-            viewModel.snackConsumedNumber.value
+            viewModel.snackResponse
         )
 
     }

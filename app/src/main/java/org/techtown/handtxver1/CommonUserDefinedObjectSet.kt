@@ -80,13 +80,19 @@ class CommonUserDefinedObjectSet {
 
     // json String 으로 encoding 하기 위해 데이터를 묶기 위한 데이터 클래스 생성
     // 설문지 부분
+
+    @Serializable
+    data class SnackData(
+        @SerialName("type") val type: String,
+        @SerialName("num") val num: Int
+    )
+
     @Serializable
     data class OneSurveyResult(
         @SerialName("results") val results: MutableList<Int>? = null,
         @SerialName("issueComment") val issueComment: String? = null, // 설문 타입 1을 제외하고는 모두 null
         @SerialName("checkedStateArray") val checkedStateArray: MutableList<Int>? = null, // 설문 타입 7을 제외하고는 모두 null
-        @SerialName("snackType") val snackType: String? = null, // 설문 타입 10을 제외하고는 모두 null
-        @SerialName("snackConsumedNumber") val snackConsumedNumber: Int? = null // 설문 타입 10을 제외하고는 모두 null
+        @SerialName("snackResponse") val snackResponse: SnackData? = null, // 설문 타입 10을 제외하고는 모두 null
     )
 
     @Serializable
@@ -341,8 +347,7 @@ class CommonUserDefinedObjectSet {
         results: MutableList<Int>,
         issueComment: String? = null,
         checkedStateArray: MutableList<Int>? = null,
-        snackType: String? = null,
-        snackConsumedNumber: Int? = null
+        snackResponse: SnackData? = null
     ) {
 
         // sharedPreferences 를 ApplicationClass 에서 가져옴
@@ -381,15 +386,13 @@ class CommonUserDefinedObjectSet {
                         results = results,
                         issueComment = issueComment,
                         checkedStateArray = checkedStateArray,
-                        snackType = snackType,
-                        snackConsumedNumber = snackConsumedNumber
+                        snackResponse = snackResponse
                     )
                         ?: OneSurveyResult(
                             results,
                             issueComment,
                             checkedStateArray,
-                            snackType,
-                            snackConsumedNumber
+                            snackResponse
                         )
 
                 // 해당 번호의 설문 데이터가 있을 때를 가정하고 있기 때문에 null safe 가 아닌 non null 처리함.
@@ -419,8 +422,7 @@ class CommonUserDefinedObjectSet {
                     results,
                     issueComment,
                     checkedStateArray,
-                    snackType,
-                    snackConsumedNumber
+                    snackResponse
                 )
                 val updateOneDateSurveyData =
                     OneDateSurveyData(mapOf(surveyNumber to updateOneSurveyData))
@@ -447,8 +449,7 @@ class CommonUserDefinedObjectSet {
                 results,
                 issueComment,
                 checkedStateArray,
-                snackType,
-                snackConsumedNumber
+                snackResponse
             )
             val updateOneDateSurveyData =
                 OneDateSurveyData(mapOf(surveyNumber to updateOneSurveyData))
@@ -598,8 +599,7 @@ class CommonUserDefinedObjectSet {
         surveyNumber: Int,
         responseSequence: Array<Int?>,
         checkedStateArray: Array<Int>? = null,
-        snackType: String? = null,
-        snackConsumedNumber: Int? = null
+        snackResponse: SnackData? = null
     ) {
         textView.background = getSubmitButtonDrawable(context)
 
@@ -649,8 +649,7 @@ class CommonUserDefinedObjectSet {
                 }
 
                 Log.d("tracking1", "${responseSequence.toMutableList()}")
-                Log.d("tracking1", "$snackType")
-                Log.d("tracking1", "$snackConsumedNumber")
+                Log.d("tracking1", "$snackResponse")
 
                 val dialogOfResponses = AlertDialog.Builder(context)
                     .setTitle("응답한 내용")
@@ -660,8 +659,7 @@ class CommonUserDefinedObjectSet {
 
                         val intent = Intent(context, QuestionnaireMainPage::class.java)
 
-                        Log.d("tracking2", "$snackType")
-                        Log.d("tracking2", "$snackConsumedNumber")
+                        Log.d("tracking2", "$snackResponse")
 
                         updateSurveyData(
                             surveyNumber,
@@ -669,8 +667,7 @@ class CommonUserDefinedObjectSet {
                             responseSequence.filterNotNull().toMutableList(),
                             null,
                             checkedStateArray?.toMutableList(),
-                            snackType,
-                            snackConsumedNumber
+                            snackResponse
                         )
 
                         context.startActivity(intent)
@@ -740,8 +737,7 @@ class CommonUserDefinedObjectSet {
         checkedStateArray: Array<Int>? = null, // 7번 설문지 13번 질문을 위한 파라미터
         switchActivityPageIndex: Int? = null, // 8번 설문지에서 절주 습관 평가 설문지로 전환하기 위한 파라미터
         newSurveyNumber: Int? = null, // 8번 설문지에서 전환에 필요한 새로운 절주 습관 액티비티 클래스 명 = 클래스 풀 네임을 적어야 함 -> 풀 네임을 적지 않고 코드 번호만 입력하도록 코드를 수정
-        snackType: String? = null, // 11번 설문지에서 필요
-        snackConsumedNumber: Int? = null // 11번 설문지에서 필요
+        snackResponse: SnackData? = null // 11번 설문지에서 필요
     ) {
 
         // frameLayoutID = R.id.pageFrame 라는 코드를 함수 외부에서 작성해서 가져올 것
@@ -785,11 +781,10 @@ class CommonUserDefinedObjectSet {
                             surveyNumber,
                             responseSequence,
                             checkedStateArray,
-                            snackType,
-                            snackConsumedNumber
+                            snackResponse
                         )
 
-                        Log.d("tracking", "$snackType")
+                        Log.d("tracking", "$snackResponse")
 
                         buttonDrawableOff(toNextPage)
                     }

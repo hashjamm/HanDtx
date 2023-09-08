@@ -266,6 +266,28 @@ class QuestionnaireMainPage : AppCompatActivity() {
                         startActivityWithAlert(intent!!)
                     }
 
+                } else if (surveyNumber == 9) {
+                    val previousSurveyResult = commonUserDefinedObjectSet.getOneSurveyResults(surveyNumber - 1, date)
+                    val drinkingResult = commonUserDefinedObjectSet.getOneSurveyResults(80, date)
+
+                    if (result == null) {
+
+                        if (previousSurveyResult == null && drinkingResult == null) {
+                            startActivityWithAlert(intent!!, false, surveyNumber)
+                        } else {
+                            startActivity(intent)
+                        }
+
+                    } else if (previousSurveyResult == null){
+
+                        startActivityWithAlert(intent!!, false, surveyNumber)
+
+                    } else {
+
+                        startActivityWithAlert(intent!!)
+
+                    }
+
                 } else {
                     val previousSurveyResult = commonUserDefinedObjectSet.getOneSurveyResults(surveyNumber - 1, date)
 

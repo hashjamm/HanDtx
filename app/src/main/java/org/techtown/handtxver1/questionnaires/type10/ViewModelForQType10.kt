@@ -3,6 +3,7 @@ package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type10
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
 
 class ViewModelForQType10 : ViewModel() {
 
@@ -29,20 +30,13 @@ class ViewModelForQType10 : ViewModel() {
         responseSequence[questionNumber - 1] = null
     }
 
-    private val _snackType: MutableLiveData<String> = MutableLiveData("")
-    val snackType: LiveData<String>
-        get() = _snackType
+    var snackResponse: CommonUserDefinedObjectSet.SnackData = CommonUserDefinedObjectSet.SnackData("", 0)
 
-    fun updateSnackType(snackType: String) {
-        _snackType.value = snackType
-    }
-
-    private val _snackConsumedNumber: MutableLiveData<Int> = MutableLiveData(0)
-    val snackConsumedNumber: LiveData<Int>
-        get() = _snackConsumedNumber
-
-    fun updateSnackConsumedNumber(snackConsumedNumber: Int) {
-        _snackConsumedNumber.value = snackConsumedNumber
+    fun updateSnackResponse(
+        type: String,
+        num: Int
+    ) {
+        snackResponse = snackResponse.copy(type = type, num = num)
     }
 
 }

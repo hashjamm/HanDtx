@@ -108,7 +108,7 @@ class BottomMenuBar(private var presentMenuElementNumber: Int = 0) : Fragment(),
                 startActivity(intentMenuElement2)
             }
             R.id.menuBarElement3 -> {
-                val intentMenuElement3 = Intent(requireActivity(), MyDataLoading::class.java)
+                val intentMenuElement3 = Intent(requireActivity(), MainPage::class.java)
                 startActivity(intentMenuElement3)
             }
             R.id.menuBarElement4 -> {

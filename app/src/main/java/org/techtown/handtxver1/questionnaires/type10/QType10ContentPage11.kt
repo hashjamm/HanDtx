@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentQType10ContentPage11Binding
+import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type10.ViewModelForQType10
 
 class QType10ContentPage11 : Fragment() {
@@ -19,6 +20,8 @@ class QType10ContentPage11 : Fragment() {
     private lateinit var binding: FragmentQType10ContentPage11Binding
 
     private val viewModel: ViewModelForQType10 by activityViewModels()
+
+    val snackDataSharedPreferences = ApplicationClass.snackDataSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +58,9 @@ class QType10ContentPage11 : Fragment() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-                val updateValue = if (p0.isNullOrEmpty()) null else p0.toString()
+                viewModel.updateSnackResponse(p0.toString(), viewModel.snackResponse.num)
 
-                if (updateValue != null) {viewModel.updateSnackType(updateValue)}
-
-                if (viewModel.snackType.value == "" || viewModel.snackConsumedNumber.value == 0) {
+                if (viewModel.snackResponse.type == "" || viewModel.snackResponse.num == 0) {
                     viewModel.initializingResponse(11)
                 } else {
                     viewModel.updateResponse(11, 1)
@@ -82,12 +83,16 @@ class QType10ContentPage11 : Fragment() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val text = p0.toString()
-                val intValue = text.toIntOrNull()
+                val intValue = if (text == "") {
+                    0
+                } else {
+                    text.toInt()
+                }
                 // viewModel.snackConsumedNumber = intValue
 
-                if (intValue != null) {viewModel.updateSnackConsumedNumber(intValue)}
+                viewModel.updateSnackResponse(viewModel.snackResponse.type, intValue)
 
-                if (viewModel.snackType.value == "" || viewModel.snackConsumedNumber.value == 0) {
+                if (viewModel.snackResponse.type == "" || viewModel.snackResponse.num == 0) {
                     viewModel.initializingResponse(11)
                 } else {
                     viewModel.updateResponse(11, 1)

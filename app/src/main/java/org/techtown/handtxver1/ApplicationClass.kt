@@ -9,6 +9,7 @@ class ApplicationClass: Application() {
         lateinit var appContext: Context
         lateinit var loginSharedPreferences: SharedPreferences
         lateinit var questionnaireSharedPreferences: SharedPreferences
+        lateinit var snackDataSharedPreferences: SharedPreferences
     }
 
     override fun onCreate() {
@@ -16,5 +17,6 @@ class ApplicationClass: Application() {
         appContext = applicationContext
         loginSharedPreferences = getSharedPreferences("LoginDataSharedPreferences", Context.MODE_PRIVATE)
         questionnaireSharedPreferences = getSharedPreferences("QuestionnaireSharedPreferences", Context.MODE_PRIVATE)
+        snackDataSharedPreferences = getSharedPreferences("SnackSharedPreferences", Context.MODE_PRIVATE)
     }
 }
