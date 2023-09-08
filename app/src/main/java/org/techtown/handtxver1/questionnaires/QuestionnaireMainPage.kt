@@ -142,9 +142,9 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
         // 이미 완료한 설문을 다시 클릭했을 때, 팝업창을 띄우고 긍정과 취소 버튼을 누를 때 발생시킬 이벤트를 설정하는
         // 코드가 재사용이 많이 될 예정이라 이를 함수로 만들어 둠.
-        fun startActivityWithAlert(intent: Intent, alertPreviousSurveyCompleted: Boolean = true, clickedSurveyNumber: Int? = null) {
+        fun startActivityWithAlert(intent: Intent, PreviousSurveyCompleted: Boolean = true, clickedSurveyNumber: Int? = null) {
 
-            if (alertPreviousSurveyCompleted) {
+            if (PreviousSurveyCompleted) {
                 val negativeAnswer = "아니요"
                 val positiveAnswer = "네"
 
@@ -278,7 +278,7 @@ class QuestionnaireMainPage : AppCompatActivity() {
                             startActivity(intent)
                         }
 
-                    } else if (previousSurveyResult == null){
+                    } else if (previousSurveyResult == null && drinkingResult == null){
 
                         startActivityWithAlert(intent!!, false, surveyNumber)
 

@@ -1,15 +1,13 @@
 package org.techtown.handtxver1.questionnaires.type10
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type10.ViewModelForQType10
-import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type9.ViewModelForQType9
-import org.techtown.handtxver1.questionnaires.type9.*
 
 class QuestionnaireType10 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +18,7 @@ class QuestionnaireType10 : AppCompatActivity() {
         val commonUserDefinedObjectSet = CommonUserDefinedObjectSet()
 
         // ViewModel 에 접근 및 로딩
-        val viewModel = ViewModelProvider(this).get(ViewModelForQType10::class.java)
+         val viewModel = ViewModelProvider(this).get(ViewModelForQType10::class.java)
 
         val presentPageBar =
             findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.presentPageBar)
@@ -52,6 +50,7 @@ class QuestionnaireType10 : AppCompatActivity() {
         val frameLayoutID = R.id.pageFrame
 
         val responseSequence = viewModel.responseSequence
+        val snackResponse = viewModel.snackResponse
 
         commonUserDefinedObjectSet.questionnaireActivityFunction(
             this,
@@ -68,7 +67,7 @@ class QuestionnaireType10 : AppCompatActivity() {
             null,
             null,
             null,
-            viewModel.snackResponse
+            snackResponse
         )
 
     }

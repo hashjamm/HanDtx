@@ -92,7 +92,7 @@ class CommonUserDefinedObjectSet {
         @SerialName("results") val results: MutableList<Int>? = null,
         @SerialName("issueComment") val issueComment: String? = null, // 설문 타입 1을 제외하고는 모두 null
         @SerialName("checkedStateArray") val checkedStateArray: MutableList<Int>? = null, // 설문 타입 7을 제외하고는 모두 null
-        @SerialName("snackResponse") val snackResponse: SnackData? = null, // 설문 타입 10을 제외하고는 모두 null
+        @SerialName("snackResponse") val snackResponse: MutableList<String>? = null, // 설문 타입 10을 제외하고는 모두 null
     )
 
     @Serializable
@@ -347,7 +347,7 @@ class CommonUserDefinedObjectSet {
         results: MutableList<Int>,
         issueComment: String? = null,
         checkedStateArray: MutableList<Int>? = null,
-        snackResponse: SnackData? = null
+        snackResponse: MutableList<String>? = null
     ) {
 
         // sharedPreferences 를 ApplicationClass 에서 가져옴
@@ -599,7 +599,7 @@ class CommonUserDefinedObjectSet {
         surveyNumber: Int,
         responseSequence: Array<Int?>,
         checkedStateArray: Array<Int>? = null,
-        snackResponse: SnackData? = null
+        snackResponse: Array<String>? = null
     ) {
         textView.background = getSubmitButtonDrawable(context)
 
@@ -648,8 +648,8 @@ class CommonUserDefinedObjectSet {
                     messageBuilder.append("${i + 1}번 : $response\n")
                 }
 
-                Log.d("tracking1", "${responseSequence.toMutableList()}")
-                Log.d("tracking1", "$snackResponse")
+                Log.d("here3", "${responseSequence.toMutableList()}")
+                snackResponse?.joinToString(", ")?.let { it1 -> Log.d("here4", it1) }
 
                 val dialogOfResponses = AlertDialog.Builder(context)
                     .setTitle("응답한 내용")
@@ -667,7 +667,7 @@ class CommonUserDefinedObjectSet {
                             responseSequence.filterNotNull().toMutableList(),
                             null,
                             checkedStateArray?.toMutableList(),
-                            snackResponse
+                            snackResponse?.toMutableList()
                         )
 
                         context.startActivity(intent)
@@ -737,7 +737,7 @@ class CommonUserDefinedObjectSet {
         checkedStateArray: Array<Int>? = null, // 7번 설문지 13번 질문을 위한 파라미터
         switchActivityPageIndex: Int? = null, // 8번 설문지에서 절주 습관 평가 설문지로 전환하기 위한 파라미터
         newSurveyNumber: Int? = null, // 8번 설문지에서 전환에 필요한 새로운 절주 습관 액티비티 클래스 명 = 클래스 풀 네임을 적어야 함 -> 풀 네임을 적지 않고 코드 번호만 입력하도록 코드를 수정
-        snackResponse: SnackData? = null // 11번 설문지에서 필요
+        snackResponse: Array<String>? = null // 11번 설문지에서 필요
     ) {
 
         // frameLayoutID = R.id.pageFrame 라는 코드를 함수 외부에서 작성해서 가져올 것

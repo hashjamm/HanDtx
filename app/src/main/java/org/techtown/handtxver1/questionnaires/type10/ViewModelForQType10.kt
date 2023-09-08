@@ -1,9 +1,6 @@
 package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type10
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.techtown.handtxver1.org.techtown.handtxver1.CommonUserDefinedObjectSet
 
 class ViewModelForQType10 : ViewModel() {
 
@@ -30,13 +27,15 @@ class ViewModelForQType10 : ViewModel() {
         responseSequence[questionNumber - 1] = null
     }
 
-    var snackResponse: CommonUserDefinedObjectSet.SnackData = CommonUserDefinedObjectSet.SnackData("", 0)
+    var snackResponse = Array(2) { "" }
 
     fun updateSnackResponse(
-        type: String,
-        num: Int
+        questionNumber: Int,
+        response: String
     ) {
-        snackResponse = snackResponse.copy(type = type, num = num)
+        if (questionNumber >= 1 && questionNumber <= responseSequence.size) {
+            snackResponse[questionNumber - 1] = response
+        }
     }
 
 }
