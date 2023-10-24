@@ -5,16 +5,27 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.CheckBox
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.techtown.handtxver1.emotionDiary.EmotionDiaryUserDefinedObjectSet
-import java.text.SimpleDateFormat
-import java.util.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class Login : AppCompatActivity() {
 
-    // 로그인 성공시, user 의 ID 와 PW 를 저장해두어 앱 전체에서 접근할 수 있도록 유저 정보 저장 sharedPreferences 생성
+    private var retrofit = Retrofit.Builder()
+        .baseUrl("https://3.37.133.233")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private var loginInterface: LoginInterface = retrofit.create(LoginInterface::class.java)
+
+    // 체크박스 체크 시, 입력된 user 의 ID 와 PW 를 자동으로 유지하도록 정보 저장 sharedPreferences 생성
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,11 +41,61 @@ class Login : AppCompatActivity() {
         val userPW =
             findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.userPW)
 
+        val saveButton =
+            findViewById<CheckBox>(R.id.saveButton)
+
         sharedPreferences = getSharedPreferences(
-            "LoginDataSharedPreferences", Context.MODE_PRIVATE
+            "LoginSharedPreferences", Context.MODE_PRIVATE
         )
 
         val editor = sharedPreferences.edit()
+
+        userID.setText(sharedPreferences.getString("saveID", ""))
+        userPW.setText(sharedPreferences.getString("savePW", ""))
+
+        saveButton.setOnCheckedChangeListener { _, isChecked ->
+
+            if (isChecked) {
+                editor.putBoolean("save", isChecked)
+                editor.apply()
+            } else {
+                editor.putBoolean("save", isChecked)
+                editor.apply()
+            }
+
+        }
+
+        userID.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                val saveID = p0.toString()
+                editor.putString("saveID", saveID)
+                editor.apply()
+            }
+        })
+
+        userPW.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                val savePW = p0.toString()
+                editor.putString("savePW", savePW)
+                editor.apply()
+            }
+        })
 
         loginButton.setOnClickListener {
 
@@ -42,38 +103,43 @@ class Login : AppCompatActivity() {
             // 실제로는 user 정보를 db와 비교 대조하는 과정을 담는 조건문이여야 함.
             // 임시로 일단은 null 값이 아니면 맞는걸로 판단
 
-            if (userID.text.toString() != "" && userPW.text.toString() != "") {
+            val userIdText = userID.text.toString()
+            val userPwText = userPW.text.toString()
 
-                // 현재 시간을 형식에 맞게 포맷팅하여 문자열로 변환
+            loginInterface.requestLogin(userIdText, userPwText).enqueue(object: Callback<LoginOutput>{
+                override fun onResponse(call: Call<LoginOutput>, response: Response<LoginOutput>) {
 
-                // 현재 시간을 형식에 맞게 포맷팅하여 문자열로 변환
-                val loginTimeFormat: SimpleDateFormat =
-                    SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.KOREA)
-                val loginTime = loginTimeFormat.format(Calendar.getInstance().time)
+                    val resultValue = response.body()
 
-                val loginInfo =
-                EmotionDiaryUserDefinedObjectSet.LoginInfo(
-                    userID.text.toString(),
-                    userPW.text.toString(),
-                    loginTime
-                )
+                    val loginDialog = AlertDialog.Builder(this@Login)
 
-                val serializedLoginInfo = Json.encodeToString(loginInfo)
+                    when (resultValue?.code) {
+                        1 -> {
 
-                editor.putString("userInfo", serializedLoginInfo)
-                editor.apply()
+                            Toast.makeText(this@Login, resultValue.message, Toast.LENGTH_SHORT).show()
 
-                val intentLoginButton = Intent(this, CheckIn::class.java)
-                startActivity(intentLoginButton)
+                            val intentToCheckIn = Intent(this@Login, CheckIn::class.java)
+                            startActivity(intentToCheckIn)
+                        }
+                        else -> {
+                            loginDialog.setTitle("로그인 오류")
+                            loginDialog.setMessage(resultValue?.message)
+                        }
+                    }
 
-            } else {
-                val wrongUserInfoWarningPopup =
-                    AlertDialog.Builder(this, R.style.PopupGravityCenterStyle)
-                        .setTitle("등록되지 않거나 잘못된 유저 정보입니다.")
-                        .setMessage("옳바른 정보를 입력해주십시오.")
+                    loginDialog.show()
 
-                wrongUserInfoWarningPopup.show()
-            }
+                }
+
+                override fun onFailure(call: Call<LoginOutput>, t: Throwable) {
+
+                    val loginDialog = AlertDialog.Builder(this@Login)
+                    loginDialog.setTitle("통신 오류")
+                    loginDialog.setMessage("통신에 실패했습니다")
+                    loginDialog.show()
+                }
+            })
+
         }
 
     }

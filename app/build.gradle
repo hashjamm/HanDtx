@@ -62,4 +62,8 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.7.2'
     implementation 'androidx.fragment:fragment-ktx:1.6.1'// ViewModel 사용을 위해 추가함
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1' // kotlin serialization 사용을 위해 추가함
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
 }
