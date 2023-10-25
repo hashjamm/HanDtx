@@ -18,11 +18,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Login : AppCompatActivity() {
 
+    // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
-        .baseUrl("https://3.37.133.233")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+        .baseUrl("https://3.37.133.233") // 연결하고자 하는 서버 주소 입력
+        .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
+        .build() // 코드 마무리
 
+    // 로그인 서비스 interface 를 장착한 Retrofit 객체 생성
     private var loginInterface: LoginInterface = retrofit.create(LoginInterface::class.java)
 
     // 체크박스 체크 시, 입력된 user 의 ID 와 PW 를 자동으로 유지하도록 정보 저장 sharedPreferences 생성
@@ -44,6 +46,7 @@ class Login : AppCompatActivity() {
         val saveButton =
             findViewById<CheckBox>(R.id.saveButton)
 
+        // 자동 완성 버튼 체크 여부 및 기록된 id, pw 값을 저장하기 위한 데이터 파일
         sharedPreferences = getSharedPreferences(
             "LoginSharedPreferences", Context.MODE_PRIVATE
         )
@@ -53,6 +56,7 @@ class Login : AppCompatActivity() {
         userID.setText(sharedPreferences.getString("saveID", ""))
         userPW.setText(sharedPreferences.getString("savePW", ""))
 
+        // save 버튼의 클릭 상태가 변경될 때마다 체크 여부를 editor 에 업데이트
         saveButton.setOnCheckedChangeListener { _, isChecked ->
 
             if (isChecked) {
@@ -65,6 +69,7 @@ class Login : AppCompatActivity() {
 
         }
 
+        // userID 부분의 텍스트가 변경됨에 따라 editor 에 해당 텍스트 내용 저장
         userID.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -81,6 +86,7 @@ class Login : AppCompatActivity() {
             }
         })
 
+        // userPW 부분의 텍스트가 변경됨에 따라 editor 에 해당 텍스트 내용 저장
         userPW.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -106,13 +112,18 @@ class Login : AppCompatActivity() {
             val userIdText = userID.text.toString()
             val userPwText = userPW.text.toString()
 
+            // login 을 위한 인터페이스 사용 과정
             loginInterface.requestLogin(userIdText, userPwText).enqueue(object: Callback<LoginOutput>{
+
+                // 통신에 성공한 경우
                 override fun onResponse(call: Call<LoginOutput>, response: Response<LoginOutput>) {
 
+                    // body 메서드를 통해 응답받은 내용을 가져올 수 있음
                     val resultValue = response.body()
 
                     val loginDialog = AlertDialog.Builder(this@Login)
 
+                    // 통신에 성공하더라도, 로그인 자체가 성공할 때와 아닐때에 대하여 세부적인 동작을 구현
                     when (resultValue?.code) {
                         1 -> {
 
@@ -131,6 +142,8 @@ class Login : AppCompatActivity() {
 
                 }
 
+
+                // 통신에 실패한 경우
                 override fun onFailure(call: Call<LoginOutput>, t: Throwable) {
 
                     val loginDialog = AlertDialog.Builder(this@Login)
@@ -141,6 +154,25 @@ class Login : AppCompatActivity() {
             })
 
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val userID =
+            findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.userID)
+
+        val userPW =
+            findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.userPW)
+
+        // 자동 완성 버튼 체크 여부 및 기록된 id, pw 값을 저장하기 위한 데이터 파일
+        sharedPreferences = getSharedPreferences(
+            "LoginSharedPreferences", Context.MODE_PRIVATE
+        )
+
+        userID.setText(sharedPreferences.getString("saveID", ""))
+        userPW.setText(sharedPreferences.getString("savePW", ""))
 
     }
 }
