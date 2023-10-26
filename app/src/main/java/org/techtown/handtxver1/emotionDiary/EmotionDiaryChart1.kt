@@ -1,6 +1,8 @@
 package org.techtown.handtxver1.emotionDiary
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +16,9 @@ import androidx.fragment.app.activityViewModels
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEmotionDiaryChart1Binding
 import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -28,15 +33,26 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
     // 감정 다이어리에서 날짜마다 점수를 기억하고, 이에 맞는 그래프를 그리게 함과 동시에, 일별 기록 부분에서도 접근 가능한
     // SharedPreferences 파일을 생성
 
-    // SharedPreferences 추가 내용 : 일별기록부분에서 날짜 각각에 대하여 입력한 내용또한 저장해야하는 것으로 나타남
-    // 이에 따라, 날짜를 key 로, 사용자가 입력한 점수(Int)와 일별기록 부분에서 입력한 내용(String)을 json 포맷으로 묶어둔 문자열을 value 로 갖도록 설정
+    // loginSharedPreferences -> 로그인 창에서 입력한 내용을 기반으로 user id를 가져오기 위하여 인스턴스 생성
 
-    val sharedPreferences = ApplicationClass.emotionDiarySharedPreferences
+    private lateinit var loginSharedPreferences: SharedPreferences
 
-    // sharedPreferences 에 넣어줄 데이터 클래스 선언. score 와 inputString 두 개를 하나로 묶어서 가지고 있도록 설정.
     // JSON 직렬화 가능하도록 해당 클래스를 설정
 
     internal lateinit var binding: FragmentEmotionDiaryChart1Binding
+
+    // retrofit 객체 생성
+    private var retrofit = Retrofit.Builder()
+        .baseUrl("https://3.37.133.233") // 연결하고자 하는 서버 주소 입력
+        .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
+        .build() // 코드 마무리
+
+    // 감정다이어리 서비스 interface 를 장착한 Retrofit 객체 생성
+    private var getEmotionDiaryRecordsInterface: GetEmotionDiaryRecordsInterface =
+        retrofit.create(GetEmotionDiaryRecordsInterface::class.java)
+
+    private var updateEmotionDiaryRecordsInterface: UpdateEmotionDiaryRecordsInterface =
+        retrofit.create(UpdateEmotionDiaryRecordsInterface::class.java)
 
     // private lateinit var dateFormat: SimpleDateFormat
     // private lateinit var weekdayFormat: SimpleDateFormat
@@ -126,47 +142,84 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
 
         fun optimizingGraph(menuNum: Int) {
 
-            val score = objectSet.getScore(sharedPreferences, menuNum, viewModel)
+            val loginSharedPreferences = ApplicationClass.loginSharedPreferences
 
-            if (score != null) {
+            // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
+            val userID = loginSharedPreferences.getString("saveID", "")
+            val date: Date? = viewModel.date.value?.time
 
-                if (score in 0..9) {
+            var score: Int?
 
-                    // 그래프 형태를 점수에 맞게 반영
-                    binding.radioButtonsBackground.background =
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            objectSet.graphBackgroundArray[score]
-                        )
-                    binding.howRU.text = objectSet.graphTextArray1[score]
+            getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID!!, date!!)
+                .enqueue(object :
+                    Callback<GetEmotionDiaryRecordsOutput> {
 
-                    // 라디오 그룹 기능 구현
-                    radioGroup.forEachIndexed { index, radioButton ->
-                        if (index == score) {
-                            radioButton.isChecked = true
+                    override fun onResponse(
+                        call: Call<GetEmotionDiaryRecordsOutput>,
+                        response: Response<GetEmotionDiaryRecordsOutput>
+                    ) {
+                        val resultValue = response.body()
+
+                        score =
+                            when (menuNum) {
+                                1 -> resultValue?.score1
+                                2 -> resultValue?.score2
+                                3 -> resultValue?.score3
+                                else -> null
+                            }
+
+                        if (score != null) {
+
+                            if (score in 0..9) {
+
+                                val scoreValue = score
+
+                                // 그래프 형태를 점수에 맞게 반영
+                                binding.radioButtonsBackground.background =
+                                    ContextCompat.getDrawable(
+                                        requireContext(),
+                                        objectSet.graphBackgroundArray[scoreValue!!]
+                                    )
+                                binding.howRU.text = objectSet.graphTextArray1[scoreValue]
+
+                                // 라디오 그룹 기능 구현
+                                radioGroup.forEachIndexed { index, radioButton ->
+                                    radioButton.isChecked = index == score
+                                }
+                            }
                         } else {
-                            radioButton.isChecked = false
+
+                            // 그래프 형태를 default 형태로 변경
+                            binding.radioButtonsBackground.background =
+                                ContextCompat.getDrawable(
+                                    requireContext(),
+                                    R.drawable.emotion_graph_image_0
+                                )
+                            binding.howRU.text =
+                                when (menuNum) {
+                                    1 -> "오늘 하루 어땠나요?"
+                                    2 -> "오늘 얼마나 불안했나요?"
+                                    3 -> "오늘 식욕은 어땠나요?"
+                                    else -> null
+                                }
+
+                            // 라디오 그룹 전체 버튼 초기화
+                            radioGroup.forEach {
+                                it.isChecked = false
+                            }
                         }
-                    }
-                }
-            } else {
 
-                // 그래프 형태를 default 형태로 변경
-                binding.radioButtonsBackground.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.emotion_graph_image_0)
-                binding.howRU.text =
-                    when (menuNum) {
-                        1 -> "오늘 하루 어땠나요?"
-                        2 -> "오늘 얼마나 불안했나요?"
-                        3 -> "오늘 식욕은 어땠나요?"
-                        else -> null
                     }
 
-                // 라디오 그룹 전체 버튼 초기화
-                radioGroup.forEach {
-                    it.isChecked = false
-                }
-            }
+                    override fun onFailure(call: Call<GetEmotionDiaryRecordsOutput>, t: Throwable) {
+
+                        val errorDialog = AlertDialog.Builder(context)
+                        errorDialog.setTitle("통신 오류")
+                        errorDialog.setMessage("통신에 실패했습니다 : type1")
+                        errorDialog.show()
+                    }
+
+                })
         }
 
         // 일단 현재 상태에서 그래프 최적화
@@ -214,18 +267,81 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
                             }
                         }
 
-                        // sharedPreferences 업데이트
-                        // viewModel 에 업데이트된 날짜를 key 로 갖고, 선택된 점수를 value 로 갖도록 editor 에 데이터 저장
-                        // 예) "2023.08.03" : 2
+                        val loginSharedPreferences = ApplicationClass.loginSharedPreferences
 
-                        objectSet.updateScore(
-                            index,
-                            sharedPreferences,
-                            1,
-                            viewModel
+                        // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
+                        val userID = loginSharedPreferences.getString("saveID", "")
+                        val date: Date? = viewModel.date.value?.time
+
+                        var resultValue: GetEmotionDiaryRecordsOutput?
+                        var updateValue: GetEmotionDiaryRecordsOutput?
+
+                        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(
+                            userID!!,
+                            date!!
                         )
+                            .enqueue(object :
+                                Callback<GetEmotionDiaryRecordsOutput> {
 
-                        // sharedPreferences 에 방금 업데이트 된 값을 바탕으로 그래프와 말풍선 텍스트 업데이트
+                                override fun onResponse(
+                                    call: Call<GetEmotionDiaryRecordsOutput>,
+                                    response: Response<GetEmotionDiaryRecordsOutput>
+                                ) {
+                                    resultValue = response.body()
+
+                                    // updateValue = resultValue -> 이러면 resultValue 바꾸면 updateValue도 바뀜
+                                    updateValue = resultValue?.copy()
+                                    updateValue?.score1 = index
+
+                                    updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
+                                        userID,
+                                        date,
+                                        updateValue?.score1,
+                                        updateValue?.inputText1,
+                                        updateValue?.score2,
+                                        updateValue?.inputText2,
+                                        updateValue?.score3,
+                                        updateValue?.inputText3
+                                    )
+                                        .enqueue(object :
+                                            Callback<UpdateEmotionDiaryRecordsOutput> {
+
+                                            override fun onResponse(
+                                                call: Call<UpdateEmotionDiaryRecordsOutput>,
+                                                response: Response<UpdateEmotionDiaryRecordsOutput>
+                                            ) {
+
+
+                                            }
+
+                                            override fun onFailure(
+                                                call: Call<UpdateEmotionDiaryRecordsOutput>,
+                                                t: Throwable
+                                            ) {
+                                                val errorDialog = AlertDialog.Builder(context)
+                                                errorDialog.setTitle("통신 오류")
+                                                errorDialog.setMessage("통신에 실패했습니다 : type2")
+                                                errorDialog.show()
+                                            }
+
+                                        })
+
+                                }
+
+                                override fun onFailure(
+                                    call: Call<GetEmotionDiaryRecordsOutput>,
+                                    t: Throwable
+                                ) {
+
+                                    val errorDialog = AlertDialog.Builder(context)
+                                    errorDialog.setTitle("통신 오류")
+                                    errorDialog.setMessage("통신에 실패했습니다 : type3")
+                                    errorDialog.show()
+                                }
+
+                            })
+
+                        // 방금 업데이트 된 값을 다시 받아와서 그래프와 말풍선 텍스트 업데이트
                         optimizingGraph(1)
 
                     }
@@ -276,47 +392,84 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
 
         fun optimizingGraph(menuNum: Int) {
 
-            val score = objectSet.getScore(sharedPreferences, menuNum, viewModel)
+            val loginSharedPreferences = ApplicationClass.loginSharedPreferences
 
-            if (score != null) {
+            // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
+            val userID = loginSharedPreferences.getString("saveID", "")
+            val date: Date? = viewModel.date.value?.time
 
-                if (score in 0..9) {
+            var score: Int?
 
-                    // 그래프 형태를 점수에 맞게 반영
-                    binding.radioButtonsBackground.background =
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            objectSet.graphBackgroundArray[score]
-                        )
-                    binding.howRU.text = objectSet.graphTextArray1[score]
+            getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID!!, date!!)
+                .enqueue(object :
+                    Callback<GetEmotionDiaryRecordsOutput> {
 
-                    // 라디오 그룹 기능 구현
-                    radioGroup.forEachIndexed { index, radioButton ->
-                        if (index == score) {
-                            radioButton.isChecked = true
+                    override fun onResponse(
+                        call: Call<GetEmotionDiaryRecordsOutput>,
+                        response: Response<GetEmotionDiaryRecordsOutput>
+                    ) {
+                        val resultValue = response.body()
+
+                        score =
+                            when (menuNum) {
+                                1 -> resultValue?.score1
+                                2 -> resultValue?.score2
+                                3 -> resultValue?.score3
+                                else -> null
+                            }
+
+                        if (score != null) {
+
+                            if (score in 0..9) {
+
+                                val scoreValue = score
+
+                                // 그래프 형태를 점수에 맞게 반영
+                                binding.radioButtonsBackground.background =
+                                    ContextCompat.getDrawable(
+                                        requireContext(),
+                                        objectSet.graphBackgroundArray[scoreValue!!]
+                                    )
+                                binding.howRU.text = objectSet.graphTextArray1[scoreValue]
+
+                                // 라디오 그룹 기능 구현
+                                radioGroup.forEachIndexed { index, radioButton ->
+                                    radioButton.isChecked = index == score
+                                }
+                            }
                         } else {
-                            radioButton.isChecked = false
+
+                            // 그래프 형태를 default 형태로 변경
+                            binding.radioButtonsBackground.background =
+                                ContextCompat.getDrawable(
+                                    requireContext(),
+                                    R.drawable.emotion_graph_image_0
+                                )
+                            binding.howRU.text =
+                                when (menuNum) {
+                                    1 -> "오늘 하루 어땠나요?"
+                                    2 -> "오늘 얼마나 불안했나요?"
+                                    3 -> "오늘 식욕은 어땠나요?"
+                                    else -> null
+                                }
+
+                            // 라디오 그룹 전체 버튼 초기화
+                            radioGroup.forEach {
+                                it.isChecked = false
+                            }
                         }
-                    }
-                }
-            } else {
 
-                // 그래프 형태를 default 형태로 변경
-                binding.radioButtonsBackground.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.emotion_graph_image_0)
-                binding.howRU.text =
-                    when (menuNum) {
-                        1 -> "오늘 하루 어땠나요?"
-                        2 -> "오늘 얼마나 불안했나요?"
-                        3 -> "오늘 식욕은 어땠나요?"
-                        else -> null
                     }
 
-                // 라디오 그룹 전체 버튼 초기화
-                radioGroup.forEach {
-                    it.isChecked = false
-                }
-            }
+                    override fun onFailure(call: Call<GetEmotionDiaryRecordsOutput>, t: Throwable) {
+
+                        val errorDialog = AlertDialog.Builder(context)
+                        errorDialog.setTitle("통신 오류")
+                        errorDialog.setMessage("통신에 실패했습니다 : type1")
+                        errorDialog.show()
+                    }
+
+                })
         }
 
         // 일단 현재 상태에서 그래프 최적화
