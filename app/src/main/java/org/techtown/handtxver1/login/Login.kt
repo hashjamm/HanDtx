@@ -1,4 +1,4 @@
-package org.techtown.handtxver1
+package org.techtown.handtxver1.login
 
 import android.app.AlertDialog
 import android.content.Context
@@ -10,6 +10,8 @@ import android.text.TextWatcher
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import org.techtown.handtxver1.CheckIn
+import org.techtown.handtxver1.R
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,10 +50,14 @@ class Login : AppCompatActivity() {
 
         // 자동 완성 버튼 체크 여부 및 기록된 id, pw 값을 저장하기 위한 데이터 파일
         sharedPreferences = getSharedPreferences(
-            "LoginSharedPreferences", Context.MODE_PRIVATE
+            "loginSharedPreferences", Context.MODE_PRIVATE
         )
 
         val editor = sharedPreferences.edit()
+
+        // loginSharedPreferences 라는 동명의 데이터 저장소 파일을 이전에 사용했었는데, 이를 초기화 해줘야함 한 번
+        // editor.clear()
+        // editor.apply()
 
         userID.setText(sharedPreferences.getString("saveID", ""))
         userPW.setText(sharedPreferences.getString("savePW", ""))

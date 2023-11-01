@@ -91,7 +91,7 @@
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".Login"
+            android:name=".login.Login"
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
