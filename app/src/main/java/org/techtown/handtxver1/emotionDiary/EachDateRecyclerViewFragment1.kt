@@ -40,6 +40,9 @@ class EachDateRecyclerViewFragment1 : Fragment() {
     // Recycler View 사용을 위한 데이터 클래스 리스트를 생성하기 위해 빈 리스트 선언
     val mutableDataList = mutableListOf<EachDateRecordDataClass>()
 
+    // 적용해줄 Adapter 인스턴스를 지정
+    private lateinit var listAdapter: EachDateRecyclerViewAdapter
+
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
         .baseUrl("https://3.37.133.233") // 연결하고자 하는 서버 주소 입력
