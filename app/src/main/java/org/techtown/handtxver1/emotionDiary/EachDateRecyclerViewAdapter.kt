@@ -1,31 +1,93 @@
 package org.techtown.handtxver1.emotionDiary
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import org.techtown.handtxver1.R
-import java.util.*
+import org.techtown.handtxver1.databinding.EachDateItemBinding
 
 class EachDateRecyclerViewAdapter(
-    private var mutableDataList: MutableList<EachDateRecordDataClass>,
-    date: Date,
-    menuNum: Int
+    private var mutableDataList: MutableList<EachDateRecordDataClass>
 ) :
-    RecyclerView.Adapter<EachDateRecyclerViewAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<EachDateRecyclerViewAdapter.OneDateViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OneDateViewHolder {
 
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.each_date_frame_layout_item, parent, false)
+        val view = EachDateItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
 
-        return MyViewHolder(view)
+        return OneDateViewHolder(view).also { holder ->
+
+            val line1 = holder.itemView.findViewById<ConstraintLayout>(R.id.line1)
+            val line2 = holder.itemView.findViewById<ConstraintLayout>(R.id.line2)
+            val line1A = holder.itemView.findViewById<AppCompatEditText>(R.id.line1A)
+
+            // positionData 가 바뀐다고 실제로 mutableDataList 에 변화를 바로 줄 수 있지는 않음
+            // 이후에 아래의 코드를 추가해줘야 함
+            // mutableDataList[holder.adapterPosition] = positionData
+
+            val positionData = mutableDataList.getOrNull(holder.adapterPosition)
+
+            val isExpandable = positionData?.isExpandable
+
+            line1A.addTextChangedListener(object: TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    positionData?.inputText = p0.toString()
+                }
+            })
+
+            line1.visibility =
+                if (isExpandable == true) View.VISIBLE else View.GONE
+
+            // 클릭 시에만 보여줘야하는 라인
+            line1.setOnClickListener {
+                if (positionData != null) {
+                    positionData.isExpandable = !positionData.isExpandable
+                } else {
+                    throw IllegalStateException("에러 발생 : there is no data : isExpandable.")
+                }
+
+                mutableDataList[holder.adapterPosition] = positionData
+
+                notifyItemChanged(holder.adapterPosition)
+            }
+
+
+            // 기본으로 계속 보여줘야하는 라인
+            line2.setOnClickListener {
+
+                if (positionData != null) {
+                    positionData.isExpandable = !positionData.isExpandable
+                } else {
+                    throw IllegalStateException("에러 발생 : there is no data : isExpandable.")
+                }
+
+                mutableDataList[holder.adapterPosition] = positionData
+
+                notifyItemChanged(holder.adapterPosition)
+            }
+
+        }
 
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: OneDateViewHolder, position: Int) {
 
         holder.bind(mutableDataList[position])
 
@@ -37,39 +99,15 @@ class EachDateRecyclerViewAdapter(
 
     }
 
-    val eachDateBox1 = EachDateBox1(date, menuNum)
-    val eachDateBox2 = EachDateBox2(date, menuNum)
+    inner class OneDateViewHolder(private val binding: EachDateItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val frameLayout: FrameLayout = itemView.findViewById(R.id.oneLineFrame)
+        fun bind(oneDateRecord: EachDateRecordDataClass) {
 
-        fun bind(item: EachDateRecordDataClass) {
-
-            // 트랜잭션에 필요한 코드 일부를 미리 지정해둠
-            val fragmentTransaction =
-                (itemView.context as FragmentActivity).supportFragmentManager.beginTransaction()
-
-            // FrameLayout 에 우선 EachDateBox1 fragment 를 트랜잭션
-            fragmentTransaction.add(R.id.oneLineFrame, eachDateBox1).commitNow()
-
-            // 해당 FrameLayout 에 대한 리스너
-            itemView.setOnClickListener {
-
-                // 현재 트랜잭션된 fragment 의 클래스 명을 가져옴
-                val currentFragment =
-                    (itemView.context as FragmentActivity).supportFragmentManager.findFragmentById(R.id.oneLineFrame)
-
-                if (currentFragment is EachDateBox1) {
-
-                    fragmentTransaction.replace(R.id.oneLineFrame, eachDateBox2).commitNow()
-
-                } else {
-
-                    fragmentTransaction.replace(R.id.oneLineFrame, eachDateBox1).commitNow()
-
-                }
-
-            }
+            binding.line1A.setText(oneDateRecord.inputText)
+            binding.line1B.text = oneDateRecord.additionalText
+            binding.line2A.text = oneDateRecord.dateStringInLine
+            binding.line2B.text = oneDateRecord.stringByScore
 
         }
 

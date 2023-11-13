@@ -1,8 +1,9 @@
 package org.techtown.handtxver1.emotionDiary
 
-import java.util.*
-
 data class EachDateRecordDataClass(
-    val date: Date,
-    val inputText: String?
+    val dateStringInLine: String,
+    val stringByScore: String?,
+    var inputText: String?,
+    val additionalText: String?,
+    var isExpandable: Boolean = false
 )

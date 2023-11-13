@@ -56,6 +56,9 @@ class EachDateRecyclerViewFragment1 : Fragment() {
     private var updateEmotionDiaryRecordsInterface: UpdateEmotionDiaryRecordsInterface =
         retrofit.create(UpdateEmotionDiaryRecordsInterface::class.java)
 
+
+    val objectSet = EmotionDiaryUserDefinedObjectSet()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -92,10 +95,17 @@ class EachDateRecyclerViewFragment1 : Fragment() {
             // viewModel 의 dateString 을 java.util.Date 형태로 변환한 값으로 서버에서
             // 감정다이어리 결과를 가져오고, 해당 결과의 inputText1 을 추출
 
-            val format = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
-            val searchDate = format.parse(viewModel.dateString)
+            val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
+            val primaryDate = dateFormat.parse(viewModel.dateString)
 
-            getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID!!, searchDate!!)
+            val calendar = Calendar.getInstance()
+            calendar.time = primaryDate!!
+
+            calendar.set(Calendar.DAY_OF_MONTH, day)
+
+            val searchDate = calendar.time
+
+            getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID!!, searchDate)
                 .enqueue(
                     object :
                         Callback<GetEmotionDiaryRecordsOutput> {
@@ -105,10 +115,32 @@ class EachDateRecyclerViewFragment1 : Fragment() {
                             response: Response<GetEmotionDiaryRecordsOutput>
                         ) {
                             val resultValue = response.body()
+
+                            val dateLineFormat = SimpleDateFormat("dd일 E", Locale.KOREA)
+
+                            val dateStringInLine = dateLineFormat.format(searchDate)
+
+                            val score = resultValue?.score1
+                            val textByScore =
+                                if (score != null) {
+                                    objectSet.graphTextArray1[score]
+                                } else {
+                                    "오늘 하루 어땠나요?"
+                                }
+
                             val inputText = resultValue?.inputText1
 
+                            // 기획된 내용에 적혀는 있지만, 정확히 어떤걸 나타내는 것인지 정해진 바 없는
+                            // 텍스트이기에 우선은 문자열을 입력해두자 20231113
+                            val additionalText = "수면 OHR"
+
                             // 데이터 클래스 생성
-                            val oneDateData = EachDateRecordDataClass(searchDate, inputText)
+                            val oneDateData = EachDateRecordDataClass(
+                                dateStringInLine,
+                                textByScore,
+                                inputText,
+                                additionalText
+                            )
 
                             // 해당 데이터 클래스를 데이터 리스트에 추가
                             mutableDataList.add(oneDateData)
