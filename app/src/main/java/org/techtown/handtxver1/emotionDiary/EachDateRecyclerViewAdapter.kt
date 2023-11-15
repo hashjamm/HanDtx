@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import org.techtown.handtxver1.CallBackInterface
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.EachDateItemBinding
 
 class EachDateRecyclerViewAdapter(
-    private var mutableDataList: MutableList<EachDateRecordDataClass>
+    private var mutableDataList: MutableList<EachDateRecordDataClass>,
+    private var callBackInterface: CallBackInterface
 ) :
     RecyclerView.Adapter<EachDateRecyclerViewAdapter.OneDateViewHolder>() {
 
@@ -29,6 +31,7 @@ class EachDateRecyclerViewAdapter(
             val line1 = holder.itemView.findViewById<ConstraintLayout>(R.id.line1)
             val line2 = holder.itemView.findViewById<ConstraintLayout>(R.id.line2)
             val line1A = holder.itemView.findViewById<AppCompatEditText>(R.id.line1A)
+            val line1B = holder.itemView.findViewById<AppCompatEditText>(R.id.line1B)
 
             // positionData 가 바뀐다고 실제로 mutableDataList 에 변화를 바로 줄 수 있지는 않음
             // 이후에 아래의 코드를 추가해줘야 함
@@ -55,13 +58,15 @@ class EachDateRecyclerViewAdapter(
             line1.visibility =
                 if (isExpandable == true) View.VISIBLE else View.GONE
 
-            // 클릭 시에만 보여줘야하는 라인
-            line1.setOnClickListener {
+            // 데이터 업데이트 버튼
+            line1B.setOnClickListener {
                 if (positionData != null) {
                     positionData.isExpandable = !positionData.isExpandable
                 } else {
                     throw IllegalStateException("에러 발생 : there is no data : isExpandable.")
                 }
+
+                callBackInterface.onCallBackValueChanged(true, holder.adapterPosition + 1)
 
                 mutableDataList[holder.adapterPosition] = positionData
 
@@ -105,9 +110,13 @@ class EachDateRecyclerViewAdapter(
         fun bind(oneDateRecord: EachDateRecordDataClass) {
 
             binding.line1A.setText(oneDateRecord.inputText)
-            binding.line1B.text = oneDateRecord.additionalText
             binding.line2A.text = oneDateRecord.dateStringInLine
             binding.line2B.text = oneDateRecord.stringByScore
+
+            val isExpandable = oneDateRecord.isExpandable
+
+            binding.line1.visibility =
+                if (isExpandable) View.VISIBLE else View.GONE
 
         }
 

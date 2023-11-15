@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import org.techtown.handtxver1.CallBackInterface
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEachDateRecyclerView1Binding
 import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
@@ -27,7 +28,7 @@ import java.util.*
  * Use the [EachDateRecyclerViewFragment1.newInstance] factory method to
  * create an instance of this fragment.
  */
-class EachDateRecyclerViewFragment1 : Fragment() {
+class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
 
     // Fragment 에 사용할 레이아웃 파일 바인딩 선언
     lateinit var binding: FragmentEachDateRecyclerView1Binding
@@ -105,66 +106,32 @@ class EachDateRecyclerViewFragment1 : Fragment() {
 
             val searchDate = calendar.time
 
-            getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID!!, searchDate)
-                .enqueue(
-                    object :
-                        Callback<GetEmotionDiaryRecordsOutput> {
+            val resultValue = getData(userID!!, searchDate)
 
-                        override fun onResponse(
-                            call: Call<GetEmotionDiaryRecordsOutput>,
-                            response: Response<GetEmotionDiaryRecordsOutput>
-                        ) {
-                            val resultValue = response.body()
+            val dateLineFormat = SimpleDateFormat("dd일 E", Locale.KOREA)
+            val dateStringInLine = dateLineFormat.format(searchDate)
 
-                            val dateLineFormat = SimpleDateFormat("dd일 E", Locale.KOREA)
+            val score = resultValue?.score1
 
-                            val dateStringInLine = dateLineFormat.format(searchDate)
+            val textByScore = if (score != null) {
+                objectSet.graphTextArray1[score]
+            } else {
+                "오늘 하루 어땠나요?"
+            }
 
-                            val score = resultValue?.score1
-                            val textByScore =
-                                if (score != null) {
-                                    objectSet.graphTextArray1[score]
-                                } else {
-                                    "오늘 하루 어땠나요?"
-                                }
+            val inputText = resultValue?.inputText1
 
-                            val inputText = resultValue?.inputText1
+            // 데이터 클래스 인스턴스 생성
+            val oneDateData = EachDateRecordDataClass(
+                dateStringInLine,
+                textByScore,
+                inputText
+            )
 
-                            // 기획된 내용에 적혀는 있지만, 정확히 어떤걸 나타내는 것인지 정해진 바 없는
-                            // 텍스트이기에 우선은 문자열을 입력해두자 20231113
-                            val additionalText = "수면 OHR"
-
-                            // 데이터 클래스 생성
-                            val oneDateData = EachDateRecordDataClass(
-                                dateStringInLine,
-                                textByScore,
-                                inputText,
-                                additionalText
-                            )
-
-                            // 해당 데이터 클래스를 데이터 리스트에 추가
-                            mutableDataList.add(oneDateData)
-
-                        }
-
-                        override fun onFailure(
-                            call: Call<GetEmotionDiaryRecordsOutput>,
-                            t: Throwable
-                        ) {
-
-                            val errorDialog = AlertDialog.Builder(context)
-                            errorDialog.setTitle("통신 오류")
-                            errorDialog.setMessage("통신에 실패했습니다")
-                            errorDialog.show()
-
-                            throw IllegalStateException("에러 발생 : 통신이 이루어지지 않습니다.")
-
-                        }
-
-                    })
+            // 해당 데이터 클래스 인스턴스를 데이터 리스트에 추가
+            mutableDataList.add(oneDateData)
 
         }
-
 
     }
 
@@ -184,5 +151,117 @@ class EachDateRecyclerViewFragment1 : Fragment() {
                 arguments = Bundle().apply {
                 }
             }
+    }
+
+    private fun getData(userID: String, date: Date): GetEmotionDiaryRecordsOutput? {
+
+        var resultValue: GetEmotionDiaryRecordsOutput? = null
+
+        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID, date)
+            .enqueue(
+                object :
+                    Callback<GetEmotionDiaryRecordsOutput> {
+
+                    override fun onResponse(
+                        call: Call<GetEmotionDiaryRecordsOutput>,
+                        response: Response<GetEmotionDiaryRecordsOutput>
+                    ) {
+
+                        resultValue = response.body()
+
+                    }
+
+                    override fun onFailure(call: Call<GetEmotionDiaryRecordsOutput>, t: Throwable) {
+
+                        throw IllegalStateException("에러 발생 : 통신이 이루어지지 않습니다.")
+                    }
+
+                }
+            )
+
+        return resultValue
+
+    }
+
+    override fun onCallBackValueChanged(success: Boolean, dateNum: Int?) {
+
+        if (success) {
+
+            var updateValue: GetEmotionDiaryRecordsOutput?
+
+            // 로그인한 유저 아이디 지정
+            val userID = ApplicationClass.loginSharedPreferences.getString("saveID", "")
+
+
+
+            val resultValue = getData(userID!!, dateNum)
+
+            getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(
+                userID!!,
+                date!!
+            )
+                .enqueue(object :
+                    Callback<GetEmotionDiaryRecordsOutput> {
+
+                    override fun onResponse(
+                        call: Call<GetEmotionDiaryRecordsOutput>,
+                        response: Response<GetEmotionDiaryRecordsOutput>
+                    ) {
+                        resultValue = response.body()
+
+                        // updateValue = resultValue -> 이러면 resultValue 바꾸면 updateValue도 바뀜
+                        updateValue = resultValue?.copy()
+                        updateValue?.score1 = index
+
+                        updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
+                            userID,
+                            date,
+                            updateValue?.score1,
+                            updateValue?.inputText1,
+                            updateValue?.score2,
+                            updateValue?.inputText2,
+                            updateValue?.score3,
+                            updateValue?.inputText3
+                        )
+                            .enqueue(object :
+                                Callback<UpdateEmotionDiaryRecordsOutput> {
+
+                                override fun onResponse(
+                                    call: Call<UpdateEmotionDiaryRecordsOutput>,
+                                    response: Response<UpdateEmotionDiaryRecordsOutput>
+                                ) {
+
+
+                                }
+
+                                override fun onFailure(
+                                    call: Call<UpdateEmotionDiaryRecordsOutput>,
+                                    t: Throwable
+                                ) {
+                                    val errorDialog = AlertDialog.Builder(context)
+                                    errorDialog.setTitle("통신 오류")
+                                    errorDialog.setMessage("통신에 실패했습니다 : type2")
+                                    errorDialog.show()
+                                }
+
+                            })
+
+                    }
+
+                    override fun onFailure(
+                        call: Call<GetEmotionDiaryRecordsOutput>,
+                        t: Throwable
+                    ) {
+
+                        val errorDialog = AlertDialog.Builder(context)
+                        errorDialog.setTitle("통신 오류")
+                        errorDialog.setMessage("통신에 실패했습니다 : type3")
+                        errorDialog.show()
+                    }
+
+                })
+
+        }
+
     }
 }

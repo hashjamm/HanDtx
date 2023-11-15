@@ -12,17 +12,19 @@
             android:id="@+id/line1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/all_border_turquoise"
             android:paddingHorizontal="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="13dp">
+            android:paddingVertical="5dp">
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/line1A"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@null"
+                android:background="@drawable/all_border"
                 android:hint="내용을 작성해주세요."
-                android:text=""
+                android:padding="5dp"
+                android:textColor="#000000"
+                android:textSize="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/line1B"
@@ -32,8 +34,11 @@
                 android:id="@+id/line1B"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="수면 OHR"
-                android:textSize="10dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="저장"
+                android:textColor="#000000"
+                android:textSize="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/line1A"
                 app:layout_constraintRight_toRightOf="parent"
@@ -45,14 +50,16 @@
             android:id="@+id/line2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/all_border"
             android:paddingHorizontal="10dp"
-            android:paddingVertical="3dp">
+            android:paddingVertical="5dp">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/line2A"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="03일 화요일"
+                android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -63,6 +70,7 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="15dp"
                 android:text="1점 내용"
+                android:textColor="#000000"
                 app:layout_constraintLeft_toRightOf="@id/line2A"
                 app:layout_constraintRight_toRightOf="parent" />
 
