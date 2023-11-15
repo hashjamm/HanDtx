@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.techtown.handtxver1.CallBackInterface
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEachDateRecyclerView1Binding
@@ -17,6 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,10 +41,14 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
     private val viewModel: ViewModelForEachDateViewer by activityViewModels()
 
     // Recycler View 사용을 위한 데이터 클래스 리스트를 생성하기 위해 빈 리스트 선언
-    val mutableDataList = mutableListOf<EachDateRecordDataClass>()
+    private val mutableDataList = mutableListOf<EachDateRecordDataClass>()
 
-    // 적용해줄 Adapter 인스턴스를 지정
-    private lateinit var listAdapter: EachDateRecyclerViewAdapter
+    // Recycler View 인스턴스를 지정
+    // 해당 뷰에 적용해줄 Adapter 인스턴스를 지정
+    // Adapter 인스턴스 파라미터로 채워줄 CallBack 클래스 인스턴스 생성
+    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
+    private lateinit var adapter: EachDateRecyclerViewAdapter
+    private lateinit var callBack: CallBackInterface
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
@@ -70,7 +76,7 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
     override fun onCreateView(
         inflater: LayoutInflater, eachDateRecyclerViewFragment1: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding =
             DataBindingUtil.inflate(
@@ -79,6 +85,14 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
                 eachDateRecyclerViewFragment1,
                 false
             )
+
+        recyclerView = binding.recyclerView
+
+        adapter = EachDateRecyclerViewAdapter(mutableDataList, callBack)
+        recyclerView.adapter = adapter
+
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = layoutManager
 
         return binding.root
     }
@@ -135,24 +149,6 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
 
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EachDateRecylerViewFragment1.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance() =
-            EachDateRecyclerViewFragment1().apply {
-                arguments = Bundle().apply {
-                }
-            }
-    }
-
     private fun getData(userID: String, date: Date): GetEmotionDiaryRecordsOutput? {
 
         var resultValue: GetEmotionDiaryRecordsOutput? = null
@@ -183,83 +179,107 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
 
     }
 
-    override fun onCallBackValueChanged(success: Boolean, dateNum: Int?) {
+    private fun updateData(userID: String, date: Date, updateValue: GetEmotionDiaryRecordsOutput?) {
+
+        updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
+            userID,
+            date,
+            updateValue?.score1,
+            updateValue?.inputText1,
+            updateValue?.score2,
+            updateValue?.inputText2,
+            updateValue?.score2,
+            updateValue?.inputText3
+        )
+            .enqueue(object :
+                Callback<UpdateEmotionDiaryRecordsOutput> {
+
+                override fun onResponse(
+                    call: Call<UpdateEmotionDiaryRecordsOutput>,
+                    response: Response<UpdateEmotionDiaryRecordsOutput>
+                ) {
+
+                }
+
+                override fun onFailure(
+                    call: Call<UpdateEmotionDiaryRecordsOutput>,
+                    t: Throwable
+                ) {
+                    val errorDialog = AlertDialog.Builder(context)
+                    errorDialog.setTitle("통신 오류")
+                    errorDialog.setMessage("통신에 실패했습니다 : type2")
+                    errorDialog.show()
+                }
+
+            })
+
+    }
+
+    private fun dayChangerForMonth(
+        dateString: String,
+        dayOfMonth: Int
+    ): Date? {
+
+        val standardFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
+        val primaryDate: Date?
+
+        try {
+            primaryDate = standardFormat.parse(dateString)
+
+            val calendar = Calendar.getInstance()
+            calendar.time = primaryDate!!
+
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+            return calendar.time
+
+        } catch (e: ParseException) {
+            // dateString 의 형태와 포맷이 일치하지 않는 경우에 대한 처리
+            e.printStackTrace()
+
+            return null
+        }
+
+    }
+
+
+    override fun onCallBackValueChanged(
+        success: Boolean,
+        dateNum: Int?,
+        positionData: EachDateRecordDataClass?
+    ) {
 
         if (success) {
 
-            var updateValue: GetEmotionDiaryRecordsOutput?
+            val updateValue: GetEmotionDiaryRecordsOutput?
 
             // 로그인한 유저 아이디 지정
-            val userID = ApplicationClass.loginSharedPreferences.getString("saveID", "")
+            val userID = ApplicationClass.loginSharedPreferences.getString("saveID", null)
 
+            val searchDate =
+                if (dateNum != null) {
+                    dayChangerForMonth(viewModel.dateString, dateNum)
+                } else {
+                    null
+                }
 
+            val resultValue =
+                if (userID != null && searchDate != null) {
+                    getData(userID, searchDate)
+                } else {
+                    null
+                }
 
-            val resultValue = getData(userID!!, dateNum)
+            // updateValue = resultValue -> 이러면 resultValue 바꾸면 updateValue 도 바뀜
+            updateValue = resultValue?.copy()
 
-            getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(
-                userID!!,
-                date!!
-            )
-                .enqueue(object :
-                    Callback<GetEmotionDiaryRecordsOutput> {
+            updateValue?.inputText1 = positionData?.inputText
 
-                    override fun onResponse(
-                        call: Call<GetEmotionDiaryRecordsOutput>,
-                        response: Response<GetEmotionDiaryRecordsOutput>
-                    ) {
-                        resultValue = response.body()
-
-                        // updateValue = resultValue -> 이러면 resultValue 바꾸면 updateValue도 바뀜
-                        updateValue = resultValue?.copy()
-                        updateValue?.score1 = index
-
-                        updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
-                            userID,
-                            date,
-                            updateValue?.score1,
-                            updateValue?.inputText1,
-                            updateValue?.score2,
-                            updateValue?.inputText2,
-                            updateValue?.score3,
-                            updateValue?.inputText3
-                        )
-                            .enqueue(object :
-                                Callback<UpdateEmotionDiaryRecordsOutput> {
-
-                                override fun onResponse(
-                                    call: Call<UpdateEmotionDiaryRecordsOutput>,
-                                    response: Response<UpdateEmotionDiaryRecordsOutput>
-                                ) {
-
-
-                                }
-
-                                override fun onFailure(
-                                    call: Call<UpdateEmotionDiaryRecordsOutput>,
-                                    t: Throwable
-                                ) {
-                                    val errorDialog = AlertDialog.Builder(context)
-                                    errorDialog.setTitle("통신 오류")
-                                    errorDialog.setMessage("통신에 실패했습니다 : type2")
-                                    errorDialog.show()
-                                }
-
-                            })
-
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetEmotionDiaryRecordsOutput>,
-                        t: Throwable
-                    ) {
-
-                        val errorDialog = AlertDialog.Builder(context)
-                        errorDialog.setTitle("통신 오류")
-                        errorDialog.setMessage("통신에 실패했습니다 : type3")
-                        errorDialog.show()
-                    }
-
-                })
+            if (userID != null && searchDate != null) {
+                updateData(userID, searchDate, updateValue)
+            } else {
+                return
+            }
 
         }
 

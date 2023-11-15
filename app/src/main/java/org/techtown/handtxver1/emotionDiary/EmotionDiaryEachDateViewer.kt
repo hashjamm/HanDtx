@@ -22,7 +22,7 @@ class EmotionDiaryEachDateViewer : AppCompatActivity() {
         viewModel.setData(dateString!!, weekdayString!!, dateWeekDayString!!, daysInMonth!!)
 
         val menuBar = BottomMenuBar(1)
-        val dateRecord1 = EmotionDiaryEachDateRecord1()
+        val dateRecord1 = EachDateRecyclerViewFragment1()
         val dateRecord2 = EmotionDiaryEachDateRecord2()
         val dateRecord3 = EmotionDiaryEachDateRecord3()
 

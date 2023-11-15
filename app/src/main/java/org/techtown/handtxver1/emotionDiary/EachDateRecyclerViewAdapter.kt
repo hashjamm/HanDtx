@@ -41,7 +41,7 @@ class EachDateRecyclerViewAdapter(
 
             val isExpandable = positionData?.isExpandable
 
-            line1A.addTextChangedListener(object: TextWatcher {
+            line1A.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     TODO("Not yet implemented")
                 }
@@ -66,7 +66,11 @@ class EachDateRecyclerViewAdapter(
                     throw IllegalStateException("에러 발생 : there is no data : isExpandable.")
                 }
 
-                callBackInterface.onCallBackValueChanged(true, holder.adapterPosition + 1)
+                callBackInterface.onCallBackValueChanged(
+                    true,
+                    holder.adapterPosition + 1,
+                    positionData
+                )
 
                 mutableDataList[holder.adapterPosition] = positionData
 
