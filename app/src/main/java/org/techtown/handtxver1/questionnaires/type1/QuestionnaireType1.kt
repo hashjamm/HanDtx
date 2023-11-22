@@ -8,8 +8,11 @@ import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.techtown.handtxver1.R
+import org.techtown.handtxver1.emotionDiary.UpdateEmotionDiaryRecordsInterface
 import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class QuestionnaireType1 : AppCompatActivity() {
 
@@ -23,6 +26,16 @@ class QuestionnaireType1 : AppCompatActivity() {
 
     // QuestionnaireUserDefinedObjectSet 클래스 인스턴스 생성
     private val objectSet = QuestionnaireUserDefinedObjectSet()
+
+    // retrofit 객체 생성
+    private var retrofit = Retrofit.Builder()
+        .baseUrl("https://112.222.70.85") // 연결하고자 하는 서버 주소 입력
+        .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
+        .build() // 코드 마무리
+
+    // 감정다이어리 서비스 interface 를 장착한 Retrofit 객체 생성
+    private var updateEmotionDiaryRecordsInterface: UpdateEmotionDiaryRecordsInterface =
+        retrofit.create(UpdateEmotionDiaryRecordsInterface::class.java)
 
     // sharedPreferences 를 선언만 함 -> 이후에 onCreate 와 onResume 에서 초기화
     // Int 타입인 checkSumChange 는 선언만 해둘 수가 없어서 우선 초기화를 해두었으나 onCreate 와 onResume 에서 다시 초기화해줄 예정
