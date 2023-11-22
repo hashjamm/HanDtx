@@ -1,4 +1,4 @@
-package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type1
+package org.techtown.handtxver1.questionnaires.type1
 
 import android.content.Intent
 import android.os.Bundle

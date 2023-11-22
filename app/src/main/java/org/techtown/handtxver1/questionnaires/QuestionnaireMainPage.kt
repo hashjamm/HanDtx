@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import org.techtown.handtxver1.BottomMenuBar
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
-import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1
+import org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type2.QuestionnaireType2
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type3.QuestionnaireType3
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type4.QuestionnaireType4

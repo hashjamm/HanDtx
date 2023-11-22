@@ -57,7 +57,7 @@
             android:name=".org.techtown.handtxver1.questionnaires.type2.QuestionnaireType2"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1"
+            android:name=".questionnaires.type1.QuestionnaireType1"
             android:exported="false" />
         <activity
             android:name=".emotionDiary.EmotionDiaryEachDateViewer"

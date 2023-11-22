@@ -152,6 +152,7 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/each_date_frame_layout_item.xml" value="0.41015625" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/each_date_item.xml" value="0.5" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_blank.xml" value="0.49765625" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_blank_each_date_recycler_view3.xml" value="0.49296875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_bottom_menu_bar.xml" value="0.9" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_drinking_questionnaire_content_page1.xml" value="0.49765625" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_drinking_questionnaire_content_page10.xml" value="0.51875" />
@@ -167,6 +168,8 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_each_date_box1.xml" value="0.5" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_each_date_box2.xml" value="0.5" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_each_date_recycler_view1.xml" value="0.5694444444444444" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_each_date_recycler_view2.xml" value="0.51875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_each_date_recycler_view3.xml" value="0.5" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_each_date_recyler_view1.xml" value="0.41171875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_emotion_diary.xml" value="0.534375" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_emotion_diary_chart1.xml" value="0.534375" />

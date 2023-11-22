@@ -11,7 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.techtown.handtxver1.CallBackInterface
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.databinding.FragmentEachDateRecyclerView1Binding
+import org.techtown.handtxver1.databinding.FragmentEachDateRecyclerView2Binding
 import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,13 +27,13 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [EachDateRecyclerViewFragment1.newInstance] factory method to
+ * Use the [EachDateRecyclerViewFragment2.newInstance] factory method to
  * create an instance of this fragment.
  */
-class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
+class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
 
     // Fragment 에 사용할 레이아웃 파일 바인딩 선언
-    lateinit var binding: FragmentEachDateRecyclerView1Binding
+    lateinit var binding: FragmentEachDateRecyclerView2Binding
 
     // 감정다이어리에서 날짜 값을 지정하고 있는 ViewModel 을
     // EmotionDiaryEachDateViewer 액티비티에서 사용할 수 있도록 하고
@@ -74,15 +74,15 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, eachDateRecyclerViewFragment1: ViewGroup?,
+        inflater: LayoutInflater, eachDateRecyclerViewFragment2: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
         binding =
             DataBindingUtil.inflate(
                 inflater,
-                R.layout.fragment_each_date_recycler_view1,
-                eachDateRecyclerViewFragment1,
+                R.layout.fragment_each_date_recycler_view2,
+                eachDateRecyclerViewFragment2,
                 false
             )
 
@@ -125,15 +125,15 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
             val dateLineFormat = SimpleDateFormat("dd일 E", Locale.KOREA)
             val dateStringInLine = dateLineFormat.format(searchDate)
 
-            val score = resultValue?.score1
+            val score = resultValue?.score2
 
             val textByScore = if (score != null) {
-                objectSet.graphTextArray1[score]
+                objectSet.graphTextArray2[score]
             } else {
-                "오늘 하루 어땠나요?"
+                "오늘 얼마나 불안했나요?"
             }
 
-            val inputText = resultValue?.inputText1
+            val inputText = resultValue?.inputText2
 
             // 데이터 클래스 인스턴스 생성
             val oneDateData = EachDateRecordDataClass(
