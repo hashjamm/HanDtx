@@ -24,9 +24,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
+import org.techtown.handtxver1.org.techtown.handtxver1.questioXnnaires.type2.QuestionnaireType2
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.drinking.DrinkingQuestionnaire
-import org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1
-import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type2.QuestionnaireType2
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type3.QuestionnaireType3
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type4.QuestionnaireType4
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type5.QuestionnaireType5
@@ -34,6 +33,7 @@ import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type6.Ques
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type7.QuestionnaireType7
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type8.QuestionnaireType8
 import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
+import org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1
 import org.techtown.handtxver1.questionnaires.type10.QuestionnaireType10
 import org.techtown.handtxver1.questionnaires.type9.QuestionnaireType9
 import java.text.SimpleDateFormat

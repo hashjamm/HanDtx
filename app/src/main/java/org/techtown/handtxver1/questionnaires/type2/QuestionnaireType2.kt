@@ -1,4 +1,4 @@
-package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type2
+package org.techtown.handtxver1.org.techtown.handtxver1.questioXnnaires.type2
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -6,7 +6,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type2.*
 import org.techtown.handtxver1.questionnaires.type2.ViewModelForQType2
+import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type2.QType2ContentPage7 as QType2ContentPage7
 
 class QuestionnaireType2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,5 +1,6 @@
 package org.techtown.handtxver1.questionnaires.type1
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -8,13 +9,23 @@ import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.emotionDiary.UpdateEmotionDiaryRecordsInterface
+import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
-import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 class QuestionnaireType1 : AppCompatActivity() {
+
+    // 로그인한 유저 아이디 지정
+    val userID = ApplicationClass.loginSharedPreferences.getString("saveID", "")
+
+    // 현재 날짜 가져오기
+    private val currentDate = Calendar.getInstance()
+    private val date = currentDate.time
 
     // 체크박스 배열 변수 선언, 작업해줄 내용을 하나의 함수로 지정하고 인스턴스를 직접사용하는 것이 필요한 경우를 파라미터로 지정해서 작성
 
@@ -22,10 +33,7 @@ class QuestionnaireType1 : AppCompatActivity() {
 
     // 제출 완료 버튼을 누름과 동시에 QuestionnaireSharedPreferences 에 전송해줄 설문 결과 데이터 인스턴스 선언
 
-    private lateinit var surveyResults: MutableList<Int>
-
-    // QuestionnaireUserDefinedObjectSet 클래스 인스턴스 생성
-    private val objectSet = QuestionnaireUserDefinedObjectSet()
+    private lateinit var surveyResults: MutableList<Boolean>
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
@@ -33,9 +41,101 @@ class QuestionnaireType1 : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
         .build() // 코드 마무리
 
-    // 감정다이어리 서비스 interface 를 장착한 Retrofit 객체 생성
-    private var updateEmotionDiaryRecordsInterface: UpdateEmotionDiaryRecordsInterface =
-        retrofit.create(UpdateEmotionDiaryRecordsInterface::class.java)
+    // 이슈 선택 서비스 interface 를 장착한 Retrofit 객체 생성
+    private var updateIssueCheckingSurveyInterface: UpdateIssueCheckingSurveyInterface =
+        retrofit.create(UpdateIssueCheckingSurveyInterface::class.java)
+
+    private var getIssueCheckingSurveyInterface: GetIssueCheckingSurveyInterface =
+        retrofit.create(GetIssueCheckingSurveyInterface::class.java)
+
+    private fun getData(userID: String, date: Date): GetIssueCheckingSurveyOutput? {
+
+        var resultValue: GetIssueCheckingSurveyOutput? = null
+
+        getIssueCheckingSurveyInterface.requestGetIssueCheckingSurvey(userID, date)
+            .enqueue(
+                object :
+                    Callback<GetIssueCheckingSurveyOutput> {
+
+                    override fun onResponse(
+                        call: Call<GetIssueCheckingSurveyOutput>,
+                        response: Response<GetIssueCheckingSurveyOutput>
+                    ) {
+
+                        resultValue = response.body()
+
+                    }
+
+                    override fun onFailure(call: Call<GetIssueCheckingSurveyOutput>, t: Throwable) {
+
+
+                        throw IllegalStateException("에러 발생 : 통신이 이루어지지 않습니다.")
+
+                    }
+                }
+
+            )
+
+        return resultValue
+
+    }
+
+    private fun updateData(
+        userID: String,
+        date: Date,
+        surveyResults: MutableList<Boolean>,
+        checkBoxText: String
+    ) {
+
+        updateIssueCheckingSurveyInterface.requestUpdateIssueCheckingSurvey(
+            userID,
+            date,
+            surveyResults[0],
+            surveyResults[1],
+            surveyResults[2],
+            surveyResults[3],
+            surveyResults[4],
+            surveyResults[5],
+            surveyResults[6],
+            surveyResults[7],
+            surveyResults[8],
+            surveyResults[9],
+            surveyResults[10],
+            surveyResults[11],
+            surveyResults[12],
+            surveyResults[13],
+            surveyResults[14],
+            surveyResults[15],
+            surveyResults[16],
+            surveyResults[17],
+            surveyResults[18],
+            surveyResults[19],
+            surveyResults[20],
+            surveyResults[21],
+            checkBoxText
+        ).enqueue(object :
+            Callback<UpdateIssueCheckingSurveyOutput> {
+
+            override fun onResponse(
+                call: Call<UpdateIssueCheckingSurveyOutput>,
+                response: Response<UpdateIssueCheckingSurveyOutput>
+            ) {
+
+            }
+
+            override fun onFailure(
+                call: Call<UpdateIssueCheckingSurveyOutput>,
+                t: Throwable
+            ) {
+                val errorDialog = AlertDialog.Builder(this@QuestionnaireType1)
+                errorDialog.setTitle("통신 오류")
+                errorDialog.setMessage("통신에 실패했습니다 : type2")
+                errorDialog.show()
+            }
+
+        })
+
+    }
 
     // sharedPreferences 를 선언만 함 -> 이후에 onCreate 와 onResume 에서 초기화
     // Int 타입인 checkSumChange 는 선언만 해둘 수가 없어서 우선 초기화를 해두었으나 onCreate 와 onResume 에서 다시 초기화해줄 예정
@@ -79,7 +179,7 @@ class QuestionnaireType1 : AppCompatActivity() {
         // surveyResults 초기화
         // 사이즈가 22개이고 모든 요소를 0으로 초기화해두어 생성
         // 어차피 모든 체크박스를 체크 해제된 상태로 초기화할 것이라 문제 없음.
-        surveyResults = MutableList(22) { 0 }
+        surveyResults = MutableList(22) { false }
 
         // 해당 설문지 액티비티에 새롭게 들어온 순간 모든 체크박스 상태 초기화
 
@@ -88,15 +188,11 @@ class QuestionnaireType1 : AppCompatActivity() {
         }
 
         // 설문 페이지 들어왔을 때, editTextView 부분 클릭 횟수를 0회부터 추적 관찰
-        // 이는 마지막 체크박스가 editTextView가 아예 입력되지 않았을 때는 체크 해제되도록 하려고 함
+        // 이는 마지막 체크박스가 editTextView 가 아예 입력되지 않았을 때는 체크 해제되도록 하려고 함
 
         checkBoxes.forEachIndexed { index, checkBox ->
             checkBox.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    surveyResults[index] = 1
-                } else {
-                    surveyResults[index] = 0
-                }
+                surveyResults[index] = isChecked
             }
         }
 
@@ -128,12 +224,7 @@ class QuestionnaireType1 : AppCompatActivity() {
 
             val checkBoxText = editTextBox.text.toString()
 
-            objectSet.updateSurveyData(
-                1,
-                objectSet.dateToday,
-                surveyResults,
-                checkBoxText
-            )
+            updateData(userID!!, date, surveyResults, checkBoxText)
 
             Toast.makeText(this, "설문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
 
@@ -174,23 +265,38 @@ class QuestionnaireType1 : AppCompatActivity() {
         // 마지막 체크박스는 사용자가 직접 상호작용할 수 없게 설정
         checkBoxes[21].isEnabled = false
 
-        // editText 뷰 인스턴스 생성
-        val editTextBox = findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.box22_text)
+        val surveyResults = getData(userID!!, date)
 
-        val getSurveyResults =
-            objectSet.getOneSurveyResults(
-                1,
-                objectSet.dateToday
-            )?.results
-
-        surveyResults =
-            getSurveyResults ?: MutableList(22) { 0 }
+        val surveyOutputList = listOf(
+            surveyResults?.checkbox1,
+            surveyResults?.checkbox2,
+            surveyResults?.checkbox3,
+            surveyResults?.checkbox4,
+            surveyResults?.checkbox5,
+            surveyResults?.checkbox6,
+            surveyResults?.checkbox7,
+            surveyResults?.checkbox8,
+            surveyResults?.checkbox9,
+            surveyResults?.checkbox10,
+            surveyResults?.checkbox11,
+            surveyResults?.checkbox12,
+            surveyResults?.checkbox13,
+            surveyResults?.checkbox14,
+            surveyResults?.checkbox15,
+            surveyResults?.checkbox16,
+            surveyResults?.checkbox17,
+            surveyResults?.checkbox18,
+            surveyResults?.checkbox19,
+            surveyResults?.checkbox20,
+            surveyResults?.checkbox21,
+            surveyResults?.inputText
+        )
 
         checkBoxes.forEachIndexed { index, checkBox ->
 
-            if (surveyResults != MutableList(22) { 0 }) {
+            if (surveyResults != null) {
 
-                if (surveyResults[index] == 1) {
+                if (surveyOutputList[index] == false) {
                     checkBox.isChecked
                 } else {
                     checkBox.isChecked = false
@@ -204,7 +310,7 @@ class QuestionnaireType1 : AppCompatActivity() {
 
         }
 
-        // 리스너의 경우, onResume과 onCreate 모두에 적혀있을 경우 리스너 충돌 문제가 발생할 수 있음.
+        // 리스너의 경우, onResume 과 onCreate 모두에 적혀있을 경우 리스너 충돌 문제가 발생할 수 있음.
         // 필요한 경우에만 작성해주도록 하자.
 
     }
