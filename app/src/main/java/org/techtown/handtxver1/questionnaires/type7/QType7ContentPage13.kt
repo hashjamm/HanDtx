@@ -1,7 +1,6 @@
 package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type7
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentQType7ContentPage13Binding
+import org.techtown.handtxver1.questionnaires.type7.ViewModelForQType7
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,7 +77,11 @@ class QType7ContentPage13 : Fragment() {
             binding.box15,
             binding.box16,
             binding.box17,
-            binding.box18
+            binding.box18,
+            binding.box19,
+            binding.box20,
+            binding.box21,
+            binding.box22
         )
 
         for (index in checkBoxes.indices) {

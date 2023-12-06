@@ -2,34 +2,18 @@ package org.techtown.handtxver1.emotionDiary
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
-import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
-import java.text.SimpleDateFormat
-import java.util.*
+import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 
 class EmotionDiaryUserDefinedObjectSet {
-
-    // 각 DB 파일로 사용된 sharedPreferences 에서 userID 밑으로 주요 분류 값으로 사용될 오늘 날짜에 대한 값을 미리 작성
-    val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
-    val dateToday = dateFormat.format(Calendar.getInstance().time)
 
     // munuNum 에 따라 아래와 같이 정의
     // 1 : "기분" 텝
     // 2 : "불안" 텝
     // 3 : "식이" 텝
     // 이외 : null
-
-    // json String 으로 encoding 하기 위해 데이터를 묶기 위한 데이터 클래스 생성
-    // 유저 로그인 정보
-    @Serializable
-    data class LoginInfo(
-        val userID: String,
-        val userPW: String,
-        val loginTime: String
-    )
 
     // json String 으로 encoding 하기 위해 데이터를 묶기 위한 데이터 클래스 생성
     // 감정다이어리 부분
@@ -46,10 +30,6 @@ class EmotionDiaryUserDefinedObjectSet {
         @SerialName("inputText3") val inputText3: String? = null
     )
 
-    @Serializable
-    data class OneUserEmotionDiaryData(
-        @SerialName("dates") val dates: Map<String, EmotionDiaryData>? = null
-    )
 
     // 기분, 불안, 비만 탭에서 그래프 최적화를 위해 점수마다 부여해줄 그래프 백그라운드 배열 생성
     val graphBackgroundArray = arrayOf(
@@ -104,25 +84,6 @@ class EmotionDiaryUserDefinedObjectSet {
         "8점 내용",
         "9점 내용"
     )
-
-    // 유저의 id와 pw를 Login 클래스에서 LoginInfo sharedPreferences 에 저장하고, 이를 여기에서도 불러오는 함수
-    // sharedPreferences 는 user info 를 담고 잇는 sharedPreferences 파일 명을 적어줘야 함
-    fun getUserInfo(): LoginInfo? {
-
-        val sharedPreferences = ApplicationClass.loginSharedPreferences
-
-        val jsonUserInfo = sharedPreferences.getString("userInfo", null)
-
-        return if (jsonUserInfo != null) {
-            Json.decodeFromString<LoginInfo>(jsonUserInfo)
-        } else {
-            null
-        }
-
-    }
-
-    // MixedData 의 default 값에 대한 encoded json String
-    val defaultJsonMixedData = Json.encodeToString(EmotionDiaryData())
 
     // SharedPreferences 를 생성해주면 해당 파일에서 score 를 알맞게 가져오는 함수
     fun getScore(

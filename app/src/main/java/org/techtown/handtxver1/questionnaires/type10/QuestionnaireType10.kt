@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
+import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type10.ViewModelForQType10
 
 class QuestionnaireType10 : AppCompatActivity() {
