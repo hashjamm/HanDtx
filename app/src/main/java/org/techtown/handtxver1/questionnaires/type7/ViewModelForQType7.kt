@@ -31,7 +31,7 @@ class ViewModelForQType7 : ViewModel() {
     }
 
     // 13번 문항의 18개 체크박스 각각에 대한 운동 종목 이름의 배열을 생성
-    val exerciseTypeSequence = arrayOf(
+    private val exerciseTypeSequence = arrayOf(
         "걷기", "축구", "조깅", "농구", "수영", "배구",
         "에어로빅", "골프", "자전거타기", "볼링", "계단오르기", "라켓볼",
         "줄넘기", "게이트볼", "등산", "스쿼시", "배드민턴", "체조",
@@ -39,17 +39,27 @@ class ViewModelForQType7 : ViewModel() {
     )
 
     // 체크 박스 중 체크된 곳들에 해당하는 운동 종목들을 하나의 string 으로 반환해주는 함수 생성
-    fun loadingExerciseTypeByUsingBoxNumber(): String {
+    fun loadingExerciseTypeByUsingBoxNumber(): ArrayList<String> {
 
-        val checkedExercisesArray = ArrayList<String>()
+        val exerciseTypeArray = ArrayList<String>()
 
         checkedStateArray.forEachIndexed { index, isChecked ->
             if (isChecked == 1) {
-                checkedExercisesArray.add(exerciseTypeSequence[index])
+                exerciseTypeArray.add(exerciseTypeSequence[index])
             }
         }
 
-        return checkedExercisesArray.joinToString(", ")
+        return exerciseTypeArray
+
+    }
+
+    var inputText = Array<String?>(1) { null }
+
+    // inputText 를 업데이트 하기 위한 함수 생성
+    fun updateInputText(
+        text: String?
+    ) {
+        inputText[0] = text
     }
 
 }

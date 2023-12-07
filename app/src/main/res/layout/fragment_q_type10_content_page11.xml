@@ -67,7 +67,7 @@
                 android:checked="false"
                 android:gravity="center"
                 android:hint="회 / 주"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textColor="#000000"
                 android:textSize="15dp"
                 android:textStyle="bold" />

@@ -18,6 +18,10 @@ import org.techtown.handtxver1.R
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type7.*
 import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
 class QuestionnaireType7 : AppCompatActivity() {
 
@@ -25,7 +29,7 @@ class QuestionnaireType7 : AppCompatActivity() {
     val objectSet = QuestionnaireUserDefinedObjectSet()
 
     // ViewModel 에 접근 및 로딩
-    val viewModel = ViewModelProvider(this).get(ViewModelForQType7::class.java)
+    val viewModel = ViewModelProvider(this)[ViewModelForQType7::class.java]
 
     val presentPageBar: AppCompatImageView =
         findViewById(R.id.presentPageBar)
@@ -234,7 +238,61 @@ class QuestionnaireType7 : AppCompatActivity() {
 
     }
 
+    private var updateExerciseSurveyInterface: UpdateExerciseSurveyInterface =
+        objectSet.retrofit.create(UpdateExerciseSurveyInterface::class.java)
 
+    private fun updateData(
+        userID: String,
+        date: Date
+    ) {
+
+        val responseSequence = viewModel.responseSequence
+        val exerciseTypeArray = viewModel.loadingExerciseTypeByUsingBoxNumber()
+        val inputText = viewModel.inputText
+
+        val exerciseType1 = if (exerciseTypeArray.size > 0) exerciseTypeArray[0] else null
+        val exerciseType2 = if (exerciseTypeArray.size > 1) exerciseTypeArray[1] else null
+        val exerciseType3 = if (exerciseTypeArray.size > 2) exerciseTypeArray[2] else null
+
+        updateExerciseSurveyInterface.requestUpdateExerciseSurvey(
+            userID,
+            date,
+            responseSequence[0]!!,
+            responseSequence[1]!!,
+            responseSequence[2]!!,
+            responseSequence[3]!!,
+            responseSequence[4]!!,
+            responseSequence[5]!!,
+            responseSequence[6]!!,
+            responseSequence[7]!!,
+            responseSequence[8]!!,
+            responseSequence[9]!!,
+            responseSequence[10]!!,
+            responseSequence[11]!!,
+            exerciseType1,
+            exerciseType2,
+            exerciseType3,
+            inputText[0]
+        ).enqueue(object :
+            Callback<UpdateExerciseSurveyOutput> {
+
+            override fun onResponse(
+                call: Call<UpdateExerciseSurveyOutput>,
+                response: Response<UpdateExerciseSurveyOutput>
+            ) {
+
+            }
+
+            override fun onFailure(call: Call<UpdateExerciseSurveyOutput>, t: Throwable) {
+                val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType7)
+                errorDialog.setTitle("통신 오류")
+                errorDialog.setMessage("통신에 실패했습니다 : type2")
+                errorDialog.show()
+            }
+
+        })
+
+    }
 
 }
 
