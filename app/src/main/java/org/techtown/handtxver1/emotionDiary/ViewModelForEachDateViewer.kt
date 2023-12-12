@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 class ViewModelForEachDateViewer : ViewModel() {
 
     var dateString = String()
-    var weekdayString = String()
-    var dateWeekDayString = String()
+    private var weekdayString = String()
+    private var dateWeekDayString = String()
     var daysInMonth: Int = 0
 
     fun setData(

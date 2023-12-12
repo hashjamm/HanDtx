@@ -33,10 +33,10 @@
             android:name=".CheckIn"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.drinking.DrinkingQuestionnaire"
+            android:name=".questionnaires.drinking.DrinkingQuestionnaire"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.type8.QuestionnaireType8"
+            android:name=".questionnaires.type8.QuestionnaireType8"
             android:exported="false" />
         <activity
             android:name=".questionnaires.type7.QuestionnaireType7"
