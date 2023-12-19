@@ -4,7 +4,7 @@
     package="org.techtown.handtxver1">
 
     <application
-        android:name=".org.techtown.handtxver1.ApplicationClass"
+        android:name=".ApplicationClass"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -33,31 +33,31 @@
             android:name=".CheckIn"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.drinking.DrinkingQuestionnaire"
+            android:name=".questionnaires.drinking.DrinkingQuestionnaire"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.type8.QuestionnaireType8"
+            android:name=".questionnaires.type8.QuestionnaireType8"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.type7.QuestionnaireType7"
+            android:name=".questionnaires.type7.QuestionnaireType7"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.type6.QuestionnaireType6"
+            android:name=".questionnaires.type6.QuestionnaireType6"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.type5.QuestionnaireType5"
+            android:name=".questionnaires.type5.QuestionnaireType5"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.type4.QuestionnaireType4"
+            android:name=".questionnaires.type4.QuestionnaireType4"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.type3.QuestionnaireType3"
+            android:name=".questionnaires.type3.QuestionnaireType3"
             android:exported="false" />
         <activity
             android:name=".org.techtown.handtxver1.questionnaires.type2.QuestionnaireType2"
             android:exported="false" />
         <activity
-            android:name=".org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1"
+            android:name=".questionnaires.type1.QuestionnaireType1"
             android:exported="false" />
         <activity
             android:name=".emotionDiary.EmotionDiaryEachDateViewer"

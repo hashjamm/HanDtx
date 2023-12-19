@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentDrinkingQuestionnaireContentPage2Binding
+import org.techtown.handtxver1.questionnaires.drinking.ViewModelForDrinkingQuestionnaire
 
 
 // TODO: Rename parameter arguments, choose names that match

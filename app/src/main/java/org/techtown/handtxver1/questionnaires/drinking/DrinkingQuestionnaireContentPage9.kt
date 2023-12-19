@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import org.techtown.handtxver1.R
+import org.techtown.handtxver1.questionnaires.drinking.ViewModelForDrinkingQuestionnaire
 
 
 // TODO: Rename parameter arguments, choose names that match

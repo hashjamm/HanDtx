@@ -1,7 +1,8 @@
-package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type7
+package org.techtown.handtxver1.questionnaires.type7
 
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,7 +78,11 @@ class QType7ContentPage13 : Fragment() {
             binding.box15,
             binding.box16,
             binding.box17,
-            binding.box18
+            binding.box18,
+            binding.box19,
+            binding.box20,
+            binding.box21,
+            binding.box22
         )
 
         for (index in checkBoxes.indices) {
@@ -87,11 +92,35 @@ class QType7ContentPage13 : Fragment() {
             }
         }
 
+        binding.box22Text.setText(viewModel.inputText[0])
+
+        binding.box22.isEnabled = false
+
+        binding.box22Text.addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                binding.box22.isChecked = !p0.isNullOrEmpty()
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+                viewModel.updateInputText(p0.toString())
+
+            }
+
+        })
+
         checkBoxes.forEachIndexed { index, checkBox ->
 
             val boxNumber = index + 1
 
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
+            checkBox.setOnCheckedChangeListener { box, isChecked ->
                 if (isChecked) {
                     viewModel.updateChecking(boxNumber, 1)
 
@@ -105,11 +134,26 @@ class QType7ContentPage13 : Fragment() {
 
                         dialogOfResponses.show()
 
-                        checkBox.isChecked = false
+                        if (box == binding.box22) {
+
+                            binding.box22Text.setText("")
+                            // -> addTextChangedListener 발동
+                            // -> 자동으로 box22 체크 해제 -> 자동으로 viewModel 내부 inputText 업데이트
+                            // 하지만 viewModel updateChecking 은 필요
+
+                        } else {
+
+                            checkBox.isChecked = false
+
+                        }
+
                         viewModel.updateChecking(boxNumber, 0)
+
                     }
                 } else {
+
                     viewModel.updateChecking(boxNumber, 0)
+
                 }
             }
         }

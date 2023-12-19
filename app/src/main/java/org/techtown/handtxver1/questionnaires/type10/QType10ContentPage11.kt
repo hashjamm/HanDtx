@@ -2,8 +2,9 @@ package org.techtown.handtxver1.questionnaires.type10
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
+import android.text.Spanned
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,24 @@ class QType10ContentPage11 : Fragment() {
     private lateinit var binding: FragmentQType10ContentPage11Binding
 
     private val viewModel: ViewModelForQType10 by activityViewModels()
+
+    inner class NumberDecimalInputFilter : InputFilter {
+        override fun filter(
+            source: CharSequence?,
+            start: Int,
+            end: Int,
+            dest: Spanned?,
+            dstart: Int,
+            dend: Int
+        ): CharSequence? {
+            for (i in start until end) {
+                if (!Character.isDigit(source?.get(i) ?: ' ') && source?.get(i) != '.') {
+                    return ""
+                }
+            }
+            return null
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +64,8 @@ class QType10ContentPage11 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.snackConsumedNumber.filters = arrayOf(NumberDecimalInputFilter())
+
         binding.snackType.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -55,17 +76,11 @@ class QType10ContentPage11 : Fragment() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-                viewModel.updateSnackResponse(1, p0.toString())
-
-                if (viewModel.snackResponse[0] == "") {
-                    viewModel.initializingResponse(11)
-                } else {
-                    viewModel.updateResponse(11, 1)
-                }
-
             }
 
             override fun afterTextChanged(p0: Editable?) {
+
+                viewModel.updateSnackType(p0.toString())
 
             }
         })
@@ -80,19 +95,11 @@ class QType10ContentPage11 : Fragment() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-                // viewModel.snackConsumedNumber = intValue
-
-                viewModel.updateSnackResponse(2, p0.toString())
-
-                if (viewModel.snackResponse[0] == "") {
-                    viewModel.initializingResponse(11)
-                } else {
-                    viewModel.updateResponse(11, 1)
-                }
-
             }
 
             override fun afterTextChanged(p0: Editable?) {
+
+                viewModel.updateConsumeNum(p0.toString().toFloat())
 
             }
         })

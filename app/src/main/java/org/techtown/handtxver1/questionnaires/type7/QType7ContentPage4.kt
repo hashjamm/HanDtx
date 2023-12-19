@@ -1,6 +1,5 @@
 package org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type7
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentQType7ContentPage4Binding
+import org.techtown.handtxver1.questionnaires.type7.ViewModelForQType7
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

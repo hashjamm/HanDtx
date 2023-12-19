@@ -1,15 +1,16 @@
 package org.techtown.handtxver1.emotionDiary
 
-import androidx.lifecycle.*
-import androidx.lifecycle.Observer
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 open class SharedDateViewModel : ViewModel() {
     val date = MutableLiveData<Calendar>()
-    val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
-    val weekdayFormat: SimpleDateFormat = SimpleDateFormat("E", Locale.KOREA)
-    val dateWeekDayFormat: SimpleDateFormat = SimpleDateFormat("MM월 dd일(E)", Locale.KOREA)
+    private val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
+    private val weekdayFormat: SimpleDateFormat = SimpleDateFormat("E", Locale.KOREA)
+    private val dateWeekDayFormat: SimpleDateFormat = SimpleDateFormat("MM월 dd일(E)", Locale.KOREA)
     val dateString = MutableLiveData<String>()
     val weekdayString = MutableLiveData<String>()
     val dateWeekDayString = MutableLiveData<String>()
@@ -24,14 +25,14 @@ open class SharedDateViewModel : ViewModel() {
     }
 
     fun observeDate(lifecycleOwner: LifecycleOwner) {
-        date.observe(lifecycleOwner, Observer {
+        date.observe(lifecycleOwner) {
             dateString.value = dateFormat.format(it.time)
             weekdayString.value = weekdayFormat.format(it.time)
             dateWeekDayString.value = dateWeekDayFormat.format(it.time)
             val calendar = Calendar.getInstance()
             calendar.time = it.time
             daysInMonth.value = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-        })
+        }
     }
 
     fun addDate() {
