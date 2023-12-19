@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.techtown.handtxver1.CallBackInterface
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEachDateRecyclerView3Binding
-import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
+import org.techtown.handtxver1.ApplicationClass
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -22,7 +22,7 @@ class Login : AppCompatActivity() {
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
-        .baseUrl("https://3.37.133.233") // 연결하고자 하는 서버 주소 입력
+        .baseUrl("https://112.222.70.85") // 연결하고자 하는 서버 주소 입력
         .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
         .build() // 코드 마무리
 

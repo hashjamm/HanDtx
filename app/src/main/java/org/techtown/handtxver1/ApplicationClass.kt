@@ -1,4 +1,4 @@
-package org.techtown.handtxver1.org.techtown.handtxver1
+package org.techtown.handtxver1
 
 import android.app.Application
 import android.content.Context

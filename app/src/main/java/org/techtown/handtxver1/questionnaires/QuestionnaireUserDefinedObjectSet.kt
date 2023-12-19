@@ -9,7 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
+import org.techtown.handtxver1.ApplicationClass
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*

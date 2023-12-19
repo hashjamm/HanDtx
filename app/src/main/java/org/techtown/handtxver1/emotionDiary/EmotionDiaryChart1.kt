@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEmotionDiaryChart1Binding
-import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
+import org.techtown.handtxver1.ApplicationClass
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*

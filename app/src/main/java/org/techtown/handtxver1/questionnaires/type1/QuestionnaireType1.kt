@@ -9,7 +9,7 @@ import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.org.techtown.handtxver1.ApplicationClass
+import org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 import retrofit2.Call
 import retrofit2.Callback
