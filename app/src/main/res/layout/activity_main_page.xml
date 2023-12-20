@@ -75,12 +75,13 @@
         app:layout_constraintBottom_toTopOf="@+id/menuBar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title">
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/wholeLinearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -96,7 +97,6 @@
                     android:text="CBT 예약 내역"
                     android:textColor="#000000" />
 
-
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -111,7 +111,6 @@
                     android:background="@drawable/bottom_border"
                     android:text="체크인 결과"
                     android:textColor="#000000" />
-
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -140,8 +139,8 @@
                     android:layout_height="120dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/all_border_round"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="9dp">
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp">
 
                     <TableRow
                         android:layout_width="match_parent"
@@ -238,7 +237,6 @@
 
                 </TableLayout>
 
-
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -255,31 +253,41 @@
                     android:text="설문지 결과"
                     android:textColor="#000000" />
 
-                <androidx.core.widget.NestedScrollView
+                <Space
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/all_border_round"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="9dp">
+                    android:layout_height="15dp"/>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    android:background="@drawable/all_border_round">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="10dp">
 
                         <androidx.appcompat.widget.LinearLayoutCompat
                             android:layout_width="match_parent"
                             android:layout_height="34dp"
                             android:orientation="horizontal">
 
-                            <androidx.appcompat.widget.AppCompatTextView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left|center"
-                                android:text="쳌박"
-                                android:textColor="#000000" />
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox1"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
@@ -297,7 +305,7 @@
                                     android:gravity="left|center"
                                     android:text="정신건강 관련 나의 관심 이슈 고르기"
                                     android:textColor="#000000"
-                                    android:textSize="14dp"
+                                    android:textSize="11dp"
                                     android:textStyle="bold" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -305,7 +313,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:gravity="right|center"
+                                    android:gravity="left|center"
                                     android:textColor="#04B837" />
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -318,13 +326,20 @@
                             android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
-                            <androidx.appcompat.widget.AppCompatTextView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left|center"
-                                android:text="쳌박"
-                                android:textColor="#000000" />
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox2"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
@@ -342,7 +357,7 @@
                                     android:gravity="left|center"
                                     android:text="자가진단 테스트 하기"
                                     android:textColor="#000000"
-                                    android:textSize="14dp"
+                                    android:textSize="11dp"
                                     android:textStyle="bold" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -350,7 +365,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:gravity="right|center"
+                                    android:gravity="left|center"
                                     android:textColor="#04B837" />
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -363,13 +378,20 @@
                             android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
-                            <androidx.appcompat.widget.AppCompatTextView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left|center"
-                                android:text="쳌박"
-                                android:textColor="#000000" />
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox3"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
@@ -387,7 +409,7 @@
                                     android:gravity="left|center"
                                     android:text="웰빙 척도 검사하기"
                                     android:textColor="#000000"
-                                    android:textSize="14dp"
+                                    android:textSize="11dp"
                                     android:textStyle="bold" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -395,7 +417,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:gravity="right|center"
+                                    android:gravity="left|center"
                                     android:textColor="#04B837" />
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -408,13 +430,20 @@
                             android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
-                            <androidx.appcompat.widget.AppCompatTextView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left|center"
-                                android:text="쳌박"
-                                android:textColor="#000000" />
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox4"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
@@ -432,7 +461,7 @@
                                     android:gravity="left|center"
                                     android:text="우울 검사 (PHQ-9)"
                                     android:textColor="#000000"
-                                    android:textSize="14dp"
+                                    android:textSize="11dp"
                                     android:textStyle="bold" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -440,7 +469,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:gravity="right|center"
+                                    android:gravity="left|center"
                                     android:textColor="#04B837" />
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -453,13 +482,20 @@
                             android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
-                            <androidx.appcompat.widget.AppCompatTextView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left|center"
-                                android:text="쳌박"
-                                android:textColor="#000000" />
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox5"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
@@ -477,7 +513,7 @@
                                     android:gravity="left|center"
                                     android:text="불안 검사 (GAD-7)"
                                     android:textColor="#000000"
-                                    android:textSize="14dp"
+                                    android:textSize="11dp"
                                     android:textStyle="bold" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -485,7 +521,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:gravity="right|center"
+                                    android:gravity="left|center"
                                     android:textColor="#04B837" />
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -498,13 +534,20 @@
                             android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
-                            <androidx.appcompat.widget.AppCompatTextView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left|center"
-                                android:text="쳌박"
-                                android:textColor="#000000" />
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox6"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
@@ -522,7 +565,7 @@
                                     android:gravity="left|center"
                                     android:text="스트레스 검사 (PSS-10)"
                                     android:textColor="#000000"
-                                    android:textSize="14dp"
+                                    android:textSize="11dp"
                                     android:textStyle="bold" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -530,7 +573,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:gravity="right|center"
+                                    android:gravity="left|center"
                                     android:textColor="#04B837" />
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -543,13 +586,20 @@
                             android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
-                            <androidx.appcompat.widget.AppCompatTextView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left|center"
-                                android:text="쳌박"
-                                android:textColor="#000000" />
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox7"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
@@ -567,7 +617,7 @@
                                     android:gravity="left|center"
                                     android:text="건강관리 문진표 (운동)"
                                     android:textColor="#000000"
-                                    android:textSize="14dp"
+                                    android:textSize="11dp"
                                     android:textStyle="bold" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -575,7 +625,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:gravity="right|center"
+                                    android:gravity="left|center"
                                     android:textColor="#04B837" />
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -588,13 +638,20 @@
                             android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
-                            <androidx.appcompat.widget.AppCompatTextView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left|center"
-                                android:text="쳌박"
-                                android:textColor="#000000" />
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox8"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="0dp"
@@ -612,7 +669,7 @@
                                     android:gravity="left|center"
                                     android:text="건강관리 문진표 (금연&amp;절주)"
                                     android:textColor="#000000"
-                                    android:textSize="14dp"
+                                    android:textSize="11dp"
                                     android:textStyle="bold" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -620,7 +677,111 @@
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:gravity="right|center"
+                                    android:gravity="left|center"
+                                    android:textColor="#04B837" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox9"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="6"
+                                android:background="@drawable/questionnaire_type_button_background9"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/questionnaireText9"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_weight="5"
+                                    android:gravity="left|center"
+                                    android:text="건강관리 문진표 (스트레스)"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/questionnaireComplete9"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="left|center"
+                                    android:textColor="#04B837" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+
+                                <RadioButton
+                                    android:id="@+id/qTypeCheckBox10"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/questionnaire_main_page_radio_button_selector"
+                                    android:button="@null" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="6"
+                                android:background="@drawable/questionnaire_type_button_background10"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/questionnaireText10"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_weight="5"
+                                    android:gravity="left|center"
+                                    android:text="건강관리 문진표 (영양)"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/questionnaireComplete10"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="left|center"
                                     android:textColor="#04B837" />
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -629,9 +790,7 @@
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-                </androidx.core.widget.NestedScrollView>
-
+                </ScrollView>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -647,7 +806,6 @@
                     android:background="@drawable/bottom_border"
                     android:text="주요 질환 알림"
                     android:textColor="#000000" />
-
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
