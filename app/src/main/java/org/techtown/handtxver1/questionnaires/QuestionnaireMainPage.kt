@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import org.techtown.handtxver1.BottomMenuBar
 import org.techtown.handtxver1.R
+import org.techtown.handtxver1.questionnaires.results.QuestionnaireResultSummary
 import org.techtown.handtxver1.questionnaires.type1.QuestionnaireType1
 import org.techtown.handtxver1.questionnaires.type10.QuestionnaireType10
 import org.techtown.handtxver1.questionnaires.type2.QuestionnaireType2
@@ -41,6 +42,7 @@ class QuestionnaireMainPage : AppCompatActivity() {
     private val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
     private val checkBox9 = findViewById<RadioButton>(R.id.qTypeCheckBox9)
     private val checkBox10 = findViewById<RadioButton>(R.id.qTypeCheckBox10)
+    private val checkBox11 = findViewById<RadioButton>(R.id.qTypeCheckBox11)
 
     // 각 QuestionnaireType 으로 이동하는 TextView 들을 미리 불러옴
     private val toQuestionnaireType1 =
@@ -63,6 +65,8 @@ class QuestionnaireMainPage : AppCompatActivity() {
         findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox9)
     private val toQuestionnaireType10 =
         findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox10)
+    private val toQuestionnaireResult =
+        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox11)
 
     // 메뉴바 fragment 불러옴
     val menuBar = BottomMenuBar(4)
@@ -82,6 +86,7 @@ class QuestionnaireMainPage : AppCompatActivity() {
     private val intent8 = Intent(this, QuestionnaireType8::class.java)
     private val intent9 = Intent(this, QuestionnaireType9::class.java)
     private val intent10 = Intent(this, QuestionnaireType10::class.java)
+    private val intent11 = Intent(this, QuestionnaireResultSummary::class.java)
 
     private val checkBoxes = arrayOf(
         checkBox1,
@@ -93,7 +98,8 @@ class QuestionnaireMainPage : AppCompatActivity() {
         checkBox7,
         checkBox8,
         checkBox9,
-        checkBox10
+        checkBox10,
+        checkBox11
     )
 
     private val toQuestionnaireArray = arrayOf(
@@ -106,7 +112,8 @@ class QuestionnaireMainPage : AppCompatActivity() {
         toQuestionnaireType7,
         toQuestionnaireType8,
         toQuestionnaireType9,
-        toQuestionnaireType10
+        toQuestionnaireType10,
+        toQuestionnaireResult
     )
 
     private val questionnaireNameArray = arrayOf(
@@ -119,7 +126,8 @@ class QuestionnaireMainPage : AppCompatActivity() {
         "건강관리 문진표 (운동)",
         "건강관리 문진표 (금연&절주)",
         "건강관리 문진표 (스트레스)",
-        "건강관리 문진표 (영양)"
+        "건강관리 문진표 (영양)",
+        "건강관리 문진표 종합 결과"
     )
 
     private val intentArray = arrayOf(
@@ -132,24 +140,12 @@ class QuestionnaireMainPage : AppCompatActivity() {
         intent7,
         intent8,
         intent9,
-        intent10
+        intent10,
+        intent11
     )
 
     // ViewModel 에 접근 및 로딩
     val viewModel = ViewModelProvider(this)[ViewModelForQMain::class.java]
-
-    private val surveyDataArray = arrayOf(
-        viewModel.issueCheckingSurveyData,
-        viewModel.selfDiagnosisSurveyData,
-        viewModel.wellBeingScaleSurveyData,
-        viewModel.phq9SurveyData,
-        viewModel.gad7SurveyData,
-        viewModel.pss10SurveyData,
-        viewModel.exerciseSurveyData,
-        viewModel.smokingDrinkingSurveyData,
-        viewModel.stressSurveyData,
-        viewModel.nutritionSurveyData
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,11 +156,28 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
         viewModel.fetchData()
 
+        val surveyDataArray = arrayOf(
+            viewModel.issueCheckingSurveyData,
+            viewModel.selfDiagnosisSurveyData,
+            viewModel.wellBeingScaleSurveyData,
+            viewModel.phq9SurveyData,
+            viewModel.gad7SurveyData,
+            viewModel.pss10SurveyData,
+            viewModel.exerciseSurveyData,
+            viewModel.smokingDrinkingSurveyData,
+            viewModel.stressSurveyData,
+            viewModel.nutritionSurveyData
+        )
+
         checkBoxes.forEachIndexed { index, buttonBox ->
 
-            buttonBox.isEnabled = false
+            if (index != checkBoxes.size - 1) {
 
-            buttonBox.isChecked = surveyDataArray[index] != null
+                buttonBox.isEnabled = false
+
+                buttonBox.isChecked = surveyDataArray[index] != null
+
+            }
 
         }
 
@@ -243,11 +256,21 @@ class QuestionnaireMainPage : AppCompatActivity() {
             index: Int
         ) {
 
-            val currentSurveyData = surveyDataArray[index]
+            val currentSurveyData =
+                if (0 <= index && index < surveyDataArray.size) {
+                    surveyDataArray[index]
+                } else {
+                    null
+                }
+
+            val previousSurveyData =
+                if (0 < index && index <= surveyDataArray.size) {
+                    surveyDataArray[index - 1]
+                } else {
+                    null
+                }
 
             if (0 < index && index < surveyDataArray.size) {
-
-                val previousSurveyData = surveyDataArray[index - 1]
 
                 if (previousSurveyData != null) {
 
@@ -276,6 +299,18 @@ class QuestionnaireMainPage : AppCompatActivity() {
                 } else {
 
                     startActivity(intentArray[index])
+
+                }
+
+            } else if (index == surveyDataArray.size) {
+
+                if (previousSurveyData != null) {
+
+                    startActivity(intentArray[index])
+
+                } else {
+
+                    previousSurveyAlertPopup(index)
 
                 }
 
@@ -308,11 +343,28 @@ class QuestionnaireMainPage : AppCompatActivity() {
         // 다른 페이지에서 뒤로가기 버튼을 눌렀을 때, 만약 날짜가 바뀐 경우라면 해당 fetchData 매서드 적용이 필요
         viewModel.fetchData()
 
+        val surveyDataArray = arrayOf(
+            viewModel.issueCheckingSurveyData,
+            viewModel.selfDiagnosisSurveyData,
+            viewModel.wellBeingScaleSurveyData,
+            viewModel.phq9SurveyData,
+            viewModel.gad7SurveyData,
+            viewModel.pss10SurveyData,
+            viewModel.exerciseSurveyData,
+            viewModel.smokingDrinkingSurveyData,
+            viewModel.stressSurveyData,
+            viewModel.nutritionSurveyData
+        )
+
         checkBoxes.forEachIndexed { index, buttonBox ->
 
-            buttonBox.isEnabled = false
+            if (index != checkBoxes.size - 1) {
 
-            buttonBox.isChecked = surveyDataArray[index] != null
+                buttonBox.isEnabled = false
+
+                buttonBox.isChecked = surveyDataArray[index] != null
+
+            }
 
         }
 
