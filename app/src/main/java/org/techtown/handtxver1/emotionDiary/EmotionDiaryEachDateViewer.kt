@@ -18,7 +18,7 @@ class EmotionDiaryEachDateViewer : AppCompatActivity() {
         val daysInMonth = intent.getStringExtra("daysInMonth")?.toInt()
 
         // ViewModel 에 접근 및 로딩
-        val viewModel = ViewModelProvider(this).get(ViewModelForEachDateViewer::class.java)
+        val viewModel = ViewModelProvider(this)[ViewModelForEachDateViewer::class.java]
         viewModel.setData(dateString!!, weekdayString!!, dateWeekDayString!!, daysInMonth!!)
 
         val menuBar = BottomMenuBar(1)

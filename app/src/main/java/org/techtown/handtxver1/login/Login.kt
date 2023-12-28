@@ -7,9 +7,11 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import okhttp3.OkHttpClient
 import org.techtown.handtxver1.CheckIn
 import org.techtown.handtxver1.R
 import retrofit2.Call
@@ -17,13 +19,45 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.*
 
 class Login : AppCompatActivity() {
 
+    fun getUnsafeOkHttpClient(): OkHttpClient.Builder {
+        val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+            override fun checkClientTrusted(p0: Array<out X509Certificate>?, p1: String?) {
+
+            }
+
+            override fun checkServerTrusted(p0: Array<out X509Certificate>?, p1: String?) {
+
+            }
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                return arrayOf()
+            }
+
+        })
+
+        val sslContext = SSLContext.getInstance("SSL")
+        sslContext.init(null, trustAllCerts, SecureRandom())
+
+        val sslSocketFactory = sslContext.socketFactory
+
+        val builder = OkHttpClient.Builder()
+        builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
+        builder.hostnameVerifier { hostname, seddion -> true}
+
+        return builder
+    }
+
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
-        .baseUrl("https://112.222.70.85") // 연결하고자 하는 서버 주소 입력
+        .baseUrl("https://112.222.70.85:23306/") // 연결하고자 하는 서버 주소 입력
         .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
+        .client(getUnsafeOkHttpClient().build())
         .build() // 코드 마무리
 
     // 로그인 서비스 interface 를 장착한 Retrofit 객체 생성
@@ -31,6 +65,29 @@ class Login : AppCompatActivity() {
 
     // 체크박스 체크 시, 입력된 user 의 ID 와 PW 를 자동으로 유지하도록 정보 저장 sharedPreferences 생성
     private lateinit var sharedPreferences: SharedPreferences
+
+    fun findTLSVersion() {
+        try {
+            // TLS를 사용하는 SSLSocket 생성
+            val sslSocketFactory: SSLSocketFactory? = SSLSocketFactory.getDefault() as? SSLSocketFactory
+            if (sslSocketFactory != null) {
+                val sslSocket: SSLSocket = sslSocketFactory.createSocket() as SSLSocket
+
+                // 현재 TLS 버전 확인
+                val tlsVersion: String? = sslSocket.session?.protocol
+                if (tlsVersion != null) {
+                    Log.d("LE", "Current TLS version : $tlsVersion")
+                } else {
+                    Log.d("LE","Unable to determine TLS version.")
+                }
+            } else {
+                Log.d("LE", "SSLSocketFactory is null.")
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,9 +209,11 @@ class Login : AppCompatActivity() {
                 // 통신에 실패한 경우
                 override fun onFailure(call: Call<LoginOutput>, t: Throwable) {
 
+                    findTLSVersion()
+
                     val loginDialog = AlertDialog.Builder(this@Login)
                     loginDialog.setTitle("통신 오류")
-                    loginDialog.setMessage("통신에 실패했습니다")
+                    loginDialog.setMessage("통신에 실패했습니다 : " + t.message)
                     loginDialog.show()
                 }
             })
