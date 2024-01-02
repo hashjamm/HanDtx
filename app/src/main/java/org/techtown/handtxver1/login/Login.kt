@@ -55,9 +55,8 @@ class Login : AppCompatActivity() {
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
-        .baseUrl("https://112.222.70.85:23306/") // 연결하고자 하는 서버 주소 입력
+        .baseUrl("http://10.0.2.2:8000/") // 연결하고자 하는 서버 주소 입력
         .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
-        .client(getUnsafeOkHttpClient().build())
         .build() // 코드 마무리
 
     // 로그인 서비스 interface 를 장착한 Retrofit 객체 생성
