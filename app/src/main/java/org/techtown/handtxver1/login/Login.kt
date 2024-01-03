@@ -11,7 +11,6 @@ import android.util.Log
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import okhttp3.OkHttpClient
 import org.techtown.handtxver1.CheckIn
 import org.techtown.handtxver1.R
 import retrofit2.Call
@@ -19,39 +18,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
-import javax.net.ssl.*
+import javax.net.ssl.SSLSocket
+import javax.net.ssl.SSLSocketFactory
 
 class Login : AppCompatActivity() {
-
-    fun getUnsafeOkHttpClient(): OkHttpClient.Builder {
-        val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
-            override fun checkClientTrusted(p0: Array<out X509Certificate>?, p1: String?) {
-
-            }
-
-            override fun checkServerTrusted(p0: Array<out X509Certificate>?, p1: String?) {
-
-            }
-
-            override fun getAcceptedIssuers(): Array<X509Certificate> {
-                return arrayOf()
-            }
-
-        })
-
-        val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, SecureRandom())
-
-        val sslSocketFactory = sslContext.socketFactory
-
-        val builder = OkHttpClient.Builder()
-        builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
-        builder.hostnameVerifier { hostname, seddion -> true}
-
-        return builder
-    }
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
@@ -180,27 +150,41 @@ class Login : AppCompatActivity() {
                 // 통신에 성공한 경우
                 override fun onResponse(call: Call<LoginOutput>, response: Response<LoginOutput>) {
 
-                    // body 메서드를 통해 응답받은 내용을 가져올 수 있음
-                    val resultValue = response.body()
+                    val statusCode = response.code()
 
-                    val loginDialog = AlertDialog.Builder(this@Login)
+                    if (response.isSuccessful) {
 
-                    // 통신에 성공하더라도, 로그인 자체가 성공할 때와 아닐때에 대하여 세부적인 동작을 구현
-                    when (resultValue?.code) {
-                        1 -> {
+                        // body 메서드를 통해 응답받은 내용을 가져올 수 있음
+                        val resultValue = response.body()
 
-                            Toast.makeText(this@Login, resultValue.message, Toast.LENGTH_SHORT).show()
+                        val loginDialog = AlertDialog.Builder(this@Login)
+
+                        if (statusCode == 200) {
+
+                            Toast.makeText(this@Login, resultValue?.message, Toast.LENGTH_SHORT).show()
 
                             val intentToCheckIn = Intent(this@Login, CheckIn::class.java)
                             startActivity(intentToCheckIn)
-                        }
-                        else -> {
-                            loginDialog.setTitle("로그인 오류")
-                            loginDialog.setMessage(resultValue?.message)
-                        }
-                    }
 
-                    loginDialog.show()
+                        } else {
+
+                            loginDialog.setTitle("로그인 오류 :")
+                            loginDialog.setMessage(resultValue?.message)
+
+                            loginDialog.show()
+
+                        }
+
+                    } else {
+
+                        val loginDialog = AlertDialog.Builder(this@Login)
+
+                        loginDialog.setTitle("로그인 오류 :")
+                        loginDialog.setMessage("등록되지 않은 사용자 계정입니다.")
+
+                        loginDialog.show()
+
+                    }
 
                 }
 
