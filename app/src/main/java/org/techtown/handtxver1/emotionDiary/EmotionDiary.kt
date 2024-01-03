@@ -13,7 +13,7 @@ class EmotionDiary : AppCompatActivity() {
         setContentView(R.layout.activity_emotion_diary)
 
         // ViewModel 에 접근 및 로딩
-        val viewModel = ViewModelProvider(this).get(SharedDateViewModel::class.java)
+        val viewModel = ViewModelProvider(this)[SharedDateViewModel::class.java]
 
         // Fragment 객체를 선언 및 초기화
         val menuBarFragment = BottomMenuBar(1)

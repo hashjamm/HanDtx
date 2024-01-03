@@ -91,6 +91,7 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/round_rectangle_gray_2.xml" value="0.2125" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/satellite_background.xml" value="0.2125" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/selector_switch.xml" value="0.234" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/siren_selector.xml" value="0.267" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/sky_blue_all_border_round.xml" value="0.225" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/submit_button.xml" value="0.1595" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/drawable/switch_on.xml" value="0.234" />
@@ -271,6 +272,7 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type9_content_page9.xml" value="0.51875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_q_type_content_page7.xml" value="0.49296875" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_un_clicked_emotion_date_record_window.xml" value="0.50859375" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/xml/network_security_config.xml" value="0.3625" />
       </map>
     </option>
   </component>

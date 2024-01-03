@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +18,14 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.net.ssl.SSLSocket
+import javax.net.ssl.SSLSocketFactory
 
 class Login : AppCompatActivity() {
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
-        .baseUrl("https://112.222.70.85") // 연결하고자 하는 서버 주소 입력
+        .baseUrl("http://10.0.2.2:8000/") // 연결하고자 하는 서버 주소 입력
         .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
         .build() // 코드 마무리
 
@@ -31,6 +34,29 @@ class Login : AppCompatActivity() {
 
     // 체크박스 체크 시, 입력된 user 의 ID 와 PW 를 자동으로 유지하도록 정보 저장 sharedPreferences 생성
     private lateinit var sharedPreferences: SharedPreferences
+
+    fun findTLSVersion() {
+        try {
+            // TLS를 사용하는 SSLSocket 생성
+            val sslSocketFactory: SSLSocketFactory? = SSLSocketFactory.getDefault() as? SSLSocketFactory
+            if (sslSocketFactory != null) {
+                val sslSocket: SSLSocket = sslSocketFactory.createSocket() as SSLSocket
+
+                // 현재 TLS 버전 확인
+                val tlsVersion: String? = sslSocket.session?.protocol
+                if (tlsVersion != null) {
+                    Log.d("LE", "Current TLS version : $tlsVersion")
+                } else {
+                    Log.d("LE","Unable to determine TLS version.")
+                }
+            } else {
+                Log.d("LE", "SSLSocketFactory is null.")
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,27 +150,41 @@ class Login : AppCompatActivity() {
                 // 통신에 성공한 경우
                 override fun onResponse(call: Call<LoginOutput>, response: Response<LoginOutput>) {
 
-                    // body 메서드를 통해 응답받은 내용을 가져올 수 있음
-                    val resultValue = response.body()
+                    val statusCode = response.code()
 
-                    val loginDialog = AlertDialog.Builder(this@Login)
+                    if (response.isSuccessful) {
 
-                    // 통신에 성공하더라도, 로그인 자체가 성공할 때와 아닐때에 대하여 세부적인 동작을 구현
-                    when (resultValue?.code) {
-                        1 -> {
+                        // body 메서드를 통해 응답받은 내용을 가져올 수 있음
+                        val resultValue = response.body()
 
-                            Toast.makeText(this@Login, resultValue.message, Toast.LENGTH_SHORT).show()
+                        val loginDialog = AlertDialog.Builder(this@Login)
+
+                        if (statusCode == 200) {
+
+                            Toast.makeText(this@Login, resultValue?.message, Toast.LENGTH_SHORT).show()
 
                             val intentToCheckIn = Intent(this@Login, CheckIn::class.java)
                             startActivity(intentToCheckIn)
-                        }
-                        else -> {
-                            loginDialog.setTitle("로그인 오류")
-                            loginDialog.setMessage(resultValue?.message)
-                        }
-                    }
 
-                    loginDialog.show()
+                        } else {
+
+                            loginDialog.setTitle("로그인 오류 :")
+                            loginDialog.setMessage(resultValue?.message)
+
+                            loginDialog.show()
+
+                        }
+
+                    } else {
+
+                        val loginDialog = AlertDialog.Builder(this@Login)
+
+                        loginDialog.setTitle("로그인 오류 :")
+                        loginDialog.setMessage("등록되지 않은 사용자 계정입니다.")
+
+                        loginDialog.show()
+
+                    }
 
                 }
 
@@ -152,9 +192,11 @@ class Login : AppCompatActivity() {
                 // 통신에 실패한 경우
                 override fun onFailure(call: Call<LoginOutput>, t: Throwable) {
 
+                    findTLSVersion()
+
                     val loginDialog = AlertDialog.Builder(this@Login)
                     loginDialog.setTitle("통신 오류")
-                    loginDialog.setMessage("통신에 실패했습니다")
+                    loginDialog.setMessage("통신에 실패했습니다 : " + t.message)
                     loginDialog.show()
                 }
             })

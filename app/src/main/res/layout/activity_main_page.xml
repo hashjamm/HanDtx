@@ -93,9 +93,378 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/bottom_border"
                     android:text="CBT 예약 내역"
                     android:textColor="#000000" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/all_border_round"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/check_in_picture" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="6"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="5">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="2023.04.25"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="7dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="(화)"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="7dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="11:00"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="7dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="~"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="7dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="11:50"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="5">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="[집단 상담]"
+                                    android:textColor="#C1B9B9"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="10dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="(4/10)"
+                                    android:textColor="#C1B9B9"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="5"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="이채원"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="5dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="상담사"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="20dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="• 예약 완료"
+                                    android:textColor="#03ECDE"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/all_border_round"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/check_in_picture" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="6"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="5">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="2023.04.24"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="7dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="(월)"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="7dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="11:00"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="7dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="~"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="7dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="11:50"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="5">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="[집단 상담]"
+                                    android:textColor="#C1B9B9"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="10dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="(8/10)"
+                                    android:textColor="#C1B9B9"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="5"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="최지원"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="5dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="상담사"
+                                    android:textColor="#000000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="20dp"
+                                    android:layout_height="match_parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:text="• 취소 완료"
+                                    android:textColor="#FF0000"
+                                    android:textSize="11dp"
+                                    android:textStyle="bold" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -103,6 +472,7 @@
                 android:id="@+id/checkInResult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -112,12 +482,21 @@
                     android:text="체크인 결과"
                     android:textColor="#000000" />
 
+                <CalendarView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/all_border_round">
+
+                </CalendarView>
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/emotionDiaryResult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -253,21 +632,19 @@
                     android:text="설문지 결과"
                     android:textColor="#000000" />
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp"/>
-
                 <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/all_border_round">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="10dp">
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp">
 
                         <androidx.appcompat.widget.LinearLayoutCompat
                             android:layout_width="match_parent"
@@ -806,6 +1183,252 @@
                     android:background="@drawable/bottom_border"
                     android:text="주요 질환 알림"
                     android:textColor="#000000" />
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/all_border_round"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/siren_selector"
+                                android:button="@null"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="left|center"
+                            android:text="치매"
+                            android:textColor="#000000" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/siren_selector"
+                                android:button="@null"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="left|center"
+                            android:text="정신분열증"
+                            android:textColor="#000000" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/siren_selector"
+                                android:button="@null"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="left|center"
+                            android:text="공황장애"
+                            android:textColor="#000000" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/siren_selector"
+                                android:button="@null"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="left|center"
+                            android:text="우울증"
+                            android:textColor="#000000" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/siren_selector"
+                                android:button="@null"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="left|center"
+                            android:text="망상장애"
+                            android:textColor="#000000" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/siren_selector"
+                                android:button="@null"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="left|center"
+                            android:text="조울증"
+                            android:textColor="#000000" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/siren_selector"
+                                android:button="@null"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="left|center"
+                            android:text="불안"
+                            android:textColor="#000000" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/siren_selector"
+                                android:button="@null"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="left|center"
+                            android:text="강박"
+                            android:textColor="#000000" />
+
+                    </TableRow>
+
+                </TableLayout>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
