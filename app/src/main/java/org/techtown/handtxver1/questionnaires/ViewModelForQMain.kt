@@ -96,7 +96,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getIssueCheckingSurveyInterface.requestGetIssueCheckingSurvey(
+                getIssueCheckingSurveyInterface.requestGetIssueCheckingSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetIssueCheckingSurveyOutput> {
                     override fun onResponse(
@@ -128,7 +128,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getSelfDiagnosisSurveyInterface.requestGetSelfDiagnosisSurvey(
+                getSelfDiagnosisSurveyInterface.requestGetSelfDiagnosisSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetSelfDiagnosisSurveyOutput> {
                     override fun onResponse(
@@ -160,7 +160,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getWellBeingScaleSurveyInterface.requestGetWellBeingScaleSurvey(
+                getWellBeingScaleSurveyInterface.requestGetWellBeingScaleSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetWellBeingScaleSurveyOutput> {
                     override fun onResponse(
@@ -192,7 +192,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getPHQ9SurveyInterface.requestGetPHQ9Survey(
+                getPHQ9SurveyInterface.requestGetPHQ9Survey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetPHQ9SurveyOutput> {
                     override fun onResponse(
@@ -224,7 +224,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getGAD7SurveyInterface.requestGetGAD7Survey(
+                getGAD7SurveyInterface.requestGetGAD7Survey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetGAD7SurveyOutput> {
                     override fun onResponse(
@@ -256,7 +256,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getPSS10SurveyInterface.requestGetPSS10Survey(
+                getPSS10SurveyInterface.requestGetPSS10Survey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetPSS10SurveyOutput> {
                     override fun onResponse(
@@ -288,7 +288,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getExerciseSurveyInterface.requestGetExerciseSurvey(
+                getExerciseSurveyInterface.requestGetExerciseSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetExerciseSurveyOutput> {
                     override fun onResponse(
@@ -320,7 +320,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getSmokingDrinkingSurveyInterface.requestGetSmokingDrinkingSurvey(
+                getSmokingDrinkingSurveyInterface.requestGetSmokingDrinkingSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetSmokingDrinkingSurveyOutput> {
                     override fun onResponse(
@@ -352,7 +352,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getStressSurveyInterface.requestGetStressSurvey(
+                getStressSurveyInterface.requestGetStressSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetStressSurveyOutput> {
                     override fun onResponse(
@@ -384,7 +384,7 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getNutritionSurveyInterface.requestGetNutritionSurvey(
+                getNutritionSurveyInterface.requestGetNutritionSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetNutritionSurveyOutput> {
                     override fun onResponse(

@@ -234,15 +234,21 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
     private fun optimizingGraph() {
 
         // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
-        val userID = loginSharedPreferences.getString("saveID", "")
+        val userID = loginSharedPreferences.getString("saveID", null)
         val date: Date? = viewModel.date.value?.time
 
-        val data = getData(userID!!, date!!)
+        try {
+            val data = getData(userID!!, date!!)
 
-        if (data == null) {
-            optimizingGraphByScore(null)
-        } else {
-            optimizingGraphByScore(data.score1)
+            if (data == null) {
+                optimizingGraphByScore(null)
+            } else {
+                optimizingGraphByScore(data.score1)
+            }
+        } catch (e: IllegalArgumentException) {
+
+            println("you should input non-null type at userID, searchDate")
+
         }
 
     }
@@ -331,31 +337,39 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
                         }
 
                         // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
-                        val userID = loginSharedPreferences.getString("saveID", "")
+                        val userID = loginSharedPreferences.getString("saveID", null)
                         val date: Date? = viewModel.date.value?.time
 
-                        val resultValue = getData(userID!!, date!!)
                         val updateValue: GetEmotionDiaryRecordsOutput?
 
-                        if (resultValue == null) {
+                        try {
+                            val resultValue = getData(userID!!, date!!)
 
-                            updateValue = GetEmotionDiaryRecordsOutput(
-                                index,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                            )
+                            if (resultValue == null) {
 
-                        } else {
+                                updateValue = GetEmotionDiaryRecordsOutput(
+                                    index,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                )
 
-                            updateValue = resultValue.copy()
-                            updateValue.score1 = index
+                            } else {
+
+                                updateValue = resultValue.copy()
+                                updateValue.score1 = index
+
+                            }
+
+                            updateData(userID, date, updateValue)
+
+                        } catch (e: IllegalArgumentException) {
+
+                            println("you should input non-null type at userID, searchDate")
 
                         }
-
-                        updateData(userID, date, updateValue)
 
                         // 방금 업데이트 된 값을 다시 받아와서 그래프와 말풍선 텍스트 업데이트
                         // optimizingGraph() -> getData 를 중첩해야하기에 직접 구현부분만 적음

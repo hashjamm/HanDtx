@@ -18,6 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.IllegalArgumentException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -308,22 +309,32 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
                     null
                 }
 
-            val resultValue =
-                if (userID != null && searchDate != null) {
-                    getData(userID, searchDate)
+            // userID와 searchDate 가 상식적으로 null 인 상황이 있을 수가 없음. 하지만 발생시 에러 발생시킬 것.
+            try {
+                val resultValue = getData(userID!!, searchDate!!)
+
+                if (resultValue == null) {
+
+                    updateValue = GetEmotionDiaryRecordsOutput(
+                        null,
+                        positionData?.inputText,
+                        null,
+                        null,
+                        null,
+                        null
+                    )
+
                 } else {
-                    null
+
+                    updateValue = resultValue.copy()
+                    updateValue.inputText1 = positionData?.inputText
+
                 }
 
-            // updateValue = resultValue -> 이러면 resultValue 바꾸면 updateValue 도 바뀜
-            updateValue = resultValue?.copy()
-
-            updateValue?.inputText1 = positionData?.inputText
-
-            if (userID != null && searchDate != null) {
                 updateData(userID, searchDate, updateValue)
-            } else {
-                return
+
+            } catch (e: IllegalArgumentException) {
+                println("you should input non-null type at userID, searchDate")
             }
 
         }

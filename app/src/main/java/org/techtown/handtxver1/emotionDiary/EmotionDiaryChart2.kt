@@ -26,6 +26,9 @@ import java.util.*
  */
 class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
 
+    // 오류 팝업 창들에 대하여, 가장 먼저 발생한 오류 팝업 창만을 유지하기 위한 Boolean 변수
+    private var isPopupShowing = false
+
     // 감정 다이어리의 각 메뉴들이 공유할 날짜를 저장하는 viewModel 인 SharedDateViewModel 에 접근
     private val viewModel: SharedDateViewModel by activityViewModels()
 
@@ -37,7 +40,7 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
-        .baseUrl("https://3.37.133.233") // 연결하고자 하는 서버 주소 입력
+        .baseUrl("http://10.0.2.2:8000/") // 연결하고자 하는 서버 주소 입력
         .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
         .build() // 코드 마무리
 
@@ -98,34 +101,33 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
 
             } else {
 
-                // 그래프 형태를 default 형태로 변경
-                binding.radioButtonsBackground.background =
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.emotion_graph_image_0
-                    )
-                binding.howRU.text = "오늘 얼마나 불안했나요?"
-
-                // 라디오 그룹 전체 버튼 초기화
-                radioGroup.forEach { radioButton ->
-                    radioButton.isChecked = false
-                }
+                // 사실상 db 에서 직접적으로 데이터를 잘못 생성하지 않는 한 일어날 수 없는 오류.
+                throw IllegalStateException("에러 발생 : score range error")
 
             }
         } ?: run {
 
-            throw IllegalStateException("에러 발생 : 통신을 통한 score 값을 얻지 못했습니다.")
+            // 그래프 형태를 default 형태로 변경
+            binding.radioButtonsBackground.background =
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.emotion_graph_image_0
+                )
+            binding.howRU.text = "오늘 얼마나 불안했나요?"
+
+            // 라디오 그룹 전체 버튼 초기화
+            radioGroup.forEach { radioButton ->
+                radioButton.isChecked = false
+            }
 
         }
     }
 
-    private fun optimizingGraph() {
+    private fun getData(userID: String, date: Date): GetEmotionDiaryRecordsOutput? {
 
-        // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
-        val userID = loginSharedPreferences.getString("saveID", "")
-        val date: Date? = viewModel.date.value?.time
+        var resultValue: GetEmotionDiaryRecordsOutput? = null
 
-        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID!!, date!!)
+        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID, date)
             .enqueue(
                 object :
                     Callback<GetEmotionDiaryRecordsOutput> {
@@ -134,25 +136,121 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
                         call: Call<GetEmotionDiaryRecordsOutput>,
                         response: Response<GetEmotionDiaryRecordsOutput>
                     ) {
-                        val resultValue = response.body()
-                        val score = resultValue?.score2
 
-                        optimizingGraphByScore(score)
+                        if (response.isSuccessful) {
+
+                            resultValue = response.body()
+
+                        }
 
                     }
 
                     override fun onFailure(call: Call<GetEmotionDiaryRecordsOutput>, t: Throwable) {
 
-                        val errorDialog = AlertDialog.Builder(context)
-                        errorDialog.setTitle("통신 오류")
-                        errorDialog.setMessage("통신에 실패했습니다 : type1")
-                        errorDialog.show()
+                        if (!isPopupShowing) {
 
-                        throw IllegalStateException("에러 발생 : 통신이 이루어지지 않습니다.")
+                            val errorDialog = AlertDialog.Builder(context)
+                            errorDialog.setTitle("통신 오류")
+                            errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+                            errorDialog.setOnDismissListener {
+                                isPopupShowing = false
+                            }
+                            errorDialog.show()
+
+                            isPopupShowing = true
+
+                        }
 
                     }
 
-                })
+                }
+            )
+
+        return resultValue
+
+    }
+
+    private fun updateData(userID: String, date: Date, updateValue: GetEmotionDiaryRecordsOutput?) {
+
+        updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
+            userID,
+            date,
+            updateValue?.score1,
+            updateValue?.inputText1,
+            updateValue?.score2,
+            updateValue?.inputText2,
+            updateValue?.score2,
+            updateValue?.inputText3
+        )
+            .enqueue(object :
+                Callback<UpdateEmotionDiaryRecordsOutput> {
+
+                override fun onResponse(
+                    call: Call<UpdateEmotionDiaryRecordsOutput>,
+                    response: Response<UpdateEmotionDiaryRecordsOutput>
+                ) {
+
+                    if (!response.isSuccessful) {
+
+                        if (!isPopupShowing) {
+                            val errorDialog = AlertDialog.Builder(context)
+                            errorDialog.setTitle("서버 응답 오류")
+                            errorDialog.setMessage("status code : ${response.code()}")
+                            errorDialog.setOnDismissListener {
+                                isPopupShowing = false
+                            }
+                            errorDialog.show()
+
+                            isPopupShowing = true
+                        }
+
+                    }
+
+                }
+
+                override fun onFailure(
+                    call: Call<UpdateEmotionDiaryRecordsOutput>,
+                    t: Throwable
+                ) {
+
+                    if (!isPopupShowing) {
+                        val errorDialog = AlertDialog.Builder(context)
+                        errorDialog.setTitle("통신 오류")
+                        errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+                        errorDialog.setOnDismissListener {
+                            isPopupShowing = false
+                        }
+                        errorDialog.show()
+
+                        isPopupShowing = true
+                    }
+
+                }
+
+            })
+
+    }
+
+    private fun optimizingGraph() {
+
+        // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
+        val userID = loginSharedPreferences.getString("saveID", null)
+        val date: Date? = viewModel.date.value?.time
+
+        try {
+            val data = getData(userID!!, date!!)
+
+            if (data == null) {
+                optimizingGraphByScore(null)
+            } else {
+                optimizingGraphByScore(data.score2)
+            }
+        } catch (e: IllegalArgumentException) {
+
+            println("you should input non-null type at userID, searchDate")
+
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -239,79 +337,43 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
                         }
 
                         // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
-                        val userID = loginSharedPreferences.getString("saveID", "")
+                        val userID = loginSharedPreferences.getString("saveID", null)
                         val date: Date? = viewModel.date.value?.time
 
-                        var resultValue: GetEmotionDiaryRecordsOutput?
-                        var updateValue: GetEmotionDiaryRecordsOutput?
+                        val updateValue: GetEmotionDiaryRecordsOutput?
 
-                        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(
-                            userID!!,
-                            date!!
-                        )
-                            .enqueue(object :
-                                Callback<GetEmotionDiaryRecordsOutput> {
+                        try {
+                            val resultValue = getData(userID!!, date!!)
 
-                                override fun onResponse(
-                                    call: Call<GetEmotionDiaryRecordsOutput>,
-                                    response: Response<GetEmotionDiaryRecordsOutput>
-                                ) {
-                                    resultValue = response.body()
+                            if (resultValue == null) {
 
-                                    // updateValue = resultValue -> 이러면 resultValue 바꾸면 updateValue도 바뀜
-                                    updateValue = resultValue?.copy()
-                                    updateValue?.score2 = index
+                                updateValue = GetEmotionDiaryRecordsOutput(
+                                    null,
+                                    null,
+                                    index,
+                                    null,
+                                    null,
+                                    null
+                                )
 
-                                    updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
-                                        userID,
-                                        date,
-                                        updateValue?.score1,
-                                        updateValue?.inputText1,
-                                        updateValue?.score2,
-                                        updateValue?.inputText2,
-                                        updateValue?.score3,
-                                        updateValue?.inputText3
-                                    )
-                                        .enqueue(object :
-                                            Callback<UpdateEmotionDiaryRecordsOutput> {
+                            } else {
 
-                                            override fun onResponse(
-                                                call: Call<UpdateEmotionDiaryRecordsOutput>,
-                                                response: Response<UpdateEmotionDiaryRecordsOutput>
-                                            ) {
+                                updateValue = resultValue.copy()
+                                updateValue.score2 = index
 
+                            }
 
-                                            }
+                            updateData(userID, date, updateValue)
 
-                                            override fun onFailure(
-                                                call: Call<UpdateEmotionDiaryRecordsOutput>,
-                                                t: Throwable
-                                            ) {
-                                                val errorDialog = AlertDialog.Builder(context)
-                                                errorDialog.setTitle("통신 오류")
-                                                errorDialog.setMessage("통신에 실패했습니다 : type2")
-                                                errorDialog.show()
-                                            }
+                        } catch (e: IllegalArgumentException) {
 
-                                        })
+                            println("you should input non-null type at userID, searchDate")
 
-                                }
-
-                                override fun onFailure(
-                                    call: Call<GetEmotionDiaryRecordsOutput>,
-                                    t: Throwable
-                                ) {
-
-                                    val errorDialog = AlertDialog.Builder(context)
-                                    errorDialog.setTitle("통신 오류")
-                                    errorDialog.setMessage("통신에 실패했습니다 : type3")
-                                    errorDialog.show()
-                                }
-
-                            })
+                        }
 
                         // 방금 업데이트 된 값을 다시 받아와서 그래프와 말풍선 텍스트 업데이트
-                        optimizingGraph()
+                        // optimizingGraph() -> getData 를 중첩해야하기에 직접 구현부분만 적음
+                        optimizingGraphByScore(index)
 
                     }
                 }
