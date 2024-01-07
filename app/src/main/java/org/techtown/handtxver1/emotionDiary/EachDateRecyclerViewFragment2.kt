@@ -163,13 +163,20 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
                         response: Response<GetEmotionDiaryRecordsOutput>
                     ) {
 
-                        resultValue = response.body()
+                        if (response.isSuccessful) {
+
+                            resultValue = response.body()
+
+                        }
 
                     }
 
                     override fun onFailure(call: Call<GetEmotionDiaryRecordsOutput>, t: Throwable) {
 
-                        throw IllegalStateException("에러 발생 : 통신이 이루어지지 않습니다.")
+                        val errorDialog = AlertDialog.Builder(context)
+                        errorDialog.setTitle("통신 오류")
+                        errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+                        errorDialog.show()
                     }
 
                 }
@@ -199,6 +206,15 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
                     response: Response<UpdateEmotionDiaryRecordsOutput>
                 ) {
 
+                    if (!response.isSuccessful) {
+
+                        val errorDialog = AlertDialog.Builder(context)
+                        errorDialog.setTitle("서버 응답 오류")
+                        errorDialog.setMessage("status code : ${response.code()}")
+                        errorDialog.show()
+
+                    }
+
                 }
 
                 override fun onFailure(
@@ -207,7 +223,7 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
                 ) {
                     val errorDialog = AlertDialog.Builder(context)
                     errorDialog.setTitle("통신 오류")
-                    errorDialog.setMessage("통신에 실패했습니다 : type2")
+                    errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
                     errorDialog.show()
                 }
 

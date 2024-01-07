@@ -9,7 +9,7 @@ import java.util.*
 interface UpdateEmotionDiaryRecordsInterface {
 
     @FormUrlEncoded
-    @POST("/app_update_emotion_diary_records/")
+    @POST("hanDtxPrototypeApp/app_update_emotion_diary_records/")
     fun requestUpdateEmotionDiaryRecords(
         @Field("user_id") user_id:String,
         @Field("date") date: Date,
