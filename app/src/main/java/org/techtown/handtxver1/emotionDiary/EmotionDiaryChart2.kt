@@ -17,6 +17,7 @@ import org.techtown.handtxver1.databinding.FragmentEmotionDiaryChart2Binding
 import org.techtown.handtxver1.ApplicationClass
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.NullPointerException
 import java.util.*
 
 /**
@@ -102,7 +103,7 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
             } else {
 
                 // 사실상 db 에서 직접적으로 데이터를 잘못 생성하지 않는 한 일어날 수 없는 오류.
-                throw IllegalStateException("에러 발생 : score range error")
+                throw ArrayIndexOutOfBoundsException("에러 발생 : score range error")
 
             }
         } ?: run {
@@ -245,9 +246,9 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
             } else {
                 optimizingGraphByScore(data.score2)
             }
-        } catch (e: IllegalArgumentException) {
+        } catch (e: NullPointerException) {
 
-            println("you should input non-null type at userID, searchDate")
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
 
         }
 
@@ -365,9 +366,9 @@ class EmotionDiaryChart2 : Fragment(), View.OnClickListener {
 
                             updateData(userID, date, updateValue)
 
-                        } catch (e: IllegalArgumentException) {
+                        } catch (e: NullPointerException) {
 
-                            println("you should input non-null type at userID, searchDate")
+                            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
 
                         }
 

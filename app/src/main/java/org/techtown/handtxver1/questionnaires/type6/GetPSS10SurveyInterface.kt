@@ -9,7 +9,7 @@ import java.util.*
 interface GetPSS10SurveyInterface {
 
     @FormUrlEncoded
-    @POST("app_get_pss10_survey/")
+    @POST("hanDtxPrototypeApp/app_get_pss10_survey/")
     fun requestGetPSS10Survey(
         @Field("user_id") user_id:String,
         @Field("date") date: Date

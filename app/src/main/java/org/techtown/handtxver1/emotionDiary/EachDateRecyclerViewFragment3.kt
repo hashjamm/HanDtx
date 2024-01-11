@@ -333,8 +333,8 @@ class EachDateRecyclerViewFragment3 : Fragment(), CallBackInterface {
 
                 updateData(userID, searchDate, updateValue)
 
-            } catch (e: IllegalArgumentException) {
-                println("you should input non-null type at userID, searchDate")
+            } catch (e: NullPointerException) {
+                throw IllegalArgumentException("you should input non-null type at userID, searchDate")
             }
 
         }

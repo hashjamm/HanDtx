@@ -1,5 +1,6 @@
 package org.techtown.handtxver1.questionnaires
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,7 @@ import org.techtown.handtxver1.questionnaires.type9.GetStressSurveyOutput
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.NullPointerException
 
 class ViewModelForQMain : ViewModel() {
 
@@ -40,7 +42,12 @@ class ViewModelForQMain : ViewModel() {
     var stressSurveyData: GetStressSurveyOutput? = null
     var nutritionSurveyData: GetNutritionSurveyOutput? = null
 
+    var networkFailureCounting = 0
+    var networkFailureMessage: String? = null
+
     fun fetchData() {
+
+        networkFailureCounting = 0
 
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -103,7 +110,10 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetIssueCheckingSurveyOutput>,
                         response: Response<GetIssueCheckingSurveyOutput>
                     ) {
-                        issueCheckingSurveyData = response.body()
+
+                        if (response.isSuccessful) {
+                            issueCheckingSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -111,15 +121,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -135,7 +146,10 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetSelfDiagnosisSurveyOutput>,
                         response: Response<GetSelfDiagnosisSurveyOutput>
                     ) {
-                        selfDiagnosisSurveyData = response.body()
+
+                        if (response.isSuccessful) {
+                            selfDiagnosisSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -143,15 +157,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -167,7 +182,9 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetWellBeingScaleSurveyOutput>,
                         response: Response<GetWellBeingScaleSurveyOutput>
                     ) {
-                        wellBeingScaleSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            wellBeingScaleSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -175,15 +192,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -199,7 +217,9 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetPHQ9SurveyOutput>,
                         response: Response<GetPHQ9SurveyOutput>
                     ) {
-                        phq9SurveyData = response.body()
+                        if (response.isSuccessful) {
+                            phq9SurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -207,15 +227,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -231,7 +252,9 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetGAD7SurveyOutput>,
                         response: Response<GetGAD7SurveyOutput>
                     ) {
-                        gad7SurveyData = response.body()
+                        if (response.isSuccessful) {
+                            gad7SurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -239,15 +262,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -263,7 +287,9 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetPSS10SurveyOutput>,
                         response: Response<GetPSS10SurveyOutput>
                     ) {
-                        pss10SurveyData = response.body()
+                        if (response.isSuccessful) {
+                            pss10SurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -271,15 +297,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -295,7 +322,9 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetExerciseSurveyOutput>,
                         response: Response<GetExerciseSurveyOutput>
                     ) {
-                        exerciseSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            exerciseSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -303,15 +332,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -327,7 +357,9 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetSmokingDrinkingSurveyOutput>,
                         response: Response<GetSmokingDrinkingSurveyOutput>
                     ) {
-                        smokingDrinkingSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            smokingDrinkingSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -335,15 +367,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -359,7 +392,9 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetStressSurveyOutput>,
                         response: Response<GetStressSurveyOutput>
                     ) {
-                        stressSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            stressSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -367,15 +402,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -391,7 +427,9 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetNutritionSurveyOutput>,
                         response: Response<GetNutritionSurveyOutput>
                     ) {
-                        nutritionSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            nutritionSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -399,15 +437,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }

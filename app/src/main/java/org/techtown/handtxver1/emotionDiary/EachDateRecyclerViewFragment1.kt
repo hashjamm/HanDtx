@@ -19,6 +19,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -333,8 +334,8 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
 
                 updateData(userID, searchDate, updateValue)
 
-            } catch (e: IllegalArgumentException) {
-                println("you should input non-null type at userID, searchDate")
+            } catch (e: NullPointerException) {
+                throw IllegalArgumentException("you should input non-null type at userID, searchDate")
             }
 
         }
