@@ -1,5 +1,6 @@
 package org.techtown.handtxver1.questionnaires
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,7 @@ import org.techtown.handtxver1.questionnaires.type9.GetStressSurveyOutput
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.NullPointerException
 
 class ViewModelForQMain : ViewModel() {
 
@@ -40,7 +42,12 @@ class ViewModelForQMain : ViewModel() {
     var stressSurveyData: GetStressSurveyOutput? = null
     var nutritionSurveyData: GetNutritionSurveyOutput? = null
 
+    var networkFailureCounting = 0
+    var networkFailureMessage: String? = null
+
     fun fetchData() {
+
+        networkFailureCounting = 0
 
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -96,14 +103,17 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getIssueCheckingSurveyInterface.requestGetIssueCheckingSurvey(
+                getIssueCheckingSurveyInterface.requestGetIssueCheckingSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetIssueCheckingSurveyOutput> {
                     override fun onResponse(
                         call: Call<GetIssueCheckingSurveyOutput>,
                         response: Response<GetIssueCheckingSurveyOutput>
                     ) {
-                        issueCheckingSurveyData = response.body()
+
+                        if (response.isSuccessful) {
+                            issueCheckingSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -111,15 +121,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -128,14 +139,17 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getSelfDiagnosisSurveyInterface.requestGetSelfDiagnosisSurvey(
+                getSelfDiagnosisSurveyInterface.requestGetSelfDiagnosisSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetSelfDiagnosisSurveyOutput> {
                     override fun onResponse(
                         call: Call<GetSelfDiagnosisSurveyOutput>,
                         response: Response<GetSelfDiagnosisSurveyOutput>
                     ) {
-                        selfDiagnosisSurveyData = response.body()
+
+                        if (response.isSuccessful) {
+                            selfDiagnosisSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -143,15 +157,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -160,14 +175,16 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getWellBeingScaleSurveyInterface.requestGetWellBeingScaleSurvey(
+                getWellBeingScaleSurveyInterface.requestGetWellBeingScaleSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetWellBeingScaleSurveyOutput> {
                     override fun onResponse(
                         call: Call<GetWellBeingScaleSurveyOutput>,
                         response: Response<GetWellBeingScaleSurveyOutput>
                     ) {
-                        wellBeingScaleSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            wellBeingScaleSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -175,15 +192,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -192,14 +210,16 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getPHQ9SurveyInterface.requestGetPHQ9Survey(
+                getPHQ9SurveyInterface.requestGetPHQ9Survey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetPHQ9SurveyOutput> {
                     override fun onResponse(
                         call: Call<GetPHQ9SurveyOutput>,
                         response: Response<GetPHQ9SurveyOutput>
                     ) {
-                        phq9SurveyData = response.body()
+                        if (response.isSuccessful) {
+                            phq9SurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -207,15 +227,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -224,14 +245,16 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getGAD7SurveyInterface.requestGetGAD7Survey(
+                getGAD7SurveyInterface.requestGetGAD7Survey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetGAD7SurveyOutput> {
                     override fun onResponse(
                         call: Call<GetGAD7SurveyOutput>,
                         response: Response<GetGAD7SurveyOutput>
                     ) {
-                        gad7SurveyData = response.body()
+                        if (response.isSuccessful) {
+                            gad7SurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -239,15 +262,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -256,14 +280,16 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getPSS10SurveyInterface.requestGetPSS10Survey(
+                getPSS10SurveyInterface.requestGetPSS10Survey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetPSS10SurveyOutput> {
                     override fun onResponse(
                         call: Call<GetPSS10SurveyOutput>,
                         response: Response<GetPSS10SurveyOutput>
                     ) {
-                        pss10SurveyData = response.body()
+                        if (response.isSuccessful) {
+                            pss10SurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -271,15 +297,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -288,14 +315,16 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getExerciseSurveyInterface.requestGetExerciseSurvey(
+                getExerciseSurveyInterface.requestGetExerciseSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetExerciseSurveyOutput> {
                     override fun onResponse(
                         call: Call<GetExerciseSurveyOutput>,
                         response: Response<GetExerciseSurveyOutput>
                     ) {
-                        exerciseSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            exerciseSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -303,15 +332,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -320,14 +350,16 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getSmokingDrinkingSurveyInterface.requestGetSmokingDrinkingSurvey(
+                getSmokingDrinkingSurveyInterface.requestGetSmokingDrinkingSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetSmokingDrinkingSurveyOutput> {
                     override fun onResponse(
                         call: Call<GetSmokingDrinkingSurveyOutput>,
                         response: Response<GetSmokingDrinkingSurveyOutput>
                     ) {
-                        smokingDrinkingSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            smokingDrinkingSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -335,15 +367,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -352,14 +385,16 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getStressSurveyInterface.requestGetStressSurvey(
+                getStressSurveyInterface.requestGetStressSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetStressSurveyOutput> {
                     override fun onResponse(
                         call: Call<GetStressSurveyOutput>,
                         response: Response<GetStressSurveyOutput>
                     ) {
-                        stressSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            stressSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -367,15 +402,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }
@@ -384,14 +420,16 @@ class ViewModelForQMain : ViewModel() {
 
         return try {
             withContext(Dispatchers.IO) {
-                val response = getNutritionSurveyInterface.requestGetNutritionSurvey(
+                getNutritionSurveyInterface.requestGetNutritionSurvey(
                     objectSet.userID!!, objectSet.date
                 ).enqueue(object : Callback<GetNutritionSurveyOutput> {
                     override fun onResponse(
                         call: Call<GetNutritionSurveyOutput>,
                         response: Response<GetNutritionSurveyOutput>
                     ) {
-                        nutritionSurveyData = response.body()
+                        if (response.isSuccessful) {
+                            nutritionSurveyData = response.body()
+                        }
                     }
 
                     override fun onFailure(
@@ -399,15 +437,16 @@ class ViewModelForQMain : ViewModel() {
                         t: Throwable
                     ) {
 
-                        throw RuntimeException("서버 응답 실패")
+                        networkFailureCounting += 1
+                        networkFailureMessage = t.message
 
                     }
 
                 })
 
             }
-        } catch (e: Exception) {
-            throw RuntimeException("통신 중 오류 발생", e)
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
         }
 
     }

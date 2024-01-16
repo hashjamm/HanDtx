@@ -23,6 +23,8 @@ import org.techtown.handtxver1.questionnaires.type2.UpdateSelfDiagnosisSurveyOut
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.util.*
 
 class QuestionnaireType5 : AppCompatActivity() {
@@ -158,13 +160,16 @@ class QuestionnaireType5 : AppCompatActivity() {
                                 .setTitle("응답한 내용")
                                 .setMessage(messageBuilder.toString())
                                 .setPositiveButton("완료") { _, _ ->
-                                    Toast.makeText(this, "설문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
 
-                                    val intent = Intent(this, QuestionnaireMainPage::class.java)
+                                    try {
 
-                                    updateData(objectSet.userID!!, objectSet.date)
+                                        updateDataIntent(objectSet.userID!!, objectSet.date)
 
-                                    startActivity(intent)
+                                    } catch (e: NullPointerException) {
+
+                                        throw IllegalArgumentException("you should input non-null type at userID")
+
+                                    }
 
                                 }
                                 .setNeutralButton("수정", null)
@@ -225,41 +230,64 @@ class QuestionnaireType5 : AppCompatActivity() {
     private var updateGAD7SurveyInterface: UpdateGAD7SurveyInterface =
         objectSet.retrofit.create(UpdateGAD7SurveyInterface::class.java)
 
-    private fun updateData(
+    private fun updateDataIntent(
         userID: String,
         date: Date
     ) {
 
         val responseSequence = viewModel.responseSequence
 
-        updateGAD7SurveyInterface.requestUpdateGAD7Survey(
-            userID,
-            date,
-            responseSequence[0]!!,
-            responseSequence[1]!!,
-            responseSequence[2]!!,
-            responseSequence[3]!!,
-            responseSequence[4]!!,
-            responseSequence[5]!!,
-            responseSequence[6]!!
-        ).enqueue(object :
-            Callback<UpdateGAD7SurveyOutput> {
+        val intent = Intent(this, QuestionnaireMainPage::class.java)
 
-            override fun onResponse(
-                call: Call<UpdateGAD7SurveyOutput>,
-                response: Response<UpdateGAD7SurveyOutput>
-            ) {
-                TODO("Not yet implemented")
-            }
+        try {
+            updateGAD7SurveyInterface.requestUpdateGAD7Survey(
+                userID,
+                date,
+                responseSequence[0]!!,
+                responseSequence[1]!!,
+                responseSequence[2]!!,
+                responseSequence[3]!!,
+                responseSequence[4]!!,
+                responseSequence[5]!!,
+                responseSequence[6]!!
+            ).enqueue(object :
+                Callback<UpdateGAD7SurveyOutput> {
 
-            override fun onFailure(call: Call<UpdateGAD7SurveyOutput>, t: Throwable) {
-                val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType5)
-                errorDialog.setTitle("통신 오류")
-                errorDialog.setMessage("통신에 실패했습니다 : type2")
-                errorDialog.show()
-            }
+                override fun onResponse(
+                    call: Call<UpdateGAD7SurveyOutput>,
+                    response: Response<UpdateGAD7SurveyOutput>
+                ) {
+                    if (response.isSuccessful) {
 
-        })
+                        Toast.makeText(this@QuestionnaireType5, "설문을 완료하였습니다.", Toast.LENGTH_SHORT)
+                            .show()
+
+                        startActivity(intent)
+
+                    } else {
+
+                        val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType5)
+                        errorDialog.setTitle("서버 응답 오류")
+                        errorDialog.setMessage("status code : ${response.code()}")
+                        errorDialog.show()
+
+                    }
+                }
+
+                override fun onFailure(call: Call<UpdateGAD7SurveyOutput>, t: Throwable) {
+
+                    val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType5)
+                    errorDialog.setTitle("통신 오류")
+                    errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+                    errorDialog.show()
+
+                }
+
+            })
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("More than 1 null are in responseSequence")
+        }
+
 
     }
 

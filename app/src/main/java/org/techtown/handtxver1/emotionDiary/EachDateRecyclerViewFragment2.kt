@@ -18,6 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.IllegalArgumentException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,6 +32,9 @@ import java.util.*
  * create an instance of this fragment.
  */
 class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
+
+    // 오류 팝업 창들에 대하여, 가장 먼저 발생한 오류 팝업 창만을 유지하기 위한 Boolean 변수
+    private var isPopupShowing = false
 
     // Fragment 에 사용할 레이아웃 파일 바인딩 선언
     lateinit var binding: FragmentEachDateRecyclerView2Binding
@@ -52,7 +56,7 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
-        .baseUrl("https://112.222.70.85") // 연결하고자 하는 서버 주소 입력
+        .baseUrl("http://10.0.2.2:8000/") // 연결하고자 하는 서버 주소 입력
         .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
         .build() // 코드 마무리
 
@@ -163,13 +167,30 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
                         response: Response<GetEmotionDiaryRecordsOutput>
                     ) {
 
-                        resultValue = response.body()
+                        if (response.isSuccessful) {
+
+                            resultValue = response.body()
+
+                        }
 
                     }
 
                     override fun onFailure(call: Call<GetEmotionDiaryRecordsOutput>, t: Throwable) {
 
-                        throw IllegalStateException("에러 발생 : 통신이 이루어지지 않습니다.")
+                        if (!isPopupShowing) {
+
+                            val errorDialog = AlertDialog.Builder(context)
+                            errorDialog.setTitle("통신 오류")
+                            errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+                            errorDialog.setOnDismissListener {
+                                isPopupShowing = false
+                            }
+                            errorDialog.show()
+
+                            isPopupShowing = true
+
+                        }
+
                     }
 
                 }
@@ -199,16 +220,41 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
                     response: Response<UpdateEmotionDiaryRecordsOutput>
                 ) {
 
+                    if (!response.isSuccessful) {
+
+                        if (!isPopupShowing) {
+                            val errorDialog = AlertDialog.Builder(context)
+                            errorDialog.setTitle("서버 응답 오류")
+                            errorDialog.setMessage("status code : ${response.code()}")
+                            errorDialog.setOnDismissListener {
+                                isPopupShowing = false
+                            }
+                            errorDialog.show()
+
+                            isPopupShowing = true
+                        }
+
+                    }
+
                 }
 
                 override fun onFailure(
                     call: Call<UpdateEmotionDiaryRecordsOutput>,
                     t: Throwable
                 ) {
-                    val errorDialog = AlertDialog.Builder(context)
-                    errorDialog.setTitle("통신 오류")
-                    errorDialog.setMessage("통신에 실패했습니다 : type2")
-                    errorDialog.show()
+
+                    if (!isPopupShowing) {
+                        val errorDialog = AlertDialog.Builder(context)
+                        errorDialog.setTitle("통신 오류")
+                        errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+                        errorDialog.setOnDismissListener {
+                            isPopupShowing = false
+                        }
+                        errorDialog.show()
+
+                        isPopupShowing = true
+                    }
+
                 }
 
             })
@@ -263,22 +309,32 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
                     null
                 }
 
-            val resultValue =
-                if (userID != null && searchDate != null) {
-                    getData(userID, searchDate)
+            // userID와 searchDate 가 상식적으로 null 인 상황이 있을 수가 없음. 하지만 발생시 에러 발생시킬 것.
+            try {
+                val resultValue = getData(userID!!, searchDate!!)
+
+                if (resultValue == null) {
+
+                    updateValue = GetEmotionDiaryRecordsOutput(
+                        null,
+                        null,
+                        null,
+                        positionData?.inputText,
+                        null,
+                        null
+                    )
+
                 } else {
-                    null
+
+                    updateValue = resultValue.copy()
+                    updateValue.inputText2 = positionData?.inputText
+
                 }
 
-            // updateValue = resultValue -> 이러면 resultValue 바꾸면 updateValue 도 바뀜
-            updateValue = resultValue?.copy()
-
-            updateValue?.inputText1 = positionData?.inputText
-
-            if (userID != null && searchDate != null) {
                 updateData(userID, searchDate, updateValue)
-            } else {
-                return
+
+            } catch (e: NullPointerException) {
+                throw IllegalArgumentException("you should input non-null type at userID, searchDate")
             }
 
         }

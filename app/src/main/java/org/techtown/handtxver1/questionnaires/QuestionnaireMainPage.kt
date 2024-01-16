@@ -156,6 +156,17 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
         viewModel.fetchData()
 
+        fun errorPopupDuringGetData(message:String?) {
+            val errorDialog = AlertDialog.Builder(this)
+            errorDialog.setTitle("통신 오류")
+            errorDialog.setMessage("설문 데이터를 가져올 수 없습니다 : $message")
+            errorDialog.show()
+        }
+
+        if (viewModel.networkFailureCounting > 0) {
+            errorPopupDuringGetData(viewModel.networkFailureMessage)
+        }
+
         val surveyDataArray = arrayOf(
             viewModel.issueCheckingSurveyData,
             viewModel.selfDiagnosisSurveyData,
@@ -217,7 +228,7 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
             } else {
 
-                throw RuntimeException("index range error : scoreResetPopup")
+                throw ArrayIndexOutOfBoundsException("index range error : scoreResetPopup")
 
             }
         }
@@ -244,7 +255,7 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
             } else {
 
-                throw RuntimeException("index range error : PreviousSurveyAlertPopup")
+                throw ArrayIndexOutOfBoundsException("index range error : PreviousSurveyAlertPopup")
 
             }
         }
@@ -316,7 +327,7 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
             } else {
 
-                throw RuntimeException("index range error")
+                throw ArrayIndexOutOfBoundsException("index range error")
 
             }
 

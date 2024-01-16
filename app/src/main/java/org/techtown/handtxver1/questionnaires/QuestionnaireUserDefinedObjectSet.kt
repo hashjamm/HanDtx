@@ -17,7 +17,7 @@ import java.util.*
 class QuestionnaireUserDefinedObjectSet {
 
     // 로그인한 유저 아이디 지정
-    val userID = ApplicationClass.loginSharedPreferences.getString("saveID", "")
+    val userID = ApplicationClass.loginSharedPreferences.getString("saveID", null)
 
     // 현재 날짜 가져오기
     private val currentDate = Calendar.getInstance()
@@ -25,7 +25,7 @@ class QuestionnaireUserDefinedObjectSet {
 
     // retrofit 객체 생성
     var retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("https://112.222.70.85") // 연결하고자 하는 서버 주소 입력
+        .baseUrl("http://10.0.2.2:8000/") // 연결하고자 하는 서버 주소 입력
         .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
         .build() // 코드 마무리
 

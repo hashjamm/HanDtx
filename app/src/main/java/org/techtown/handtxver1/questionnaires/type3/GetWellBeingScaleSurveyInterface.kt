@@ -9,7 +9,7 @@ import java.util.*
 interface GetWellBeingScaleSurveyInterface {
 
     @FormUrlEncoded
-    @POST("app_get_well_being_scale_survey/")
+    @POST("hanDtxPrototypeApp/app_get_well_being_scale_survey/")
     fun requestGetWellBeingScaleSurvey(
         @Field("user_id") user_id:String,
         @Field("date") date: Date

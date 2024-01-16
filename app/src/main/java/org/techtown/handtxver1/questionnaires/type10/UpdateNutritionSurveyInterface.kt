@@ -9,7 +9,7 @@ import java.util.*
 interface UpdateNutritionSurveyInterface {
 
     @FormUrlEncoded
-    @POST("app_update_nutrition_survey/")
+    @POST("hanDtxPrototypeApp/app_update_nutrition_survey/")
     fun requestUpdateNutritionSurvey(
         @Field("user_id") user_id: String,
         @Field("date") date: Date,

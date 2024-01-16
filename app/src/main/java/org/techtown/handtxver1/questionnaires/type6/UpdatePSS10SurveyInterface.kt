@@ -10,7 +10,7 @@ import java.util.*
 interface UpdatePSS10SurveyInterface {
 
     @FormUrlEncoded
-    @POST("app_update_self_diagnosis_survey/")
+    @POST("hanDtxPrototypeApp/app_update_pss10_survey/")
     fun requestUpdatePSS10Survey(
         @Field("user_id") user_id: String,
         @Field("date") date: Date,

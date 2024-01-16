@@ -38,7 +38,8 @@ class Login : AppCompatActivity() {
     fun findTLSVersion() {
         try {
             // TLS를 사용하는 SSLSocket 생성
-            val sslSocketFactory: SSLSocketFactory? = SSLSocketFactory.getDefault() as? SSLSocketFactory
+            val sslSocketFactory: SSLSocketFactory? =
+                SSLSocketFactory.getDefault() as? SSLSocketFactory
             if (sslSocketFactory != null) {
                 val sslSocket: SSLSocket = sslSocketFactory.createSocket() as SSLSocket
 
@@ -47,7 +48,7 @@ class Login : AppCompatActivity() {
                 if (tlsVersion != null) {
                     Log.d("LE", "Current TLS version : $tlsVersion")
                 } else {
-                    Log.d("LE","Unable to determine TLS version.")
+                    Log.d("LE", "Unable to determine TLS version.")
                 }
             } else {
                 Log.d("LE", "SSLSocketFactory is null.")
@@ -102,7 +103,7 @@ class Login : AppCompatActivity() {
         }
 
         // userID 부분의 텍스트가 변경됨에 따라 editor 에 해당 텍스트 내용 저장
-        userID.addTextChangedListener(object: TextWatcher {
+        userID.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
@@ -119,7 +120,7 @@ class Login : AppCompatActivity() {
         })
 
         // userPW 부분의 텍스트가 변경됨에 따라 editor 에 해당 텍스트 내용 저장
-        userPW.addTextChangedListener(object: TextWatcher {
+        userPW.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
@@ -145,61 +146,66 @@ class Login : AppCompatActivity() {
             val userPwText = userPW.text.toString()
 
             // login 을 위한 인터페이스 사용 과정
-            loginInterface.requestLogin(userIdText, userPwText).enqueue(object: Callback<LoginOutput>{
+            loginInterface.requestLogin(userIdText, userPwText)
+                .enqueue(object : Callback<LoginOutput> {
 
-                // 통신에 성공한 경우
-                override fun onResponse(call: Call<LoginOutput>, response: Response<LoginOutput>) {
+                    // 통신에 성공한 경우
+                    override fun onResponse(
+                        call: Call<LoginOutput>,
+                        response: Response<LoginOutput>
+                    ) {
 
-                    val statusCode = response.code()
+                        val statusCode = response.code()
 
-                    if (response.isSuccessful) {
+                        if (response.isSuccessful) {
 
-                        // body 메서드를 통해 응답받은 내용을 가져올 수 있음
-                        val resultValue = response.body()
+                            // body 메서드를 통해 응답받은 내용을 가져올 수 있음
+                            val resultValue = response.body()
 
-                        val loginDialog = AlertDialog.Builder(this@Login)
+                            val loginDialog = AlertDialog.Builder(this@Login)
 
-                        if (statusCode == 200) {
+                            if (statusCode == 200) {
 
-                            Toast.makeText(this@Login, resultValue?.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@Login, resultValue?.message, Toast.LENGTH_SHORT)
+                                    .show()
 
-                            val intentToCheckIn = Intent(this@Login, CheckIn::class.java)
-                            startActivity(intentToCheckIn)
+                                val intentToCheckIn = Intent(this@Login, CheckIn::class.java)
+                                startActivity(intentToCheckIn)
+
+                            } else {
+
+                                loginDialog.setTitle("로그인 오류 :")
+                                loginDialog.setMessage(resultValue?.message)
+
+                                loginDialog.show()
+
+                            }
 
                         } else {
 
+                            val loginDialog = AlertDialog.Builder(this@Login)
+
                             loginDialog.setTitle("로그인 오류 :")
-                            loginDialog.setMessage(resultValue?.message)
+                            loginDialog.setMessage("등록되지 않은 사용자 계정입니다.")
 
                             loginDialog.show()
 
                         }
 
-                    } else {
-
-                        val loginDialog = AlertDialog.Builder(this@Login)
-
-                        loginDialog.setTitle("로그인 오류 :")
-                        loginDialog.setMessage("등록되지 않은 사용자 계정입니다.")
-
-                        loginDialog.show()
-
                     }
 
-                }
 
+                    // 통신에 실패한 경우
+                    override fun onFailure(call: Call<LoginOutput>, t: Throwable) {
 
-                // 통신에 실패한 경우
-                override fun onFailure(call: Call<LoginOutput>, t: Throwable) {
+                        findTLSVersion()
 
-                    findTLSVersion()
-
-                    val loginDialog = AlertDialog.Builder(this@Login)
-                    loginDialog.setTitle("통신 오류")
-                    loginDialog.setMessage("통신에 실패했습니다 : " + t.message)
-                    loginDialog.show()
-                }
-            })
+                        val loginDialog = AlertDialog.Builder(this@Login)
+                        loginDialog.setTitle("통신 오류")
+                        loginDialog.setMessage("통신에 실패했습니다 : " + t.message)
+                        loginDialog.show()
+                    }
+                })
 
         }
 

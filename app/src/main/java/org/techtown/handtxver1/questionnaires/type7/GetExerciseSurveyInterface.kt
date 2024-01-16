@@ -9,7 +9,7 @@ import java.util.*
 interface GetExerciseSurveyInterface {
 
     @FormUrlEncoded
-    @POST("app_get_exercise_survey/")
+    @POST("hanDtxPrototypeApp/app_get_exercise_survey/")
     fun requestGetExerciseSurvey(
         @Field("user_id") user_id:String,
         @Field("date") date: Date
