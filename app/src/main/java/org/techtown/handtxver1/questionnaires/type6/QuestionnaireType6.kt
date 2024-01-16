@@ -21,6 +21,8 @@ import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.util.*
 
 class QuestionnaireType6 : AppCompatActivity() {
@@ -159,13 +161,16 @@ class QuestionnaireType6 : AppCompatActivity() {
                                 .setTitle("응답한 내용")
                                 .setMessage(messageBuilder.toString())
                                 .setPositiveButton("완료") { _, _ ->
-                                    Toast.makeText(this, "설문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
 
-                                    val intent = Intent(this, QuestionnaireMainPage::class.java)
+                                    try {
 
-                                    updateData(objectSet.userID!!, objectSet.date)
+                                        updateDataIntent(objectSet.userID!!, objectSet.date)
 
-                                    startActivity(intent)
+                                    } catch (e: NullPointerException) {
+
+                                        throw IllegalArgumentException("you should input non-null type at userID")
+
+                                    }
 
                                 }
                                 .setNeutralButton("수정", null)
@@ -226,44 +231,67 @@ class QuestionnaireType6 : AppCompatActivity() {
     private var updatePSS10SurveyInterface: UpdatePSS10SurveyInterface =
         objectSet.retrofit.create(UpdatePSS10SurveyInterface::class.java)
 
-    private fun updateData(
+    private fun updateDataIntent(
         userID: String,
         date: Date
     ) {
 
         val responseSequence = viewModel.responseSequence
 
-        updatePSS10SurveyInterface.requestUpdatePSS10Survey(
-            userID,
-            date,
-            responseSequence[0]!!,
-            responseSequence[1]!!,
-            responseSequence[2]!!,
-            responseSequence[3]!!,
-            responseSequence[4]!!,
-            responseSequence[5]!!,
-            responseSequence[6]!!,
-            responseSequence[7]!!,
-            responseSequence[8]!!,
-            responseSequence[9]!!
-        ).enqueue(object :
-            Callback<UpdatePSS10SurveyOutput> {
+        val intent = Intent(this, QuestionnaireMainPage::class.java)
 
-            override fun onResponse(
-                call: Call<UpdatePSS10SurveyOutput>,
-                response: Response<UpdatePSS10SurveyOutput>
-            ) {
+        try {
+            updatePSS10SurveyInterface.requestUpdatePSS10Survey(
+                userID,
+                date,
+                responseSequence[0]!!,
+                responseSequence[1]!!,
+                responseSequence[2]!!,
+                responseSequence[3]!!,
+                responseSequence[4]!!,
+                responseSequence[5]!!,
+                responseSequence[6]!!,
+                responseSequence[7]!!,
+                responseSequence[8]!!,
+                responseSequence[9]!!
+            ).enqueue(object :
+                Callback<UpdatePSS10SurveyOutput> {
 
-            }
+                override fun onResponse(
+                    call: Call<UpdatePSS10SurveyOutput>,
+                    response: Response<UpdatePSS10SurveyOutput>
+                ) {
+                    if (response.isSuccessful) {
 
-            override fun onFailure(call: Call<UpdatePSS10SurveyOutput>, t: Throwable) {
-                val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType6)
-                errorDialog.setTitle("통신 오류")
-                errorDialog.setMessage("통신에 실패했습니다 : type2")
-                errorDialog.show()
-            }
+                        Toast.makeText(this@QuestionnaireType6, "설문을 완료하였습니다.", Toast.LENGTH_SHORT)
+                            .show()
 
-        })
+                        startActivity(intent)
+
+                    } else {
+
+                        val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType6)
+                        errorDialog.setTitle("서버 응답 오류")
+                        errorDialog.setMessage("status code : ${response.code()}")
+                        errorDialog.show()
+
+                    }
+                }
+
+                override fun onFailure(call: Call<UpdatePSS10SurveyOutput>, t: Throwable) {
+
+                    val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType6)
+                    errorDialog.setTitle("통신 오류")
+                    errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+                    errorDialog.show()
+
+                }
+
+            })
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("More than 1 null are in responseSequence")
+        }
+
 
     }
 

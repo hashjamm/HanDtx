@@ -16,6 +16,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.util.*
 
 class QuestionnaireType1 : AppCompatActivity() {
@@ -37,7 +39,7 @@ class QuestionnaireType1 : AppCompatActivity() {
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
-        .baseUrl("https://112.222.70.85") // 연결하고자 하는 서버 주소 입력
+        .baseUrl("http://10.0.2.2:8000/") // 연결하고자 하는 서버 주소 입력
         .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
         .build() // 코드 마무리
 
@@ -61,17 +63,25 @@ class QuestionnaireType1 : AppCompatActivity() {
                         call: Call<GetIssueCheckingSurveyOutput>,
                         response: Response<GetIssueCheckingSurveyOutput>
                     ) {
+                        if (response.isSuccessful) {
 
-                        resultValue = response.body()
+                            resultValue = response.body()
+
+                        }
 
                     }
 
                     override fun onFailure(call: Call<GetIssueCheckingSurveyOutput>, t: Throwable) {
 
+                        val errorDialog = AlertDialog.Builder(this@QuestionnaireType1)
+                        errorDialog.setTitle("통신 오류")
+                        errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
 
-                        throw IllegalStateException("에러 발생 : 통신이 이루어지지 않습니다.")
+                        errorDialog.show()
 
                     }
+
+
                 }
 
             )
@@ -86,6 +96,8 @@ class QuestionnaireType1 : AppCompatActivity() {
         surveyResults: MutableList<Boolean>,
         checkBoxText: String
     ) {
+
+        val intent = Intent(this, QuestionnaireMainPage::class.java)
 
         updateIssueCheckingSurveyInterface.requestUpdateIssueCheckingSurvey(
             userID,
@@ -121,24 +133,45 @@ class QuestionnaireType1 : AppCompatActivity() {
                 response: Response<UpdateIssueCheckingSurveyOutput>
             ) {
 
+                if (response.isSuccessful) {
+
+                    Toast.makeText(this@QuestionnaireType1, "설문을 완료하였습니다.", Toast.LENGTH_SHORT)
+                        .show()
+
+                    startActivity(intent)
+
+                } else {
+
+                    val errorDialog = AlertDialog.Builder(this@QuestionnaireType1)
+                    errorDialog.setTitle("서버 응답 오류")
+                    errorDialog.setMessage("status code : ${response.code()}")
+
+                    errorDialog.show()
+
+                }
+
             }
 
             override fun onFailure(
                 call: Call<UpdateIssueCheckingSurveyOutput>,
                 t: Throwable
             ) {
+
                 val errorDialog = AlertDialog.Builder(this@QuestionnaireType1)
                 errorDialog.setTitle("통신 오류")
-                errorDialog.setMessage("통신에 실패했습니다 : type2")
+                errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+
                 errorDialog.show()
+
             }
+
 
         })
 
     }
 
-    // sharedPreferences 를 선언만 함 -> 이후에 onCreate 와 onResume 에서 초기화
-    // Int 타입인 checkSumChange 는 선언만 해둘 수가 없어서 우선 초기화를 해두었으나 onCreate 와 onResume 에서 다시 초기화해줄 예정
+// sharedPreferences 를 선언만 함 -> 이후에 onCreate 와 onResume 에서 초기화
+// Int 타입인 checkSumChange 는 선언만 해둘 수가 없어서 우선 초기화를 해두었으나 onCreate 와 onResume 에서 다시 초기화해줄 예정
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -220,15 +253,17 @@ class QuestionnaireType1 : AppCompatActivity() {
 
         submitButton.setOnClickListener {
 
-            val intent = Intent(this, QuestionnaireMainPage::class.java)
-
             val checkBoxText = editTextBox.text.toString()
 
-            updateData(userID!!, date, surveyResults, checkBoxText)
+            try {
 
-            Toast.makeText(this, "설문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
+                updateData(userID!!, date, surveyResults, checkBoxText)
 
-            startActivity(intent)
+            } catch (e: NullPointerException) {
+
+                throw IllegalArgumentException("you should input non-null type at userID")
+
+            }
 
         }
     }
@@ -265,48 +300,55 @@ class QuestionnaireType1 : AppCompatActivity() {
         // 마지막 체크박스는 사용자가 직접 상호작용할 수 없게 설정
         checkBoxes[21].isEnabled = false
 
-        val surveyResults = getData(userID!!, date)
+        try {
+            val surveyResults = getData(userID!!, date)
 
-        val surveyOutputList = listOf(
-            surveyResults?.checkbox1,
-            surveyResults?.checkbox2,
-            surveyResults?.checkbox3,
-            surveyResults?.checkbox4,
-            surveyResults?.checkbox5,
-            surveyResults?.checkbox6,
-            surveyResults?.checkbox7,
-            surveyResults?.checkbox8,
-            surveyResults?.checkbox9,
-            surveyResults?.checkbox10,
-            surveyResults?.checkbox11,
-            surveyResults?.checkbox12,
-            surveyResults?.checkbox13,
-            surveyResults?.checkbox14,
-            surveyResults?.checkbox15,
-            surveyResults?.checkbox16,
-            surveyResults?.checkbox17,
-            surveyResults?.checkbox18,
-            surveyResults?.checkbox19,
-            surveyResults?.checkbox20,
-            surveyResults?.checkbox21,
-            surveyResults?.inputText
-        )
+            val surveyOutputList = listOf(
+                surveyResults?.checkbox1,
+                surveyResults?.checkbox2,
+                surveyResults?.checkbox3,
+                surveyResults?.checkbox4,
+                surveyResults?.checkbox5,
+                surveyResults?.checkbox6,
+                surveyResults?.checkbox7,
+                surveyResults?.checkbox8,
+                surveyResults?.checkbox9,
+                surveyResults?.checkbox10,
+                surveyResults?.checkbox11,
+                surveyResults?.checkbox12,
+                surveyResults?.checkbox13,
+                surveyResults?.checkbox14,
+                surveyResults?.checkbox15,
+                surveyResults?.checkbox16,
+                surveyResults?.checkbox17,
+                surveyResults?.checkbox18,
+                surveyResults?.checkbox19,
+                surveyResults?.checkbox20,
+                surveyResults?.checkbox21,
+                surveyResults?.inputText
+            )
 
-        checkBoxes.forEachIndexed { index, checkBox ->
+            checkBoxes.forEachIndexed { index, checkBox ->
 
-            if (surveyResults != null) {
+                if (surveyResults != null) {
 
-                if (surveyOutputList[index] == false) {
-                    checkBox.isChecked
+                    if (surveyOutputList[index] == false) {
+                        checkBox.isChecked = false
+                    } else {
+                        checkBox.isChecked
+                    }
+
                 } else {
+
                     checkBox.isChecked = false
+
                 }
 
-            } else {
-
-                checkBox.isChecked = false
-
             }
+
+        } catch (e: NullPointerException) {
+
+            throw IllegalArgumentException("you should input non-null type at userID")
 
         }
 

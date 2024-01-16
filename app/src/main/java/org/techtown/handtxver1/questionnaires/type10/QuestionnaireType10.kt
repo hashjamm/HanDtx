@@ -21,6 +21,8 @@ import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.util.*
 
 class QuestionnaireType10 : AppCompatActivity() {
@@ -160,13 +162,16 @@ class QuestionnaireType10 : AppCompatActivity() {
                                 .setTitle("응답한 내용")
                                 .setMessage(messageBuilder.toString())
                                 .setPositiveButton("완료") { _, _ ->
-                                    Toast.makeText(this, "설문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
 
-                                    val intent = Intent(this, QuestionnaireMainPage::class.java)
+                                    try {
 
-                                    updateData(objectSet.userID!!, objectSet.date)
+                                        updateDataIntent(objectSet.userID!!, objectSet.date)
 
-                                    startActivity(intent)
+                                    } catch (e: NullPointerException) {
+
+                                        throw IllegalArgumentException("you should input non-null type at userID")
+
+                                    }
 
                                 }
                                 .setNeutralButton("수정", null)
@@ -226,7 +231,7 @@ class QuestionnaireType10 : AppCompatActivity() {
     private var updateNutritionSurveyInterface: UpdateNutritionSurveyInterface =
         objectSet.retrofit.create(UpdateNutritionSurveyInterface::class.java)
 
-    private fun updateData(
+    private fun updateDataIntent(
         userID: String,
         date: Date
     ) {
@@ -235,39 +240,64 @@ class QuestionnaireType10 : AppCompatActivity() {
         val snackTypeArray = viewModel.snackTypeArray
         val consumeNumArray = viewModel.consumeNumArray
 
-        updateNutritionSurveyInterface.requestUpdateNutritionSurvey(
-            userID,
-            date,
-            responseSequence[0]!!,
-            responseSequence[1]!!,
-            responseSequence[2]!!,
-            responseSequence[3]!!,
-            responseSequence[4]!!,
-            responseSequence[5]!!,
-            responseSequence[6]!!,
-            responseSequence[7]!!,
-            responseSequence[8]!!,
-            responseSequence[9]!!,
-            snackTypeArray[0],
-            consumeNumArray[0]
-        ).enqueue(object :
-            Callback<UpdateNutritionSurveyOutput> {
+        val intent = Intent(this, QuestionnaireMainPage::class.java)
 
-            override fun onResponse(
-                call: Call<UpdateNutritionSurveyOutput>,
-                response: Response<UpdateNutritionSurveyOutput>
-            ) {
+        try {
+            updateNutritionSurveyInterface.requestUpdateNutritionSurvey(
+                userID,
+                date,
+                responseSequence[0]!!,
+                responseSequence[1]!!,
+                responseSequence[2]!!,
+                responseSequence[3]!!,
+                responseSequence[4]!!,
+                responseSequence[5]!!,
+                responseSequence[6]!!,
+                responseSequence[7]!!,
+                responseSequence[8]!!,
+                responseSequence[9]!!,
+                snackTypeArray[0],
+                consumeNumArray[0]
+            ).enqueue(object :
+                Callback<UpdateNutritionSurveyOutput> {
 
-            }
+                override fun onResponse(
+                    call: Call<UpdateNutritionSurveyOutput>,
+                    response: Response<UpdateNutritionSurveyOutput>
+                ) {
 
-            override fun onFailure(call: Call<UpdateNutritionSurveyOutput>, t: Throwable) {
-                val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType10)
-                errorDialog.setTitle("통신 오류")
-                errorDialog.setMessage("통신에 실패했습니다 : type2")
-                errorDialog.show()
-            }
+                    if (response.isSuccessful) {
 
-        })
+                        Toast.makeText(this@QuestionnaireType10, "설문을 완료하였습니다.", Toast.LENGTH_SHORT)
+                            .show()
+
+                        startActivity(intent)
+
+                    } else {
+
+                        val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType10)
+                        errorDialog.setTitle("서버 응답 오류")
+                        errorDialog.setMessage("status code : ${response.code()}")
+                        errorDialog.show()
+
+                    }
+
+                }
+
+                override fun onFailure(call: Call<UpdateNutritionSurveyOutput>, t: Throwable) {
+
+                    val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType10)
+                    errorDialog.setTitle("통신 오류")
+                    errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+                    errorDialog.show()
+
+                }
+
+            })
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("More than 1 null are in responseSequence")
+        }
+
 
     }
 

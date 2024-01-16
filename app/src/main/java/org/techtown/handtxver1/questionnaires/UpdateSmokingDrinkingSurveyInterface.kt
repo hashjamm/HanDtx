@@ -9,7 +9,7 @@ import java.util.*
 interface UpdateSmokingDrinkingSurveyInterface {
 
     @FormUrlEncoded
-    @POST("app_update_smoking_drinking_survey/")
+    @POST("hanDtxPrototypeApp/app_update_smoking_drinking_survey/")
     fun requestUpdateSmokingDrinkingSurvey(
         @Field("user_id") user_id: String,
         @Field("date") date: Date,

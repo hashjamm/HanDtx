@@ -24,6 +24,8 @@ import org.techtown.handtxver1.questionnaires.UpdateSmokingDrinkingSurveyOutput
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.util.*
 
 class QuestionnaireType8 : AppCompatActivity() {
@@ -166,14 +168,16 @@ class QuestionnaireType8 : AppCompatActivity() {
                                     .setTitle("응답한 내용")
                                     .setMessage(messageBuilder.toString())
                                     .setPositiveButton("완료") { _, _ ->
-                                        Toast.makeText(this, "설문을 완료하였습니다.", Toast.LENGTH_SHORT)
-                                            .show()
 
-                                        val intent = Intent(this, QuestionnaireMainPage::class.java)
+                                        try {
 
-                                        updateData(objectSet.userID!!, objectSet.date)
+                                            updateDataIntent(objectSet.userID!!, objectSet.date)
 
-                                        startActivity(intent)
+                                        } catch (e: NullPointerException) {
+
+                                            throw IllegalArgumentException("you should input non-null type at userID")
+
+                                        }
 
                                     }
                                     .setNeutralButton("수정", null)
@@ -238,12 +242,14 @@ class QuestionnaireType8 : AppCompatActivity() {
     private var updateSmokingDrinkingSurveyInterface: UpdateSmokingDrinkingSurveyInterface =
         objectSet.retrofit.create(UpdateSmokingDrinkingSurveyInterface::class.java)
 
-    private fun updateData(
+    private fun updateDataIntent(
         userID: String,
         date: Date
     ) {
 
         val responseSequence = viewModel.responseSequence
+
+        val intent = Intent(this, QuestionnaireMainPage::class.java)
 
         updateSmokingDrinkingSurveyInterface.requestUpdateSmokingDrinkingSurvey(
             userID,
@@ -265,13 +271,31 @@ class QuestionnaireType8 : AppCompatActivity() {
                 response: Response<UpdateSmokingDrinkingSurveyOutput>
             ) {
 
+                if (response.isSuccessful) {
+
+                    Toast.makeText(this@QuestionnaireType8, "설문을 완료하였습니다.", Toast.LENGTH_SHORT)
+                        .show()
+
+                    startActivity(intent)
+
+                } else {
+
+                    val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType8)
+                    errorDialog.setTitle("서버 응답 오류")
+                    errorDialog.setMessage("status code : ${response.code()}")
+                    errorDialog.show()
+
+                }
+
             }
 
             override fun onFailure(call: Call<UpdateSmokingDrinkingSurveyOutput>, t: Throwable) {
+
                 val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType8)
                 errorDialog.setTitle("통신 오류")
-                errorDialog.setMessage("통신에 실패했습니다 : type2")
+                errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
                 errorDialog.show()
+
             }
 
 

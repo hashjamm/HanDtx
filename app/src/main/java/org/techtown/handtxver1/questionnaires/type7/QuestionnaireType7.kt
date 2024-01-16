@@ -21,6 +21,7 @@ import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.IllegalArgumentException
 import java.util.*
 
 class QuestionnaireType7 : AppCompatActivity() {
@@ -42,19 +43,19 @@ class QuestionnaireType7 : AppCompatActivity() {
     val submitButton: AppCompatTextView =
         findViewById(R.id.submitButton)
 
-    val page1 = QType7ContentPage1()
-    val page2 = QType7ContentPage2()
-    val page3 = QType7ContentPage3()
-    val page4 = QType7ContentPage4()
-    val page5 = QType7ContentPage5()
-    val page6 = QType7ContentPage6()
-    val page7 = QType7ContentPage7()
-    val page8 = QType7ContentPage8()
-    val page9 = QType7ContentPage9()
-    val page10 = QType7ContentPage10()
-    val page11 = QType7ContentPage11()
-    val page12 = QType7ContentPage12()
-    val page13 = QType7ContentPage13()
+    private val page1 = QType7ContentPage1()
+    private val page2 = QType7ContentPage2()
+    private val page3 = QType7ContentPage3()
+    private val page4 = QType7ContentPage4()
+    private val page5 = QType7ContentPage5()
+    private val page6 = QType7ContentPage6()
+    private val page7 = QType7ContentPage7()
+    private val page8 = QType7ContentPage8()
+    private val page9 = QType7ContentPage9()
+    private val page10 = QType7ContentPage10()
+    private val page11 = QType7ContentPage11()
+    private val page12 = QType7ContentPage12()
+    private val page13 = QType7ContentPage13()
 
     val pageSequence = arrayOf(
         page1,
@@ -174,13 +175,16 @@ class QuestionnaireType7 : AppCompatActivity() {
                                 .setTitle("응답한 내용")
                                 .setMessage(messageBuilder.toString())
                                 .setPositiveButton("완료") { _, _ ->
-                                    Toast.makeText(this, "설문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
 
-                                    val intent = Intent(this, QuestionnaireMainPage::class.java)
+                                    try {
 
-                                    updateData(objectSet.userID!!, objectSet.date)
+                                        updateDataIntent(objectSet.userID!!, objectSet.date)
 
-                                    startActivity(intent)
+                                    } catch (e: NullPointerException) {
+
+                                        throw IllegalArgumentException("you should input non-null type at userID")
+
+                                    }
 
                                 }
                                 .setNeutralButton("수정", null)
@@ -241,7 +245,7 @@ class QuestionnaireType7 : AppCompatActivity() {
     private var updateExerciseSurveyInterface: UpdateExerciseSurveyInterface =
         objectSet.retrofit.create(UpdateExerciseSurveyInterface::class.java)
 
-    private fun updateData(
+    private fun updateDataIntent(
         userID: String,
         date: Date
     ) {
@@ -254,43 +258,67 @@ class QuestionnaireType7 : AppCompatActivity() {
         val exerciseType2 = if (exerciseTypeArray.size > 1) exerciseTypeArray[1] else null
         val exerciseType3 = if (exerciseTypeArray.size > 2) exerciseTypeArray[2] else null
 
-        updateExerciseSurveyInterface.requestUpdateExerciseSurvey(
-            userID,
-            date,
-            responseSequence[0]!!,
-            responseSequence[1]!!,
-            responseSequence[2]!!,
-            responseSequence[3]!!,
-            responseSequence[4]!!,
-            responseSequence[5]!!,
-            responseSequence[6]!!,
-            responseSequence[7]!!,
-            responseSequence[8]!!,
-            responseSequence[9]!!,
-            responseSequence[10]!!,
-            responseSequence[11]!!,
-            exerciseType1,
-            exerciseType2,
-            exerciseType3,
-            inputText[0]
-        ).enqueue(object :
-            Callback<UpdateExerciseSurveyOutput> {
+        val intent = Intent(this, QuestionnaireMainPage::class.java)
 
-            override fun onResponse(
-                call: Call<UpdateExerciseSurveyOutput>,
-                response: Response<UpdateExerciseSurveyOutput>
-            ) {
+        try {
+            updateExerciseSurveyInterface.requestUpdateExerciseSurvey(
+                userID,
+                date,
+                responseSequence[0]!!,
+                responseSequence[1]!!,
+                responseSequence[2]!!,
+                responseSequence[3]!!,
+                responseSequence[4]!!,
+                responseSequence[5]!!,
+                responseSequence[6]!!,
+                responseSequence[7]!!,
+                responseSequence[8]!!,
+                responseSequence[9]!!,
+                responseSequence[10]!!,
+                responseSequence[11]!!,
+                exerciseType1,
+                exerciseType2,
+                exerciseType3,
+                inputText[0]
+            ).enqueue(object :
+                Callback<UpdateExerciseSurveyOutput> {
 
-            }
+                override fun onResponse(
+                    call: Call<UpdateExerciseSurveyOutput>,
+                    response: Response<UpdateExerciseSurveyOutput>
+                ) {
 
-            override fun onFailure(call: Call<UpdateExerciseSurveyOutput>, t: Throwable) {
-                val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType7)
-                errorDialog.setTitle("통신 오류")
-                errorDialog.setMessage("통신에 실패했습니다 : type2")
-                errorDialog.show()
-            }
+                    if (response.isSuccessful) {
 
-        })
+                        Toast.makeText(this@QuestionnaireType7, "설문을 완료하였습니다.", Toast.LENGTH_SHORT)
+                            .show()
+
+                        startActivity(intent)
+
+                    } else {
+
+                        val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType7)
+                        errorDialog.setTitle("서버 응답 오류")
+                        errorDialog.setMessage("status code : ${response.code()}")
+                        errorDialog.show()
+
+                    }
+
+                }
+
+                override fun onFailure(call: Call<UpdateExerciseSurveyOutput>, t: Throwable) {
+
+                    val errorDialog = android.app.AlertDialog.Builder(this@QuestionnaireType7)
+                    errorDialog.setTitle("통신 오류")
+                    errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+                    errorDialog.show()
+
+                }
+
+            })
+        } catch (e: NullPointerException) {
+            throw IllegalArgumentException("More than 1 null are in responseSequence")
+        }
 
     }
 
