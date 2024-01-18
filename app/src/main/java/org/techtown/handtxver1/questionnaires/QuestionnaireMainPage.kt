@@ -30,91 +30,8 @@ class QuestionnaireMainPage : AppCompatActivity() {
     // CommonUserDefinedObjectSet 클래스 인스턴스 생성
     val objectSet = QuestionnaireUserDefinedObjectSet()
 
-    // 체크상태 표기
-
-    private val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)
-    private val checkBox2 = findViewById<RadioButton>(R.id.qTypeCheckBox2)
-    private val checkBox3 = findViewById<RadioButton>(R.id.qTypeCheckBox3)
-    private val checkBox4 = findViewById<RadioButton>(R.id.qTypeCheckBox4)
-    private val checkBox5 = findViewById<RadioButton>(R.id.qTypeCheckBox5)
-    private val checkBox6 = findViewById<RadioButton>(R.id.qTypeCheckBox6)
-    private val checkBox7 = findViewById<RadioButton>(R.id.qTypeCheckBox7)
-    private val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
-    private val checkBox9 = findViewById<RadioButton>(R.id.qTypeCheckBox9)
-    private val checkBox10 = findViewById<RadioButton>(R.id.qTypeCheckBox10)
-    private val checkBox11 = findViewById<RadioButton>(R.id.qTypeCheckBox11)
-
-    // 각 QuestionnaireType 으로 이동하는 TextView 들을 미리 불러옴
-    private val toQuestionnaireType1 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox1)
-    private val toQuestionnaireType2 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox2)
-    private val toQuestionnaireType3 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox3)
-    private val toQuestionnaireType4 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox4)
-    private val toQuestionnaireType5 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox5)
-    private val toQuestionnaireType6 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox6)
-    private val toQuestionnaireType7 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox7)
-    private val toQuestionnaireType8 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox8)
-    private val toQuestionnaireType9 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox9)
-    private val toQuestionnaireType10 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox10)
-    private val toQuestionnaireResult =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox11)
-
     // 메뉴바 fragment 불러옴
     val menuBar = BottomMenuBar(4)
-
-    // 각 설문지 타입으로 넘어가는 텍스트뷰들에 대한 리스너 코드
-    // 인텐트에 실어줄 액티비티 이름을 string 을 사용하여 Class.forName 매서드를 통해 지정함에 있어서
-    // 전체 주소를 입력해줘야하는 문제가 있음
-    // 보다 일반적인 코드를 위하여 intentMap 을 사용하는 코드로 변경
-
-    private val intent1 = Intent(this, QuestionnaireType1::class.java)
-    private val intent2 = Intent(this, QuestionnaireType2::class.java)
-    private val intent3 = Intent(this, QuestionnaireType3::class.java)
-    private val intent4 = Intent(this, QuestionnaireType4::class.java)
-    private val intent5 = Intent(this, QuestionnaireType5::class.java)
-    private val intent6 = Intent(this, QuestionnaireType6::class.java)
-    private val intent7 = Intent(this, QuestionnaireType7::class.java)
-    private val intent8 = Intent(this, QuestionnaireType8::class.java)
-    private val intent9 = Intent(this, QuestionnaireType9::class.java)
-    private val intent10 = Intent(this, QuestionnaireType10::class.java)
-    private val intent11 = Intent(this, QuestionnaireResultSummary::class.java)
-
-    private val checkBoxes = arrayOf(
-        checkBox1,
-        checkBox2,
-        checkBox3,
-        checkBox4,
-        checkBox5,
-        checkBox6,
-        checkBox7,
-        checkBox8,
-        checkBox9,
-        checkBox10,
-        checkBox11
-    )
-
-    private val toQuestionnaireArray = arrayOf(
-        toQuestionnaireType1,
-        toQuestionnaireType2,
-        toQuestionnaireType3,
-        toQuestionnaireType4,
-        toQuestionnaireType5,
-        toQuestionnaireType6,
-        toQuestionnaireType7,
-        toQuestionnaireType8,
-        toQuestionnaireType9,
-        toQuestionnaireType10,
-        toQuestionnaireResult
-    )
 
     private val questionnaireNameArray = arrayOf(
         "정신건강 관련 나의 관심 이슈 고르기",
@@ -130,33 +47,116 @@ class QuestionnaireMainPage : AppCompatActivity() {
         "건강관리 문진표 종합 결과"
     )
 
-    private val intentArray = arrayOf(
-        intent1,
-        intent2,
-        intent3,
-        intent4,
-        intent5,
-        intent6,
-        intent7,
-        intent8,
-        intent9,
-        intent10,
-        intent11
-    )
-
-    // ViewModel 에 접근 및 로딩
-    val viewModel = ViewModelProvider(this)[ViewModelForQMain::class.java]
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_page1)
+
+        // ViewModel 에 접근 및 로딩
+        val viewModel = ViewModelProvider(this)[ViewModelForQMain::class.java]
+
+        // 체크상태 표기
+
+        val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)
+        val checkBox2 = findViewById<RadioButton>(R.id.qTypeCheckBox2)
+        val checkBox3 = findViewById<RadioButton>(R.id.qTypeCheckBox3)
+        val checkBox4 = findViewById<RadioButton>(R.id.qTypeCheckBox4)
+        val checkBox5 = findViewById<RadioButton>(R.id.qTypeCheckBox5)
+        val checkBox6 = findViewById<RadioButton>(R.id.qTypeCheckBox6)
+        val checkBox7 = findViewById<RadioButton>(R.id.qTypeCheckBox7)
+        val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
+        val checkBox9 = findViewById<RadioButton>(R.id.qTypeCheckBox9)
+        val checkBox10 = findViewById<RadioButton>(R.id.qTypeCheckBox10)
+        val checkBox11 = findViewById<RadioButton>(R.id.qTypeCheckBox11)
+
+        // 각 QuestionnaireType 으로 이동하는 TextView 들을 미리 불러옴
+        val toQuestionnaireType1 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox1)
+        val toQuestionnaireType2 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox2)
+        val toQuestionnaireType3 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox3)
+        val toQuestionnaireType4 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox4)
+        val toQuestionnaireType5 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox5)
+        val toQuestionnaireType6 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox6)
+        val toQuestionnaireType7 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox7)
+        val toQuestionnaireType8 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox8)
+        val toQuestionnaireType9 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox9)
+        val toQuestionnaireType10 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox10)
+        val toQuestionnaireResult =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox11)
+
+        val checkBoxes = arrayOf(
+            checkBox1,
+            checkBox2,
+            checkBox3,
+            checkBox4,
+            checkBox5,
+            checkBox6,
+            checkBox7,
+            checkBox8,
+            checkBox9,
+            checkBox10,
+            checkBox11
+        )
+
+        val toQuestionnaireArray = arrayOf(
+            toQuestionnaireType1,
+            toQuestionnaireType2,
+            toQuestionnaireType3,
+            toQuestionnaireType4,
+            toQuestionnaireType5,
+            toQuestionnaireType6,
+            toQuestionnaireType7,
+            toQuestionnaireType8,
+            toQuestionnaireType9,
+            toQuestionnaireType10,
+            toQuestionnaireResult
+        )
+
+        // 각 설문지 타입으로 넘어가는 텍스트뷰들에 대한 리스너 코드
+        // 인텐트에 실어줄 액티비티 이름을 string 을 사용하여 Class.forName 매서드를 통해 지정함에 있어서
+        // 전체 주소를 입력해줘야하는 문제가 있음
+        // 보다 일반적인 코드를 위하여 intentMap 을 사용하는 코드로 변경
+
+        val intent1 = Intent(this, QuestionnaireType1::class.java)
+        val intent2 = Intent(this, QuestionnaireType2::class.java)
+        val intent3 = Intent(this, QuestionnaireType3::class.java)
+        val intent4 = Intent(this, QuestionnaireType4::class.java)
+        val intent5 = Intent(this, QuestionnaireType5::class.java)
+        val intent6 = Intent(this, QuestionnaireType6::class.java)
+        val intent7 = Intent(this, QuestionnaireType7::class.java)
+        val intent8 = Intent(this, QuestionnaireType8::class.java)
+        val intent9 = Intent(this, QuestionnaireType9::class.java)
+        val intent10 = Intent(this, QuestionnaireType10::class.java)
+        val intent11 = Intent(this, QuestionnaireResultSummary::class.java)
+
+        val intentArray = arrayOf(
+            intent1,
+            intent2,
+            intent3,
+            intent4,
+            intent5,
+            intent6,
+            intent7,
+            intent8,
+            intent9,
+            intent10,
+            intent11
+        )
 
         // 메뉴바 fragment 에 대한 beginTransaction
         supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
 
         viewModel.fetchData()
 
-        fun errorPopupDuringGetData(message:String?) {
+        fun errorPopupDuringGetData(message: String?) {
             val errorDialog = AlertDialog.Builder(this)
             errorDialog.setTitle("통신 오류")
             errorDialog.setMessage("설문 데이터를 가져올 수 없습니다 : $message")
@@ -346,40 +346,71 @@ class QuestionnaireMainPage : AppCompatActivity() {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-
-        supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
-
-        // 다른 페이지에서 뒤로가기 버튼을 눌렀을 때, 만약 날짜가 바뀐 경우라면 해당 fetchData 매서드 적용이 필요
-        viewModel.fetchData()
-
-        val surveyDataArray = arrayOf(
-            viewModel.issueCheckingSurveyData,
-            viewModel.selfDiagnosisSurveyData,
-            viewModel.wellBeingScaleSurveyData,
-            viewModel.phq9SurveyData,
-            viewModel.gad7SurveyData,
-            viewModel.pss10SurveyData,
-            viewModel.exerciseSurveyData,
-            viewModel.smokingDrinkingSurveyData,
-            viewModel.stressSurveyData,
-            viewModel.nutritionSurveyData
-        )
-
-        checkBoxes.forEachIndexed { index, buttonBox ->
-
-            if (index != checkBoxes.size - 1) {
-
-                buttonBox.isEnabled = false
-
-                buttonBox.isChecked = surveyDataArray[index] != null
-
-            }
-
-        }
-
-    }
+//    override fun onResume() {
+//        super.onResume()
+//
+//        // ViewModel 에 접근 및 로딩
+//        val viewModel = ViewModelProvider(this)[ViewModelForQMain::class.java]
+//
+//        // 체크상태 표기
+//
+//        val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)
+//        val checkBox2 = findViewById<RadioButton>(R.id.qTypeCheckBox2)
+//        val checkBox3 = findViewById<RadioButton>(R.id.qTypeCheckBox3)
+//        val checkBox4 = findViewById<RadioButton>(R.id.qTypeCheckBox4)
+//        val checkBox5 = findViewById<RadioButton>(R.id.qTypeCheckBox5)
+//        val checkBox6 = findViewById<RadioButton>(R.id.qTypeCheckBox6)
+//        val checkBox7 = findViewById<RadioButton>(R.id.qTypeCheckBox7)
+//        val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
+//        val checkBox9 = findViewById<RadioButton>(R.id.qTypeCheckBox9)
+//        val checkBox10 = findViewById<RadioButton>(R.id.qTypeCheckBox10)
+//        val checkBox11 = findViewById<RadioButton>(R.id.qTypeCheckBox11)
+//
+//        val checkBoxes = arrayOf(
+//            checkBox1,
+//            checkBox2,
+//            checkBox3,
+//            checkBox4,
+//            checkBox5,
+//            checkBox6,
+//            checkBox7,
+//            checkBox8,
+//            checkBox9,
+//            checkBox10,
+//            checkBox11
+//        )
+//
+//        supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
+//
+//        // 다른 페이지에서 뒤로가기 버튼을 눌렀을 때, 만약 날짜가 바뀐 경우라면 해당 fetchData 매서드 적용이 필요
+//        viewModel.fetchData()
+//
+//        val surveyDataArray = arrayOf(
+//            viewModel.issueCheckingSurveyData,
+//            viewModel.selfDiagnosisSurveyData,
+//            viewModel.wellBeingScaleSurveyData,
+//            viewModel.phq9SurveyData,
+//            viewModel.gad7SurveyData,
+//            viewModel.pss10SurveyData,
+//            viewModel.exerciseSurveyData,
+//            viewModel.smokingDrinkingSurveyData,
+//            viewModel.stressSurveyData,
+//            viewModel.nutritionSurveyData
+//        )
+//
+//        checkBoxes.forEachIndexed { index, buttonBox ->
+//
+//            if (index != checkBoxes.size - 1) {
+//
+//                buttonBox.isEnabled = false
+//
+//                buttonBox.isChecked = surveyDataArray[index] != null
+//
+//            }
+//
+//        }
+//
+//    }
 
 }
 

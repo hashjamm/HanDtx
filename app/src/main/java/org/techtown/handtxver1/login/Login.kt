@@ -11,6 +11,7 @@ import android.util.Log
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.CheckIn
 import org.techtown.handtxver1.R
 import retrofit2.Call
@@ -31,9 +32,6 @@ class Login : AppCompatActivity() {
 
     // 로그인 서비스 interface 를 장착한 Retrofit 객체 생성
     private var loginInterface: LoginInterface = retrofit.create(LoginInterface::class.java)
-
-    // 체크박스 체크 시, 입력된 user 의 ID 와 PW 를 자동으로 유지하도록 정보 저장 sharedPreferences 생성
-    private lateinit var sharedPreferences: SharedPreferences
 
     fun findTLSVersion() {
         try {
@@ -75,19 +73,21 @@ class Login : AppCompatActivity() {
         val saveButton =
             findViewById<CheckBox>(R.id.saveButton)
 
-        // 자동 완성 버튼 체크 여부 및 기록된 id, pw 값을 저장하기 위한 데이터 파일
-        sharedPreferences = getSharedPreferences(
-            "loginSharedPreferences", Context.MODE_PRIVATE
-        )
-
-        val editor = sharedPreferences.edit()
+        val editor = ApplicationClass.loginSharedPreferences.edit()
 
         // loginSharedPreferences 라는 동명의 데이터 저장소 파일을 이전에 사용했었는데, 이를 초기화 해줘야함 한 번
         // editor.clear()
         // editor.apply()
 
-        userID.setText(sharedPreferences.getString("saveID", ""))
-        userPW.setText(sharedPreferences.getString("savePW", ""))
+        saveButton.isChecked = ApplicationClass.loginSharedPreferences.getBoolean("save", false)
+
+        if (saveButton.isChecked) {
+            userID.setText(ApplicationClass.loginSharedPreferences.getString("saveID", ""))
+            userPW.setText(ApplicationClass.loginSharedPreferences.getString("savePW", ""))
+        } else {
+            userID.setText("")
+            userPW.setText("")
+        }
 
         // save 버튼의 클릭 상태가 변경될 때마다 체크 여부를 editor 에 업데이트
         saveButton.setOnCheckedChangeListener { _, isChecked ->
@@ -172,6 +172,10 @@ class Login : AppCompatActivity() {
                                 val intentToCheckIn = Intent(this@Login, CheckIn::class.java)
                                 startActivity(intentToCheckIn)
 
+                                editor.putString("saveID", userIdText)
+                                editor.putString("savePW", userPwText)
+                                editor.apply()
+
                             } else {
 
                                 loginDialog.setTitle("로그인 오류 :")
@@ -220,13 +224,18 @@ class Login : AppCompatActivity() {
         val userPW =
             findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.userPW)
 
-        // 자동 완성 버튼 체크 여부 및 기록된 id, pw 값을 저장하기 위한 데이터 파일
-        sharedPreferences = getSharedPreferences(
-            "LoginSharedPreferences", Context.MODE_PRIVATE
-        )
+        val saveButton =
+            findViewById<CheckBox>(R.id.saveButton)
 
-        userID.setText(sharedPreferences.getString("saveID", ""))
-        userPW.setText(sharedPreferences.getString("savePW", ""))
+        saveButton.isChecked = ApplicationClass.loginSharedPreferences.getBoolean("save", false)
+
+        if (saveButton.isChecked) {
+            userID.setText(ApplicationClass.loginSharedPreferences.getString("saveID", ""))
+            userPW.setText(ApplicationClass.loginSharedPreferences.getString("savePW", ""))
+        } else {
+            userID.setText("")
+            userPW.setText("")
+        }
 
     }
 }

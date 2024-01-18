@@ -5,19 +5,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import org.techtown.handtxver1.R
 import org.techtown.handtxver1.ApplicationClass
+import org.techtown.handtxver1.R
 import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
+import java.text.SimpleDateFormat
 import java.util.*
 
 class QuestionnaireType1 : AppCompatActivity() {
@@ -27,7 +27,9 @@ class QuestionnaireType1 : AppCompatActivity() {
 
     // 현재 날짜 가져오기
     private val currentDate = Calendar.getInstance()
-    private val date = currentDate.time
+
+    // 날짜 변수를 string 으로 변환하는 과정에서 사용하는 포매터 : 로컬 시간대를 포함
+    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     // 체크박스 배열 변수 선언, 작업해줄 내용을 하나의 함수로 지정하고 인스턴스를 직접사용하는 것이 필요한 경우를 파라미터로 지정해서 작성
 
@@ -50,7 +52,7 @@ class QuestionnaireType1 : AppCompatActivity() {
     private var getIssueCheckingSurveyInterface: GetIssueCheckingSurveyInterface =
         retrofit.create(GetIssueCheckingSurveyInterface::class.java)
 
-    private fun getData(userID: String, date: Date): GetIssueCheckingSurveyOutput? {
+    private fun getData(userID: String, date: String): GetIssueCheckingSurveyOutput? {
 
         var resultValue: GetIssueCheckingSurveyOutput? = null
 
@@ -92,12 +94,15 @@ class QuestionnaireType1 : AppCompatActivity() {
 
     private fun updateData(
         userID: String,
-        date: Date,
+        date: String,
         surveyResults: MutableList<Boolean>,
         checkBoxText: String
     ) {
 
         val intent = Intent(this, QuestionnaireMainPage::class.java)
+
+        Log.d("err", "${surveyResults[0]}")
+        Log.d("err", "${surveyResults[0] is Boolean}")
 
         updateIssueCheckingSurveyInterface.requestUpdateIssueCheckingSurvey(
             userID,
@@ -176,6 +181,9 @@ class QuestionnaireType1 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_type1)
+
+        // 날짜를 문자열로 변환
+        val formattedDate = dateFormatter.format(currentDate.time)
 
         // editText 뷰 인스턴스 생성
         val editTextBox = findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.box22_text)
@@ -257,7 +265,7 @@ class QuestionnaireType1 : AppCompatActivity() {
 
             try {
 
-                updateData(userID!!, date, surveyResults, checkBoxText)
+                updateData(userID!!, formattedDate, surveyResults, checkBoxText)
 
             } catch (e: NullPointerException) {
 
@@ -271,6 +279,9 @@ class QuestionnaireType1 : AppCompatActivity() {
     override fun onResume() {
 
         super.onResume()
+
+        // 날짜를 문자열로 변환
+        val formattedDate = dateFormatter.format(currentDate.time)
 
         checkBoxes = arrayOf(
             findViewById(R.id.box1),
@@ -301,7 +312,7 @@ class QuestionnaireType1 : AppCompatActivity() {
         checkBoxes[21].isEnabled = false
 
         try {
-            val surveyResults = getData(userID!!, date)
+            val surveyResults = getData(userID!!, formattedDate)
 
             val surveyOutputList = listOf(
                 surveyResults?.checkbox1,

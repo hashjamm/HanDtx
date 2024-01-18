@@ -1,6 +1,6 @@
 package org.techtown.handtxver1.questionnaires
 
-import android.app.AlertDialog
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +27,6 @@ import org.techtown.handtxver1.questionnaires.type9.GetStressSurveyOutput
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.NullPointerException
 
 class ViewModelForQMain : ViewModel() {
 
@@ -101,10 +100,13 @@ class ViewModelForQMain : ViewModel() {
 
     private suspend fun getIssueCheckingSurveyData() {
 
+        Log.d("error check", "objectSet.userID = ${objectSet.userID}")
+        Log.d("error check", "objectSet.date = ${objectSet.date}")
+
         return try {
             withContext(Dispatchers.IO) {
                 getIssueCheckingSurveyInterface.requestGetIssueCheckingSurvey(
-                    objectSet.userID!!, objectSet.date
+                    objectSet.userID!!, objectSet.formattedDate
                 ).enqueue(object : Callback<GetIssueCheckingSurveyOutput> {
                     override fun onResponse(
                         call: Call<GetIssueCheckingSurveyOutput>,

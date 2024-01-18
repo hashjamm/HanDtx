@@ -12,7 +12,7 @@ interface UpdateIssueCheckingSurveyInterface {
     @POST("hanDtxPrototypeApp/app_update_issue_checking_survey/")
     fun requestUpdateIssueCheckingSurvey(
         @Field("user_id") user_id: String,
-        @Field("date") date: Date,
+        @Field("date") date: String,
         @Field("checkbox1") checkBox1: Boolean,
         @Field("checkbox2") checkBox2: Boolean,
         @Field("checkbox3") checkBox3: Boolean,
