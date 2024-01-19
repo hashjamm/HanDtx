@@ -100,9 +100,6 @@ class ViewModelForQMain : ViewModel() {
 
     private suspend fun getIssueCheckingSurveyData() {
 
-        Log.d("error check", "objectSet.userID = ${objectSet.userID}")
-        Log.d("error check", "objectSet.date = ${objectSet.date}")
-
         return try {
             withContext(Dispatchers.IO) {
                 getIssueCheckingSurveyInterface.requestGetIssueCheckingSurvey(
@@ -112,10 +109,11 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetIssueCheckingSurveyOutput>,
                         response: Response<GetIssueCheckingSurveyOutput>
                     ) {
-
+                        Log.d("err1", "${response.code()}")
                         if (response.isSuccessful) {
                             issueCheckingSurveyData = response.body()
                         }
+                        Log.d("err4", "$issueCheckingSurveyData")
                     }
 
                     override fun onFailure(
@@ -148,7 +146,7 @@ class ViewModelForQMain : ViewModel() {
                         call: Call<GetSelfDiagnosisSurveyOutput>,
                         response: Response<GetSelfDiagnosisSurveyOutput>
                     ) {
-
+                        Log.d("err2", "${response.code()}")
                         if (response.isSuccessful) {
                             selfDiagnosisSurveyData = response.body()
                         }

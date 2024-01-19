@@ -92,6 +92,14 @@ class QuestionnaireType1 : AppCompatActivity() {
 
     }
 
+    // boolean 타입으로 api 서버에 보냈더니 'true' 라는 문자열로 인식함
+    // 이를 해결하기 위해 아예 int 형태로 변형해서 보내려고 함
+    // boolean 을 int 형태로 전환하는 함수 생성
+
+    fun booleanToInt(boolean: Boolean): Int {
+        return if (boolean) 1 else 0
+    }
+
     private fun updateData(
         userID: String,
         date: String,
@@ -104,31 +112,37 @@ class QuestionnaireType1 : AppCompatActivity() {
         Log.d("err", "${surveyResults[0]}")
         Log.d("err", "${surveyResults[0] is Boolean}")
 
+        val formattedSurveyResults = mutableListOf<Int>()
+
+        surveyResults.forEach { result ->
+            formattedSurveyResults.add(booleanToInt(result))
+        }
+
         updateIssueCheckingSurveyInterface.requestUpdateIssueCheckingSurvey(
             userID,
             date,
-            surveyResults[0],
-            surveyResults[1],
-            surveyResults[2],
-            surveyResults[3],
-            surveyResults[4],
-            surveyResults[5],
-            surveyResults[6],
-            surveyResults[7],
-            surveyResults[8],
-            surveyResults[9],
-            surveyResults[10],
-            surveyResults[11],
-            surveyResults[12],
-            surveyResults[13],
-            surveyResults[14],
-            surveyResults[15],
-            surveyResults[16],
-            surveyResults[17],
-            surveyResults[18],
-            surveyResults[19],
-            surveyResults[20],
-            surveyResults[21],
+            formattedSurveyResults[0],
+            formattedSurveyResults[1],
+            formattedSurveyResults[2],
+            formattedSurveyResults[3],
+            formattedSurveyResults[4],
+            formattedSurveyResults[5],
+            formattedSurveyResults[6],
+            formattedSurveyResults[7],
+            formattedSurveyResults[8],
+            formattedSurveyResults[9],
+            formattedSurveyResults[10],
+            formattedSurveyResults[11],
+            formattedSurveyResults[12],
+            formattedSurveyResults[13],
+            formattedSurveyResults[14],
+            formattedSurveyResults[15],
+            formattedSurveyResults[16],
+            formattedSurveyResults[17],
+            formattedSurveyResults[18],
+            formattedSurveyResults[19],
+            formattedSurveyResults[20],
+            formattedSurveyResults[21],
             checkBoxText
         ).enqueue(object :
             Callback<UpdateIssueCheckingSurveyOutput> {

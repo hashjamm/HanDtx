@@ -7,6 +7,7 @@ import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AlignmentSpan
+import android.util.Log
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -50,6 +51,10 @@ class QuestionnaireMainPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_page1)
+
+        Log.d("err", "${objectSet.userID}")
+        Log.d("err", "${objectSet.formattedDate}")
+        Log.d("err", "${objectSet.date}")
 
         // ViewModel 에 접근 및 로딩
         val viewModel = ViewModelProvider(this)[ViewModelForQMain::class.java]
@@ -154,17 +159,11 @@ class QuestionnaireMainPage : AppCompatActivity() {
         // 메뉴바 fragment 에 대한 beginTransaction
         supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
 
-        viewModel.fetchData()
-
         fun errorPopupDuringGetData(message: String?) {
             val errorDialog = AlertDialog.Builder(this)
             errorDialog.setTitle("통신 오류")
             errorDialog.setMessage("설문 데이터를 가져올 수 없습니다 : $message")
             errorDialog.show()
-        }
-
-        if (viewModel.networkFailureCounting > 0) {
-            errorPopupDuringGetData(viewModel.networkFailureMessage)
         }
 
         val surveyDataArray = arrayOf(
@@ -179,18 +178,6 @@ class QuestionnaireMainPage : AppCompatActivity() {
             viewModel.stressSurveyData,
             viewModel.nutritionSurveyData
         )
-
-        checkBoxes.forEachIndexed { index, buttonBox ->
-
-            if (index != checkBoxes.size - 1) {
-
-                buttonBox.isEnabled = false
-
-                buttonBox.isChecked = surveyDataArray[index] != null
-
-            }
-
-        }
 
         fun scoreResetPopup(index: Int) {
 
@@ -333,6 +320,12 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
         }
 
+        viewModel.fetchData()
+
+        if (viewModel.networkFailureCounting > 0) {
+            errorPopupDuringGetData(viewModel.networkFailureMessage)
+        }
+
         toQuestionnaireArray.forEachIndexed { index, view ->
 
             view.setOnClickListener {
@@ -343,74 +336,88 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
         }
 
+        checkBoxes.forEachIndexed { index, buttonBox ->
+
+            if (index != checkBoxes.size - 1) {
+
+                buttonBox.isEnabled = false
+
+                buttonBox.isChecked = surveyDataArray[index] != null
+
+                Log.d("err3", "${surveyDataArray[index]}")
+
+            }
+
+        }
+
     }
 
 
-//    override fun onResume() {
-//        super.onResume()
-//
-//        // ViewModel 에 접근 및 로딩
-//        val viewModel = ViewModelProvider(this)[ViewModelForQMain::class.java]
-//
-//        // 체크상태 표기
-//
-//        val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)
-//        val checkBox2 = findViewById<RadioButton>(R.id.qTypeCheckBox2)
-//        val checkBox3 = findViewById<RadioButton>(R.id.qTypeCheckBox3)
-//        val checkBox4 = findViewById<RadioButton>(R.id.qTypeCheckBox4)
-//        val checkBox5 = findViewById<RadioButton>(R.id.qTypeCheckBox5)
-//        val checkBox6 = findViewById<RadioButton>(R.id.qTypeCheckBox6)
-//        val checkBox7 = findViewById<RadioButton>(R.id.qTypeCheckBox7)
-//        val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
-//        val checkBox9 = findViewById<RadioButton>(R.id.qTypeCheckBox9)
-//        val checkBox10 = findViewById<RadioButton>(R.id.qTypeCheckBox10)
-//        val checkBox11 = findViewById<RadioButton>(R.id.qTypeCheckBox11)
-//
-//        val checkBoxes = arrayOf(
-//            checkBox1,
-//            checkBox2,
-//            checkBox3,
-//            checkBox4,
-//            checkBox5,
-//            checkBox6,
-//            checkBox7,
-//            checkBox8,
-//            checkBox9,
-//            checkBox10,
-//            checkBox11
-//        )
-//
-//        supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
-//
-//        // 다른 페이지에서 뒤로가기 버튼을 눌렀을 때, 만약 날짜가 바뀐 경우라면 해당 fetchData 매서드 적용이 필요
-//        viewModel.fetchData()
-//
-//        val surveyDataArray = arrayOf(
-//            viewModel.issueCheckingSurveyData,
-//            viewModel.selfDiagnosisSurveyData,
-//            viewModel.wellBeingScaleSurveyData,
-//            viewModel.phq9SurveyData,
-//            viewModel.gad7SurveyData,
-//            viewModel.pss10SurveyData,
-//            viewModel.exerciseSurveyData,
-//            viewModel.smokingDrinkingSurveyData,
-//            viewModel.stressSurveyData,
-//            viewModel.nutritionSurveyData
-//        )
-//
-//        checkBoxes.forEachIndexed { index, buttonBox ->
-//
-//            if (index != checkBoxes.size - 1) {
-//
-//                buttonBox.isEnabled = false
-//
-//                buttonBox.isChecked = surveyDataArray[index] != null
-//
-//            }
-//
-//        }
-//
-//    }
+    override fun onResume() {
+        super.onResume()
+
+        // ViewModel 에 접근 및 로딩
+        val viewModel = ViewModelProvider(this)[ViewModelForQMain::class.java]
+
+        // 체크상태 표기
+
+        val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)
+        val checkBox2 = findViewById<RadioButton>(R.id.qTypeCheckBox2)
+        val checkBox3 = findViewById<RadioButton>(R.id.qTypeCheckBox3)
+        val checkBox4 = findViewById<RadioButton>(R.id.qTypeCheckBox4)
+        val checkBox5 = findViewById<RadioButton>(R.id.qTypeCheckBox5)
+        val checkBox6 = findViewById<RadioButton>(R.id.qTypeCheckBox6)
+        val checkBox7 = findViewById<RadioButton>(R.id.qTypeCheckBox7)
+        val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
+        val checkBox9 = findViewById<RadioButton>(R.id.qTypeCheckBox9)
+        val checkBox10 = findViewById<RadioButton>(R.id.qTypeCheckBox10)
+        val checkBox11 = findViewById<RadioButton>(R.id.qTypeCheckBox11)
+
+        val checkBoxes = arrayOf(
+            checkBox1,
+            checkBox2,
+            checkBox3,
+            checkBox4,
+            checkBox5,
+            checkBox6,
+            checkBox7,
+            checkBox8,
+            checkBox9,
+            checkBox10,
+            checkBox11
+        )
+
+        // supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
+
+        // 다른 페이지에서 뒤로가기 버튼을 눌렀을 때, 만약 날짜가 바뀐 경우라면 해당 fetchData 매서드 적용이 필요
+        viewModel.fetchData()
+
+        val surveyDataArray = arrayOf(
+            viewModel.issueCheckingSurveyData,
+            viewModel.selfDiagnosisSurveyData,
+            viewModel.wellBeingScaleSurveyData,
+            viewModel.phq9SurveyData,
+            viewModel.gad7SurveyData,
+            viewModel.pss10SurveyData,
+            viewModel.exerciseSurveyData,
+            viewModel.smokingDrinkingSurveyData,
+            viewModel.stressSurveyData,
+            viewModel.nutritionSurveyData
+        )
+
+        checkBoxes.forEachIndexed { index, buttonBox ->
+
+            if (index != checkBoxes.size - 1) {
+
+                buttonBox.isEnabled = false
+
+                buttonBox.isChecked = surveyDataArray[index] != null
+
+            }
+
+        }
+
+    }
 
 }
 
