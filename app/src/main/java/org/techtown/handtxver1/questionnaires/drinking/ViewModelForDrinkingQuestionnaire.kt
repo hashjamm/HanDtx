@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 
 class ViewModelForDrinkingQuestionnaire : ViewModel() {
 
-    var smokingResponseSequnce = Array<Int?>(9) { null }
-
     var responseSequence = Array<Int?>(10) { null }
 
     fun updateResponse(

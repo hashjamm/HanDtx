@@ -12,7 +12,7 @@ interface UpdateNutritionSurveyInterface {
     @POST("hanDtxPrototypeApp/app_update_nutrition_survey/")
     fun requestUpdateNutritionSurvey(
         @Field("user_id") user_id: String,
-        @Field("date") date: Date,
+        @Field("date") date: String,
         @Field("result1") result1: Int,
         @Field("result2") result2: Int,
         @Field("result3") result3: Int,

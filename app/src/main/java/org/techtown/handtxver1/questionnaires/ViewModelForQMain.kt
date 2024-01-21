@@ -1,452 +1,108 @@
 package org.techtown.handtxver1.questionnaires
 
-import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.techtown.handtxver1.questionnaires.type1.GetIssueCheckingSurveyInterface
-import org.techtown.handtxver1.questionnaires.type1.GetIssueCheckingSurveyOutput
-import org.techtown.handtxver1.questionnaires.type10.GetNutritionSurveyInterface
-import org.techtown.handtxver1.questionnaires.type10.GetNutritionSurveyOutput
-import org.techtown.handtxver1.questionnaires.type2.GetSelfDiagnosisSurveyInterface
-import org.techtown.handtxver1.questionnaires.type2.GetSelfDiagnosisSurveyOutput
-import org.techtown.handtxver1.questionnaires.type3.GetWellBeingScaleSurveyInterface
-import org.techtown.handtxver1.questionnaires.type3.GetWellBeingScaleSurveyOutput
-import org.techtown.handtxver1.questionnaires.type4.GetPHQ9SurveyInterface
-import org.techtown.handtxver1.questionnaires.type4.GetPHQ9SurveyOutput
-import org.techtown.handtxver1.questionnaires.type5.GetGAD7SurveyInterface
-import org.techtown.handtxver1.questionnaires.type5.GetGAD7SurveyOutput
-import org.techtown.handtxver1.questionnaires.type6.GetPSS10SurveyInterface
-import org.techtown.handtxver1.questionnaires.type6.GetPSS10SurveyOutput
-import org.techtown.handtxver1.questionnaires.type7.GetExerciseSurveyInterface
-import org.techtown.handtxver1.questionnaires.type7.GetExerciseSurveyOutput
-import org.techtown.handtxver1.questionnaires.type9.GetStressSurveyInterface
-import org.techtown.handtxver1.questionnaires.type9.GetStressSurveyOutput
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ViewModelForQMain : ViewModel() {
 
-    var issueCheckingSurveyData: GetIssueCheckingSurveyOutput? = null
-    var selfDiagnosisSurveyData: GetSelfDiagnosisSurveyOutput? = null
-    var wellBeingScaleSurveyData: GetWellBeingScaleSurveyOutput? = null
-    var phq9SurveyData: GetPHQ9SurveyOutput? = null
-    var gad7SurveyData: GetGAD7SurveyOutput? = null
-    var pss10SurveyData: GetPSS10SurveyOutput? = null
-    var exerciseSurveyData: GetExerciseSurveyOutput? = null
-    var smokingDrinkingSurveyData: GetSmokingDrinkingSurveyOutput? = null
-    var stressSurveyData: GetStressSurveyOutput? = null
-    var nutritionSurveyData: GetNutritionSurveyOutput? = null
+    // MutableLiveData를 사용하여 UI에 변경을 알릴 수 있는 변수
+    val resultLiveData = MutableLiveData<GetAllSurveyCheckedOutput>()
 
-    var networkFailureCounting = 0
-    var networkFailureMessage: String? = null
+    fun fetchData(userID: String, date: String) {
+        viewModelScope.launch {
+            try {
+                // getData 함수를 호출하여 데이터를 가져옴
+                val result = getData(userID, date)
 
-    fun fetchData() {
-
-        networkFailureCounting = 0
-
-        viewModelScope.launch(Dispatchers.IO) {
-
-            getIssueCheckingSurveyData()
-            getSelfDiagnosisSurveyData()
-            getWellBeingScaleSurveyData()
-            getPHQ9SurveyData()
-            getGAD7SurveyData()
-            getPSS10SurveyData()
-            getExerciseSurveyData()
-            getSmokingDrinkingSurveyData()
-            getStressSurveyData()
-            getNutritionSurveyData()
-
+                // LiveData에 결과를 전달하여 UI에 변경을 알림
+                resultLiveData.postValue(result)
+            } catch (e: Exception) {
+                // 네트워크 문제 또는 기타 오류 처리
+                e.printStackTrace()
+            }
         }
-
     }
 
     // CommonUserDefinedObjectSet 클래스 인스턴스 생성
     val objectSet = QuestionnaireUserDefinedObjectSet()
 
-    private var getIssueCheckingSurveyInterface: GetIssueCheckingSurveyInterface =
-        objectSet.retrofit.create(GetIssueCheckingSurveyInterface::class.java)
+    private val getAllSurveyCheckedInterface: GetAllSurveyCheckedInterface =
+        objectSet.retrofit.create(GetAllSurveyCheckedInterface::class.java)
 
-    private var getSelfDiagnosisSurveyInterface: GetSelfDiagnosisSurveyInterface =
-        objectSet.retrofit.create(GetSelfDiagnosisSurveyInterface::class.java)
+    private suspend fun getData(userID: String, date: String): GetAllSurveyCheckedOutput {
 
-    private var getWellBeingScaleSurveyInterface: GetWellBeingScaleSurveyInterface =
-        objectSet.retrofit.create(GetWellBeingScaleSurveyInterface::class.java)
+        return withContext(Dispatchers.IO) {
 
-    private var getPHQ9SurveyInterface: GetPHQ9SurveyInterface =
-        objectSet.retrofit.create(GetPHQ9SurveyInterface::class.java)
+            var resultValue =
+                GetAllSurveyCheckedOutput(
+                    issue_checking = false,
+                    self_diagnosis = false,
+                    well_being_scale = false,
+                    phq9 = false,
+                    gad7 = false,
+                    pss10 = false,
+                    exercise = false,
+                    smoking_drinking = false,
+                    stress = false,
+                    nutrition = false
+                )
 
-    private var getGAD7SurveyInterface: GetGAD7SurveyInterface =
-        objectSet.retrofit.create(GetGAD7SurveyInterface::class.java)
+            try {
+                val response = getAllSurveyCheckedInterface.requestGetAllSurveyChecked(userID, date)
+                    .execute()
 
-    private var getPSS10SurveyInterface: GetPSS10SurveyInterface =
-        objectSet.retrofit.create(GetPSS10SurveyInterface::class.java)
+                if (response.isSuccessful) {
 
-    private var getExerciseSurveyInterface: GetExerciseSurveyInterface =
-        objectSet.retrofit.create(GetExerciseSurveyInterface::class.java)
+                    resultValue = response.body()!!
 
-    private var getSmokingDrinkingSurveyInterface: GetSmokingDrinkingSurveyInterface =
-        objectSet.retrofit.create(GetSmokingDrinkingSurveyInterface::class.java)
+                }
+            } catch (e: Exception) {
 
-    private var getStressSurveyInterface: GetStressSurveyInterface =
-        objectSet.retrofit.create(GetStressSurveyInterface::class.java)
-
-    private var getNutritionSurveyInterface: GetNutritionSurveyInterface =
-        objectSet.retrofit.create(GetNutritionSurveyInterface::class.java)
-
-    private suspend fun getIssueCheckingSurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getIssueCheckingSurveyInterface.requestGetIssueCheckingSurvey(
-                    objectSet.userID!!, objectSet.formattedDate
-                ).enqueue(object : Callback<GetIssueCheckingSurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetIssueCheckingSurveyOutput>,
-                        response: Response<GetIssueCheckingSurveyOutput>
-                    ) {
-                        Log.d("err1", "${response.code()}")
-                        if (response.isSuccessful) {
-                            issueCheckingSurveyData = response.body()
-                        }
-                        Log.d("err4", "$issueCheckingSurveyData")
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetIssueCheckingSurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
+                // 네트워크 문제 또는 기타 오류 처리
+                e.printStackTrace()
 
             }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-        }
 
-    }
-
-    private suspend fun getSelfDiagnosisSurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getSelfDiagnosisSurveyInterface.requestGetSelfDiagnosisSurvey(
-                    objectSet.userID!!, objectSet.date
-                ).enqueue(object : Callback<GetSelfDiagnosisSurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetSelfDiagnosisSurveyOutput>,
-                        response: Response<GetSelfDiagnosisSurveyOutput>
-                    ) {
-                        Log.d("err2", "${response.code()}")
-                        if (response.isSuccessful) {
-                            selfDiagnosisSurveyData = response.body()
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetSelfDiagnosisSurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
-
-            }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-        }
-
-    }
-
-    private suspend fun getWellBeingScaleSurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getWellBeingScaleSurveyInterface.requestGetWellBeingScaleSurvey(
-                    objectSet.userID!!, objectSet.date
-                ).enqueue(object : Callback<GetWellBeingScaleSurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetWellBeingScaleSurveyOutput>,
-                        response: Response<GetWellBeingScaleSurveyOutput>
-                    ) {
-                        if (response.isSuccessful) {
-                            wellBeingScaleSurveyData = response.body()
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetWellBeingScaleSurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
-
-            }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-        }
-
-    }
-
-    private suspend fun getPHQ9SurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getPHQ9SurveyInterface.requestGetPHQ9Survey(
-                    objectSet.userID!!, objectSet.date
-                ).enqueue(object : Callback<GetPHQ9SurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetPHQ9SurveyOutput>,
-                        response: Response<GetPHQ9SurveyOutput>
-                    ) {
-                        if (response.isSuccessful) {
-                            phq9SurveyData = response.body()
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetPHQ9SurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
-
-            }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-        }
-
-    }
-
-    private suspend fun getGAD7SurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getGAD7SurveyInterface.requestGetGAD7Survey(
-                    objectSet.userID!!, objectSet.date
-                ).enqueue(object : Callback<GetGAD7SurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetGAD7SurveyOutput>,
-                        response: Response<GetGAD7SurveyOutput>
-                    ) {
-                        if (response.isSuccessful) {
-                            gad7SurveyData = response.body()
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetGAD7SurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
-
-            }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-        }
-
-    }
-
-    private suspend fun getPSS10SurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getPSS10SurveyInterface.requestGetPSS10Survey(
-                    objectSet.userID!!, objectSet.date
-                ).enqueue(object : Callback<GetPSS10SurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetPSS10SurveyOutput>,
-                        response: Response<GetPSS10SurveyOutput>
-                    ) {
-                        if (response.isSuccessful) {
-                            pss10SurveyData = response.body()
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetPSS10SurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
-
-            }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-        }
-
-    }
-
-    private suspend fun getExerciseSurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getExerciseSurveyInterface.requestGetExerciseSurvey(
-                    objectSet.userID!!, objectSet.date
-                ).enqueue(object : Callback<GetExerciseSurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetExerciseSurveyOutput>,
-                        response: Response<GetExerciseSurveyOutput>
-                    ) {
-                        if (response.isSuccessful) {
-                            exerciseSurveyData = response.body()
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetExerciseSurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
-
-            }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-        }
-
-    }
-
-    private suspend fun getSmokingDrinkingSurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getSmokingDrinkingSurveyInterface.requestGetSmokingDrinkingSurvey(
-                    objectSet.userID!!, objectSet.date
-                ).enqueue(object : Callback<GetSmokingDrinkingSurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetSmokingDrinkingSurveyOutput>,
-                        response: Response<GetSmokingDrinkingSurveyOutput>
-                    ) {
-                        if (response.isSuccessful) {
-                            smokingDrinkingSurveyData = response.body()
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetSmokingDrinkingSurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
-
-            }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-        }
-
-    }
-
-    private suspend fun getStressSurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getStressSurveyInterface.requestGetStressSurvey(
-                    objectSet.userID!!, objectSet.date
-                ).enqueue(object : Callback<GetStressSurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetStressSurveyOutput>,
-                        response: Response<GetStressSurveyOutput>
-                    ) {
-                        if (response.isSuccessful) {
-                            stressSurveyData = response.body()
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetStressSurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
-
-            }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-        }
-
-    }
-
-    private suspend fun getNutritionSurveyData() {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                getNutritionSurveyInterface.requestGetNutritionSurvey(
-                    objectSet.userID!!, objectSet.date
-                ).enqueue(object : Callback<GetNutritionSurveyOutput> {
-                    override fun onResponse(
-                        call: Call<GetNutritionSurveyOutput>,
-                        response: Response<GetNutritionSurveyOutput>
-                    ) {
-                        if (response.isSuccessful) {
-                            nutritionSurveyData = response.body()
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<GetNutritionSurveyOutput>,
-                        t: Throwable
-                    ) {
-
-                        networkFailureCounting += 1
-                        networkFailureMessage = t.message
-
-                    }
-
-                })
-
-            }
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
+//            getAllSurveyCheckedInterface.requestGetAllSurveyChecked(userID, date)
+//                .enqueue(
+//                    object :
+//                        Callback<GetAllSurveyCheckedOutput> {
+//
+//                        override fun onResponse(
+//                            call: Call<GetAllSurveyCheckedOutput>,
+//                            response: Response<GetAllSurveyCheckedOutput>
+//                        ) {
+//                            if (response.isSuccessful) {
+//
+//                                resultValue = response.body()!!
+//
+//                            }
+//
+//                        }
+//
+//                        override fun onFailure(
+//                            call: Call<GetAllSurveyCheckedOutput>,
+//                            t: Throwable
+//                        ) {
+//
+//                            val errorDialog = AlertDialog.Builder(this@ViewModelForQMain)
+//                            errorDialog.setTitle("통신 오류")
+//                            errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+//
+//                            errorDialog.show()
+//
+//                        }
+//
+//
+//                    }
+//
+//                )
+
+            resultValue
         }
 
     }

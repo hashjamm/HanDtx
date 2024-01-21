@@ -15,37 +15,20 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import org.techtown.handtxver1.R
-import org.techtown.handtxver1.questionnaires.drinking.DrinkingQuestionnaire
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type8.*
 import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 import org.techtown.handtxver1.questionnaires.UpdateSmokingDrinkingSurveyInterface
 import org.techtown.handtxver1.questionnaires.UpdateSmokingDrinkingSurveyOutput
+import org.techtown.handtxver1.questionnaires.drinking.DrinkingQuestionnaire
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
-import java.util.*
 
 class QuestionnaireType8 : AppCompatActivity() {
 
     // QuestionnaireUserDefinedObjectSet 클래스 인스턴스 생성
     val objectSet = QuestionnaireUserDefinedObjectSet()
-
-    // ViewModel 에 접근 및 로딩
-    val viewModel = ViewModelProvider(this)[ViewModelForQType8::class.java]
-
-    val presentPageBar: AppCompatImageView =
-        findViewById(R.id.presentPageBar)
-    val pageBar: ConstraintLayout = findViewById(R.id.pageBar)
-    val toPreviousPage: AppCompatTextView =
-        findViewById(R.id.previous_page)
-    val toNextPage: AppCompatTextView = findViewById(R.id.next_page)
-    val pageNumberBox: AppCompatTextView =
-        findViewById(R.id.pageNumberBox1)
-    val submitButton: AppCompatTextView =
-        findViewById(R.id.submitButton)
 
     private val page1 = QType8ContentPage1()
     private val page2 = QType8ContentPage2()
@@ -68,6 +51,21 @@ class QuestionnaireType8 : AppCompatActivity() {
         setContentView(R.layout.activity_questionnaire_type8)
 
         supportFragmentManager.beginTransaction().add(frameLayoutID, pageSequence[0]).commitNow()
+
+        // ViewModel 에 접근 및 로딩
+        val viewModel = ViewModelProvider(this)[ViewModelForQType8::class.java]
+
+        val presentPageBar: AppCompatImageView =
+            findViewById(R.id.presentPageBar)
+        val pageBar: ConstraintLayout = findViewById(R.id.pageBar)
+        val toPreviousPage: AppCompatTextView =
+            findViewById(R.id.previous_page)
+        val toNextPage: AppCompatTextView = findViewById(R.id.next_page)
+        val pageNumberBox: AppCompatTextView =
+            findViewById(R.id.pageNumberBox1)
+        val submitButton: AppCompatTextView =
+            findViewById(R.id.submitButton)
+
         objectSet.pageBarLengthSetting(pageBar, presentPageBar, 1, pageSequence.size)
         objectSet.pageNumberBoxSetting(pageNumberBox, 1, pageSequence.size)
         objectSet.buttonDrawableOff(toPreviousPage)
@@ -171,7 +169,7 @@ class QuestionnaireType8 : AppCompatActivity() {
 
                                         try {
 
-                                            updateDataIntent(objectSet.userID!!, objectSet.date)
+                                            updateDataIntent(viewModel.responseSequence, objectSet.userID!!, objectSet.formattedDate)
 
                                         } catch (e: NullPointerException) {
 
@@ -243,11 +241,10 @@ class QuestionnaireType8 : AppCompatActivity() {
         objectSet.retrofit.create(UpdateSmokingDrinkingSurveyInterface::class.java)
 
     private fun updateDataIntent(
+        responseSequence: Array<Int?>,
         userID: String,
-        date: Date
+        date: String
     ) {
-
-        val responseSequence = viewModel.responseSequence
 
         val intent = Intent(this, QuestionnaireMainPage::class.java)
 
@@ -306,19 +303,6 @@ class QuestionnaireType8 : AppCompatActivity() {
     private fun changeQuestionnaire(destination: AppCompatActivity) {
 
         val intent = Intent(this, destination::class.java)
-
-        intent.putExtra("startingPointData", viewModel.responseSequence)
-
-        // 흡연과 음주에 대해서는, 물론 [0, null, ...] 를 전달해주어야 맞긴 함
-        // 왜냐하면 1번 문항에서 예를 누른 뒤, 2번 이후까지 답변을 한 후 되돌아와서 1번을 아니요 누르면
-        // 음주 액티비티에 옳지 않은 데이터가 전달될 수 있기 때문
-        // 하지만 viewModel.responseSeqeunce 를 전달해주는 것은 흡연 음주 외의 일반적인 설문지 전환 유형에 대비하기 위함
-        // 어차피 음주 설문에서는 음주에 대한 설문 정보만을 retrofit interface 에 올리고, 나머지 흡연 관련한 설문 정보는
-        // default 값으로 통신할 것임. default 값에 [0, null, ... ] 을 이미 등록해주었음.
-        // 일반적인 경우 추천하는 방식 :
-            // viewModel.responseSequence 를 받아서 그대로 viewModel 에 등록해주고
-            // 그 등록한 값 중, 이전 설문지의 전환되는 설문 번호 이후의 응답을 모두 null 로 전환해준 뒤 작업
-            // 아니면 도착 액티비티에서 retrofit interface 에 default 값을 설정해줘도 좋음
 
         startActivity(intent)
 

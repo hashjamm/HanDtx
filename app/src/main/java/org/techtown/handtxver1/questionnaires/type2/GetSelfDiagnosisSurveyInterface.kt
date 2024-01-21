@@ -12,7 +12,7 @@ interface GetSelfDiagnosisSurveyInterface {
     @POST("hanDtxPrototypeApp/app_get_self_diagnosis_survey/")
     fun requestGetSelfDiagnosisSurvey(
         @Field("user_id") user_id:String,
-        @Field("date") date: Date
+        @Field("date") date: String
     ) : Call<GetSelfDiagnosisSurveyOutput>
 
 }

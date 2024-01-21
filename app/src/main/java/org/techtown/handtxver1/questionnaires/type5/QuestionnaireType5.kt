@@ -18,33 +18,14 @@ import org.techtown.handtxver1.R
 import org.techtown.handtxver1.org.techtown.handtxver1.questionnaires.type5.*
 import org.techtown.handtxver1.questionnaires.QuestionnaireMainPage
 import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
-import org.techtown.handtxver1.questionnaires.type2.UpdateSelfDiagnosisSurveyInterface
-import org.techtown.handtxver1.questionnaires.type2.UpdateSelfDiagnosisSurveyOutput
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
-import java.util.*
 
 class QuestionnaireType5 : AppCompatActivity() {
 
     // QuestionnaireUserDefinedObjectSet 클래스 인스턴스 생성
     val objectSet = QuestionnaireUserDefinedObjectSet()
-
-    // ViewModel 에 접근 및 로딩
-    val viewModel = ViewModelProvider(this).get(ViewModelForQType5::class.java)
-
-    val presentPageBar: AppCompatImageView =
-        findViewById(R.id.presentPageBar)
-    val pageBar: ConstraintLayout = findViewById(R.id.pageBar)
-    val toPreviousPage: AppCompatTextView =
-        findViewById(R.id.previous_page)
-    val toNextPage: AppCompatTextView = findViewById(R.id.next_page)
-    val pageNumberBox: AppCompatTextView =
-        findViewById(R.id.pageNumberBox1)
-    val submitButton: AppCompatTextView =
-        findViewById(R.id.submitButton)
 
     private val page1 = QType5ContentPage1()
     private val page2 = QType5ContentPage2()
@@ -65,6 +46,20 @@ class QuestionnaireType5 : AppCompatActivity() {
         setContentView(R.layout.activity_questionnaire_type5)
 
         supportFragmentManager.beginTransaction().add(frameLayoutID, pageSequence[0]).commitNow()
+
+        // ViewModel 에 접근 및 로딩
+        val viewModel = ViewModelProvider(this).get(ViewModelForQType5::class.java)
+
+        val presentPageBar: AppCompatImageView =
+            findViewById(R.id.presentPageBar)
+        val pageBar: ConstraintLayout = findViewById(R.id.pageBar)
+        val toPreviousPage: AppCompatTextView =
+            findViewById(R.id.previous_page)
+        val toNextPage: AppCompatTextView = findViewById(R.id.next_page)
+        val pageNumberBox: AppCompatTextView =
+            findViewById(R.id.pageNumberBox1)
+        val submitButton: AppCompatTextView =
+            findViewById(R.id.submitButton)
 
         objectSet.pageBarLengthSetting(pageBar, presentPageBar, 1, pageSequence.size)
         objectSet.pageNumberBoxSetting(pageNumberBox, 1, pageSequence.size)
@@ -163,7 +158,7 @@ class QuestionnaireType5 : AppCompatActivity() {
 
                                     try {
 
-                                        updateDataIntent(objectSet.userID!!, objectSet.date)
+                                        updateDataIntent(viewModel.responseSequence, objectSet.userID!!, objectSet.formattedDate)
 
                                     } catch (e: NullPointerException) {
 
@@ -231,11 +226,10 @@ class QuestionnaireType5 : AppCompatActivity() {
         objectSet.retrofit.create(UpdateGAD7SurveyInterface::class.java)
 
     private fun updateDataIntent(
+        responseSequence: Array<Int?>,
         userID: String,
-        date: Date
+        date: String
     ) {
-
-        val responseSequence = viewModel.responseSequence
 
         val intent = Intent(this, QuestionnaireMainPage::class.java)
 

@@ -21,28 +21,11 @@ import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
-import java.util.*
 
 class QuestionnaireType2 : AppCompatActivity() {
 
     // QuestionnaireUserDefinedObjectSet 클래스 인스턴스 생성
     val objectSet = QuestionnaireUserDefinedObjectSet()
-
-    // ViewModel 에 접근 및 로딩
-    val viewModel = ViewModelProvider(this)[ViewModelForQType2::class.java]
-
-    val presentPageBar: AppCompatImageView =
-        findViewById(R.id.presentPageBar)
-    val pageBar: ConstraintLayout = findViewById(R.id.pageBar)
-    val toPreviousPage: AppCompatTextView =
-        findViewById(R.id.previous_page)
-    val toNextPage: AppCompatTextView = findViewById(R.id.next_page)
-    val pageNumberBox: AppCompatTextView =
-        findViewById(R.id.pageNumberBox1)
-    val submitButton: AppCompatTextView =
-        findViewById(R.id.submitButton)
 
     private val page1 = QType2ContentPage1()
     private val page2 = QType2ContentPage2()
@@ -64,6 +47,20 @@ class QuestionnaireType2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_type2)
+
+        // ViewModel 에 접근 및 로딩
+        val viewModel = ViewModelProvider(this)[ViewModelForQType2::class.java]
+
+        val presentPageBar: AppCompatImageView =
+            findViewById(R.id.presentPageBar)
+        val pageBar: ConstraintLayout = findViewById(R.id.pageBar)
+        val toPreviousPage: AppCompatTextView =
+            findViewById(R.id.previous_page)
+        val toNextPage: AppCompatTextView = findViewById(R.id.next_page)
+        val pageNumberBox: AppCompatTextView =
+            findViewById(R.id.pageNumberBox1)
+        val submitButton: AppCompatTextView =
+            findViewById(R.id.submitButton)
 
         supportFragmentManager.beginTransaction().add(frameLayoutID, pageSequence[0]).commitNow()
 
@@ -164,7 +161,7 @@ class QuestionnaireType2 : AppCompatActivity() {
 
                                     try {
 
-                                        updateDataIntent(objectSet.userID!!, objectSet.date)
+                                        updateDataIntent(viewModel.responseSequence, objectSet.userID!!, objectSet.formattedDate)
 
                                     } catch (e: NullPointerException) {
 
@@ -232,11 +229,10 @@ class QuestionnaireType2 : AppCompatActivity() {
         objectSet.retrofit.create(UpdateSelfDiagnosisSurveyInterface::class.java)
 
     private fun updateDataIntent(
+        responseSequence: Array<Int?>,
         userID: String,
-        date: Date
+        date: String
     ) {
-
-        val responseSequence = viewModel.responseSequence
 
         val intent = Intent(this, QuestionnaireMainPage::class.java)
 

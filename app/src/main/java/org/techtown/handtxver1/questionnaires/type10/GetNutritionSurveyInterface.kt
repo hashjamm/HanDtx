@@ -12,7 +12,7 @@ interface GetNutritionSurveyInterface {
     @POST("hanDtxPrototypeApp/app_get_nutrition_survey/")
     fun requestGetNutritionSurvey(
         @Field("user_id") user_id:String,
-        @Field("date") date: Date
+        @Field("date") date: String
     ) : Call<GetNutritionSurveyOutput>
 
 }
