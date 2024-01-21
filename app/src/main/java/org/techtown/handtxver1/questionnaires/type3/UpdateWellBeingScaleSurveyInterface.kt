@@ -4,7 +4,6 @@ import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
-import java.util.*
 
 interface UpdateWellBeingScaleSurveyInterface {
 
@@ -12,7 +11,7 @@ interface UpdateWellBeingScaleSurveyInterface {
     @POST("hanDtxPrototypeApp/app_update_well_being_scale_survey/")
     fun requestUpdateWellBeingScaleSurvey(
         @Field("user_id") user_id: String,
-        @Field("date") date: Date,
+        @Field("date") date: String,
         @Field("result1") result1: Int,
         @Field("result2") result2: Int,
         @Field("result3") result3: Int,

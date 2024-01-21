@@ -8,9 +8,6 @@ data class GetStressSurveyOutput(
     var result4: Int?,
     var result5: Int?,
     var result6: Int?,
-    var result7: Int?,
-    var result8: Int?,
-    var result9: Int?,
-    var result10: Int?
+    var result7: Int?
 
 )

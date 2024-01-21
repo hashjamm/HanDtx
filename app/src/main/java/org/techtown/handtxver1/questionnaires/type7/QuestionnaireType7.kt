@@ -21,27 +21,12 @@ import org.techtown.handtxver1.questionnaires.QuestionnaireUserDefinedObjectSet
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.IllegalArgumentException
 import java.util.*
 
 class QuestionnaireType7 : AppCompatActivity() {
 
     // QuestionnaireUserDefinedObjectSet 클래스 인스턴스 생성
     val objectSet = QuestionnaireUserDefinedObjectSet()
-
-    // ViewModel 에 접근 및 로딩
-    val viewModel = ViewModelProvider(this)[ViewModelForQType7::class.java]
-
-    val presentPageBar: AppCompatImageView =
-        findViewById(R.id.presentPageBar)
-    val pageBar: ConstraintLayout = findViewById(R.id.pageBar)
-    val toPreviousPage: AppCompatTextView =
-        findViewById(R.id.previous_page)
-    val toNextPage: AppCompatTextView = findViewById(R.id.next_page)
-    val pageNumberBox: AppCompatTextView =
-        findViewById(R.id.pageNumberBox1)
-    val submitButton: AppCompatTextView =
-        findViewById(R.id.submitButton)
 
     private val page1 = QType7ContentPage1()
     private val page2 = QType7ContentPage2()
@@ -80,6 +65,20 @@ class QuestionnaireType7 : AppCompatActivity() {
         setContentView(R.layout.activity_questionnaire_type7)
 
         supportFragmentManager.beginTransaction().add(frameLayoutID, pageSequence[0]).commitNow()
+
+        // ViewModel 에 접근 및 로딩
+        val viewModel = ViewModelProvider(this)[ViewModelForQType7::class.java]
+
+        val presentPageBar: AppCompatImageView =
+            findViewById(R.id.presentPageBar)
+        val pageBar: ConstraintLayout = findViewById(R.id.pageBar)
+        val toPreviousPage: AppCompatTextView =
+            findViewById(R.id.previous_page)
+        val toNextPage: AppCompatTextView = findViewById(R.id.next_page)
+        val pageNumberBox: AppCompatTextView =
+            findViewById(R.id.pageNumberBox1)
+        val submitButton: AppCompatTextView =
+            findViewById(R.id.submitButton)
 
         objectSet.pageBarLengthSetting(pageBar, presentPageBar, 1, pageSequence.size)
         objectSet.pageNumberBoxSetting(pageNumberBox, 1, pageSequence.size)
@@ -178,7 +177,13 @@ class QuestionnaireType7 : AppCompatActivity() {
 
                                     try {
 
-                                        updateDataIntent(objectSet.userID!!, objectSet.date)
+                                        updateDataIntent(
+                                            objectSet.userID!!,
+                                            objectSet.formattedDate,
+                                            viewModel.responseSequence,
+                                            viewModel.loadingExerciseTypeByUsingBoxNumber(),
+                                            viewModel.inputText
+                                        )
 
                                     } catch (e: NullPointerException) {
 
@@ -247,12 +252,11 @@ class QuestionnaireType7 : AppCompatActivity() {
 
     private fun updateDataIntent(
         userID: String,
-        date: Date
+        date: String,
+        responseSequence: Array<Int?>,
+        exerciseTypeArray: ArrayList<String>,
+        inputText: Array<String?>
     ) {
-
-        val responseSequence = viewModel.responseSequence
-        val exerciseTypeArray = viewModel.loadingExerciseTypeByUsingBoxNumber()
-        val inputText = viewModel.inputText
 
         val exerciseType1 = if (exerciseTypeArray.size > 0) exerciseTypeArray[0] else null
         val exerciseType2 = if (exerciseTypeArray.size > 1) exerciseTypeArray[1] else null

@@ -7,10 +7,12 @@ import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AlignmentSpan
+import android.util.Log
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import org.techtown.handtxver1.BottomMenuBar
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.questionnaires.results.QuestionnaireResultSummary
@@ -30,91 +32,8 @@ class QuestionnaireMainPage : AppCompatActivity() {
     // CommonUserDefinedObjectSet 클래스 인스턴스 생성
     val objectSet = QuestionnaireUserDefinedObjectSet()
 
-    // 체크상태 표기
-
-    private val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)
-    private val checkBox2 = findViewById<RadioButton>(R.id.qTypeCheckBox2)
-    private val checkBox3 = findViewById<RadioButton>(R.id.qTypeCheckBox3)
-    private val checkBox4 = findViewById<RadioButton>(R.id.qTypeCheckBox4)
-    private val checkBox5 = findViewById<RadioButton>(R.id.qTypeCheckBox5)
-    private val checkBox6 = findViewById<RadioButton>(R.id.qTypeCheckBox6)
-    private val checkBox7 = findViewById<RadioButton>(R.id.qTypeCheckBox7)
-    private val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
-    private val checkBox9 = findViewById<RadioButton>(R.id.qTypeCheckBox9)
-    private val checkBox10 = findViewById<RadioButton>(R.id.qTypeCheckBox10)
-    private val checkBox11 = findViewById<RadioButton>(R.id.qTypeCheckBox11)
-
-    // 각 QuestionnaireType 으로 이동하는 TextView 들을 미리 불러옴
-    private val toQuestionnaireType1 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox1)
-    private val toQuestionnaireType2 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox2)
-    private val toQuestionnaireType3 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox3)
-    private val toQuestionnaireType4 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox4)
-    private val toQuestionnaireType5 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox5)
-    private val toQuestionnaireType6 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox6)
-    private val toQuestionnaireType7 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox7)
-    private val toQuestionnaireType8 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox8)
-    private val toQuestionnaireType9 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox9)
-    private val toQuestionnaireType10 =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox10)
-    private val toQuestionnaireResult =
-        findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox11)
-
     // 메뉴바 fragment 불러옴
     val menuBar = BottomMenuBar(4)
-
-    // 각 설문지 타입으로 넘어가는 텍스트뷰들에 대한 리스너 코드
-    // 인텐트에 실어줄 액티비티 이름을 string 을 사용하여 Class.forName 매서드를 통해 지정함에 있어서
-    // 전체 주소를 입력해줘야하는 문제가 있음
-    // 보다 일반적인 코드를 위하여 intentMap 을 사용하는 코드로 변경
-
-    private val intent1 = Intent(this, QuestionnaireType1::class.java)
-    private val intent2 = Intent(this, QuestionnaireType2::class.java)
-    private val intent3 = Intent(this, QuestionnaireType3::class.java)
-    private val intent4 = Intent(this, QuestionnaireType4::class.java)
-    private val intent5 = Intent(this, QuestionnaireType5::class.java)
-    private val intent6 = Intent(this, QuestionnaireType6::class.java)
-    private val intent7 = Intent(this, QuestionnaireType7::class.java)
-    private val intent8 = Intent(this, QuestionnaireType8::class.java)
-    private val intent9 = Intent(this, QuestionnaireType9::class.java)
-    private val intent10 = Intent(this, QuestionnaireType10::class.java)
-    private val intent11 = Intent(this, QuestionnaireResultSummary::class.java)
-
-    private val checkBoxes = arrayOf(
-        checkBox1,
-        checkBox2,
-        checkBox3,
-        checkBox4,
-        checkBox5,
-        checkBox6,
-        checkBox7,
-        checkBox8,
-        checkBox9,
-        checkBox10,
-        checkBox11
-    )
-
-    private val toQuestionnaireArray = arrayOf(
-        toQuestionnaireType1,
-        toQuestionnaireType2,
-        toQuestionnaireType3,
-        toQuestionnaireType4,
-        toQuestionnaireType5,
-        toQuestionnaireType6,
-        toQuestionnaireType7,
-        toQuestionnaireType8,
-        toQuestionnaireType9,
-        toQuestionnaireType10,
-        toQuestionnaireResult
-    )
 
     private val questionnaireNameArray = arrayOf(
         "정신건강 관련 나의 관심 이슈 고르기",
@@ -130,218 +49,412 @@ class QuestionnaireMainPage : AppCompatActivity() {
         "건강관리 문진표 종합 결과"
     )
 
-    private val intentArray = arrayOf(
-        intent1,
-        intent2,
-        intent3,
-        intent4,
-        intent5,
-        intent6,
-        intent7,
-        intent8,
-        intent9,
-        intent10,
-        intent11
-    )
+    private val viewModel: ViewModelForQMain by viewModels()
 
-    // ViewModel 에 접근 및 로딩
-    val viewModel = ViewModelProvider(this)[ViewModelForQMain::class.java]
+    private fun scoreResetPopup(
+        dataArray: Array<Boolean?>,
+        intentArray: Array<Intent>,
+        index: Int
+    ) {
+
+        if (0 <= index && index < dataArray.size) {
+
+            val negativeAnswer = "아니요"
+            val positiveAnswer = "네"
+
+            val spannableStringBuilderNo = SpannableStringBuilder(negativeAnswer)
+            spannableStringBuilderNo.setSpan(
+                AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                0,
+                negativeAnswer.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            val spannableStringBuilderYes = SpannableStringBuilder(positiveAnswer)
+            spannableStringBuilderYes.setSpan(
+                AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                0,
+                positiveAnswer.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            val popup = AlertDialog.Builder(this)
+                .setTitle("오늘 이미 설문에 응답하였습니다.")
+                .setMessage("다시 설문을 진행하시겠습니까?") // 초기화 하지는 않고 뷰만 초기화되기 때문에 그냥 다시 보겠냐고만 묻기
+                .setNeutralButton(spannableStringBuilderNo, null)
+                .setPositiveButton(spannableStringBuilderYes) { _, _ ->
+                    startActivity(intentArray[index])
+
+                    Toast.makeText(this, "설문을 다시 진행합니다", Toast.LENGTH_SHORT).show()
+                }
+
+            popup.show()
+
+        } else {
+
+            throw ArrayIndexOutOfBoundsException("index range error : scoreResetPopup")
+
+        }
+    }
+
+    private fun previousSurveyAlertPopup(dataArray: Array<Boolean?>, index: Int) {
+
+        if (0 < index && index < dataArray.size) {
+
+            val message = questionnaireNameArray[index - 1]
+
+            val centeredMessage = SpannableStringBuilder(message)
+            centeredMessage.setSpan(
+                AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                0,
+                centeredMessage.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            val popup = AlertDialog.Builder(this)
+                .setTitle("오늘의 이전 설문이 완료되지 않았습니다 :")
+                .setMessage(centeredMessage)
+
+            popup.show()
+
+        } else {
+
+            throw ArrayIndexOutOfBoundsException("index range error : PreviousSurveyAlertPopup")
+
+        }
+    }
+
+
+    // 이미 완료한 설문을 다시 클릭했을 때, 팝업창을 띄우고 긍정과 취소 버튼을 누를 때 발생시킬 이벤트를 설정하는
+// 코드가 재사용이 많이 될 예정이라 이를 함수로 만들어 둠.
+    private fun startActivityWithAlert(
+        dataArray: Array<Boolean?>,
+        intentArray: Array<Intent>,
+        index: Int
+    ) {
+
+        val currentSurveyData =
+            if (0 <= index && index < dataArray.size) {
+                dataArray[index]
+            } else {
+                null
+            }
+
+        val previousSurveyData =
+            if (0 < index && index <= dataArray.size) {
+                dataArray[index - 1]
+            } else {
+                null
+            }
+
+        if (0 < index && index < dataArray.size) {
+
+            if (previousSurveyData != false) {
+
+                if (currentSurveyData != false) {
+
+                    scoreResetPopup(dataArray, intentArray, index)
+
+                } else {
+
+                    startActivity(intentArray[index])
+
+                }
+
+            } else {
+
+                previousSurveyAlertPopup(dataArray, index)
+
+            }
+
+        } else if (index == 0) {
+
+            if (currentSurveyData != false) {
+
+                scoreResetPopup(dataArray, intentArray, index)
+
+            } else {
+
+                startActivity(intentArray[index])
+
+            }
+
+        } else if (index == dataArray.size) {
+
+            if (previousSurveyData != false) {
+
+                startActivity(intentArray[index])
+
+            } else {
+
+                previousSurveyAlertPopup(dataArray, index)
+
+            }
+
+        } else {
+
+            throw ArrayIndexOutOfBoundsException("index range error")
+
+        }
+
+    }
+
+//    private val getAllSurveyCheckedInterface: GetAllSurveyCheckedInterface =
+//        objectSet.retrofit.create(GetAllSurveyCheckedInterface::class.java)
+//
+//    private fun getData(userID: String, date: String): GetAllSurveyCheckedOutput {
+//
+//        var resultValue =
+//            GetAllSurveyCheckedOutput(
+//                issue_checking = false,
+//                self_diagnosis = false,
+//                well_being_scale = false,
+//                phq9 = false,
+//                gad7 = false,
+//                pss10 = false,
+//                exercise = false,
+//                smoking_drinking = false,
+//                stress = false,
+//                nutrition = false
+//            )
+//
+//        getAllSurveyCheckedInterface.requestGetAllSurveyChecked(userID, date)
+//            .enqueue(
+//                object :
+//                    Callback<GetAllSurveyCheckedOutput> {
+//
+//                    override fun onResponse(
+//                        call: Call<GetAllSurveyCheckedOutput>,
+//                        response: Response<GetAllSurveyCheckedOutput>
+//                    ) {
+//                        if (response.isSuccessful) {
+//
+//                            resultValue = response.body()!!
+//
+//                        }
+//
+//                    }
+//
+//                    override fun onFailure(
+//                        call: Call<GetAllSurveyCheckedOutput>,
+//                        t: Throwable
+//                    ) {
+//
+//                        val errorDialog = AlertDialog.Builder(this@QuestionnaireMainPage)
+//                        errorDialog.setTitle("통신 오류")
+//                        errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
+//
+//                        errorDialog.show()
+//
+//                    }
+//
+//
+//                }
+//
+//            )
+//
+//        return resultValue
+//
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_page1)
 
+        Log.d("err", "${objectSet.userID}")
+        Log.d("err", "${objectSet.formattedDate}")
+        Log.d("err", "${objectSet.date}")
+
+        // 체크상태 표기
+
+        val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)
+        val checkBox2 = findViewById<RadioButton>(R.id.qTypeCheckBox2)
+        val checkBox3 = findViewById<RadioButton>(R.id.qTypeCheckBox3)
+        val checkBox4 = findViewById<RadioButton>(R.id.qTypeCheckBox4)
+        val checkBox5 = findViewById<RadioButton>(R.id.qTypeCheckBox5)
+        val checkBox6 = findViewById<RadioButton>(R.id.qTypeCheckBox6)
+        val checkBox7 = findViewById<RadioButton>(R.id.qTypeCheckBox7)
+        val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
+        val checkBox9 = findViewById<RadioButton>(R.id.qTypeCheckBox9)
+        val checkBox10 = findViewById<RadioButton>(R.id.qTypeCheckBox10)
+        val checkBox11 = findViewById<RadioButton>(R.id.qTypeCheckBox11)
+
+        // 각 QuestionnaireType 으로 이동하는 TextView 들을 미리 불러옴
+        val toQuestionnaireType1 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox1)
+        val toQuestionnaireType2 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox2)
+        val toQuestionnaireType3 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox3)
+        val toQuestionnaireType4 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox4)
+        val toQuestionnaireType5 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox5)
+        val toQuestionnaireType6 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox6)
+        val toQuestionnaireType7 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox7)
+        val toQuestionnaireType8 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox8)
+        val toQuestionnaireType9 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox9)
+        val toQuestionnaireType10 =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox10)
+        val toQuestionnaireResult =
+            findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.qTypeBox11)
+
+        val checkBoxes = arrayOf(
+            checkBox1,
+            checkBox2,
+            checkBox3,
+            checkBox4,
+            checkBox5,
+            checkBox6,
+            checkBox7,
+            checkBox8,
+            checkBox9,
+            checkBox10,
+            checkBox11
+        )
+
+        val toQuestionnaireArray = arrayOf(
+            toQuestionnaireType1,
+            toQuestionnaireType2,
+            toQuestionnaireType3,
+            toQuestionnaireType4,
+            toQuestionnaireType5,
+            toQuestionnaireType6,
+            toQuestionnaireType7,
+            toQuestionnaireType8,
+            toQuestionnaireType9,
+            toQuestionnaireType10,
+            toQuestionnaireResult
+        )
+
+        // 각 설문지 타입으로 넘어가는 텍스트뷰들에 대한 리스너 코드
+        // 인텐트에 실어줄 액티비티 이름을 string 을 사용하여 Class.forName 매서드를 통해 지정함에 있어서
+        // 전체 주소를 입력해줘야하는 문제가 있음
+        // 보다 일반적인 코드를 위하여 intentMap 을 사용하는 코드로 변경
+
+        val intent1 = Intent(this, QuestionnaireType1::class.java)
+        val intent2 = Intent(this, QuestionnaireType2::class.java)
+        val intent3 = Intent(this, QuestionnaireType3::class.java)
+        val intent4 = Intent(this, QuestionnaireType4::class.java)
+        val intent5 = Intent(this, QuestionnaireType5::class.java)
+        val intent6 = Intent(this, QuestionnaireType6::class.java)
+        val intent7 = Intent(this, QuestionnaireType7::class.java)
+        val intent8 = Intent(this, QuestionnaireType8::class.java)
+        val intent9 = Intent(this, QuestionnaireType9::class.java)
+        val intent10 = Intent(this, QuestionnaireType10::class.java)
+        val intent11 = Intent(this, QuestionnaireResultSummary::class.java)
+
+        val intentArray = arrayOf(
+            intent1,
+            intent2,
+            intent3,
+            intent4,
+            intent5,
+            intent6,
+            intent7,
+            intent8,
+            intent9,
+            intent10,
+            intent11
+        )
+
         // 메뉴바 fragment 에 대한 beginTransaction
         supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
 
-        viewModel.fetchData()
+        fun updateUI(resultValue: GetAllSurveyCheckedOutput) {
 
-        fun errorPopupDuringGetData(message:String?) {
-            val errorDialog = AlertDialog.Builder(this)
-            errorDialog.setTitle("통신 오류")
-            errorDialog.setMessage("설문 데이터를 가져올 수 없습니다 : $message")
-            errorDialog.show()
-        }
-
-        if (viewModel.networkFailureCounting > 0) {
-            errorPopupDuringGetData(viewModel.networkFailureMessage)
-        }
-
-        val surveyDataArray = arrayOf(
-            viewModel.issueCheckingSurveyData,
-            viewModel.selfDiagnosisSurveyData,
-            viewModel.wellBeingScaleSurveyData,
-            viewModel.phq9SurveyData,
-            viewModel.gad7SurveyData,
-            viewModel.pss10SurveyData,
-            viewModel.exerciseSurveyData,
-            viewModel.smokingDrinkingSurveyData,
-            viewModel.stressSurveyData,
-            viewModel.nutritionSurveyData
-        )
-
-        checkBoxes.forEachIndexed { index, buttonBox ->
-
-            if (index != checkBoxes.size - 1) {
-
-                buttonBox.isEnabled = false
-
-                buttonBox.isChecked = surveyDataArray[index] != null
-
-            }
-
-        }
-
-        fun scoreResetPopup(index: Int) {
-
-            if (0 <= index && index < surveyDataArray.size) {
-
-                val negativeAnswer = "아니요"
-                val positiveAnswer = "네"
-
-                val spannableStringBuilderNo = SpannableStringBuilder(negativeAnswer)
-                spannableStringBuilderNo.setSpan(
-                    AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
-                    0,
-                    negativeAnswer.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                val spannableStringBuilderYes = SpannableStringBuilder(positiveAnswer)
-                spannableStringBuilderYes.setSpan(
-                    AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
-                    0,
-                    positiveAnswer.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            val surveyCheckedDataArray =
+                arrayOf(
+                    resultValue.issue_checking, resultValue.self_diagnosis,
+                    resultValue.well_being_scale, resultValue.phq9,
+                    resultValue.gad7, resultValue.pss10,
+                    resultValue.exercise, resultValue.smoking_drinking,
+                    resultValue.stress, resultValue.nutrition
                 )
 
-                val popup = AlertDialog.Builder(this)
-                    .setTitle("오늘 이미 설문에 응답하였습니다.")
-                    .setMessage("다시 설문을 진행하시겠습니까?") // 초기화 하지는 않고 뷰만 초기화되기 때문에 그냥 다시 보겠냐고만 묻기
-                    .setNeutralButton(spannableStringBuilderNo, null)
-                    .setPositiveButton(spannableStringBuilderYes) { _, _ ->
-                        startActivity(intentArray[index])
+            checkBoxes.forEachIndexed { index, buttonBox ->
 
-                        Toast.makeText(this, "설문을 다시 진행합니다", Toast.LENGTH_SHORT).show()
-                    }
+                if (index != checkBoxes.size - 1) {
 
-                popup.show()
+                    buttonBox.isEnabled = false
 
-            } else {
+                    buttonBox.isChecked = surveyCheckedDataArray[index] == true
 
-                throw ArrayIndexOutOfBoundsException("index range error : scoreResetPopup")
+                }
 
             }
-        }
 
-        fun previousSurveyAlertPopup(index: Int) {
+            toQuestionnaireArray.forEachIndexed { index, view ->
 
-            if (0 < index && index < surveyDataArray.size) {
+                view.setOnClickListener {
 
-                val message = questionnaireNameArray[index - 1]
-
-                val centeredMessage = SpannableStringBuilder(message)
-                centeredMessage.setSpan(
-                    AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
-                    0,
-                    centeredMessage.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-
-                val popup = AlertDialog.Builder(this)
-                    .setTitle("오늘의 이전 설문이 완료되지 않았습니다 :")
-                    .setMessage(centeredMessage)
-
-                popup.show()
-
-            } else {
-
-                throw ArrayIndexOutOfBoundsException("index range error : PreviousSurveyAlertPopup")
-
-            }
-        }
-
-
-        // 이미 완료한 설문을 다시 클릭했을 때, 팝업창을 띄우고 긍정과 취소 버튼을 누를 때 발생시킬 이벤트를 설정하는
-        // 코드가 재사용이 많이 될 예정이라 이를 함수로 만들어 둠.
-        fun startActivityWithAlert(
-            index: Int
-        ) {
-
-            val currentSurveyData =
-                if (0 <= index && index < surveyDataArray.size) {
-                    surveyDataArray[index]
-                } else {
-                    null
-                }
-
-            val previousSurveyData =
-                if (0 < index && index <= surveyDataArray.size) {
-                    surveyDataArray[index - 1]
-                } else {
-                    null
-                }
-
-            if (0 < index && index < surveyDataArray.size) {
-
-                if (previousSurveyData != null) {
-
-                    if (currentSurveyData != null) {
-
-                        scoreResetPopup(index)
-
-                    } else {
-
-                        startActivity(intentArray[index])
-
-                    }
-
-                } else {
-
-                    previousSurveyAlertPopup(index)
+                    startActivityWithAlert(surveyCheckedDataArray, intentArray, index)
 
                 }
-
-            } else if (index == 0) {
-
-                if (currentSurveyData != null) {
-
-                    scoreResetPopup(index)
-
-                } else {
-
-                    startActivity(intentArray[index])
-
-                }
-
-            } else if (index == surveyDataArray.size) {
-
-                if (previousSurveyData != null) {
-
-                    startActivity(intentArray[index])
-
-                } else {
-
-                    previousSurveyAlertPopup(index)
-
-                }
-
-            } else {
-
-                throw ArrayIndexOutOfBoundsException("index range error")
 
             }
 
         }
-
-        toQuestionnaireArray.forEachIndexed { index, view ->
-
-            view.setOnClickListener {
-
-                startActivityWithAlert(index)
-
-            }
-
+        // LiveData를 관찰하고 데이터가 변경될 때마다 호출되는 Observer
+        val observer = Observer<GetAllSurveyCheckedOutput> { newData ->
+            updateUI(newData)
         }
+
+        // ViewModel에서 LiveData를 가져와서 현재 엑티비티에서 관찰
+        viewModel.resultLiveData.observe(this, observer)
+
+        viewModel.fetchData(objectSet.userID!!, objectSet.formattedDate)
+
+//
+//
+//        try {
+//
+//            val resultValue = getData(objectSet.userID!!, objectSet.formattedDate)
+//
+//            Log.d("result", "$resultValue")
+//
+//            val surveyCheckedDataArray =
+//                arrayOf(
+//                    resultValue.issue_checking, resultValue.self_diagnosis,
+//                    resultValue.well_being_scale, resultValue.phq9,
+//                    resultValue.gad7, resultValue.pss10,
+//                    resultValue.exercise, resultValue.smoking_drinking,
+//                    resultValue.stress, resultValue.nutrition
+//                )
+//
+//            Log.d("surveyCheckedDataArray", "$surveyCheckedDataArray")
+//
+//            checkBoxes.forEachIndexed { index, buttonBox ->
+//
+//                if (index != checkBoxes.size - 1) {
+//
+//                    buttonBox.isEnabled = false
+//
+//                    buttonBox.isChecked = surveyCheckedDataArray[index] == true
+//
+//                }
+//
+//            }
+//
+//            toQuestionnaireArray.forEachIndexed { index, view ->
+//
+//                view.setOnClickListener {
+//
+//                    startActivityWithAlert(surveyCheckedDataArray, intentArray, index)
+//
+//                }
+//
+//            }
+//
+//        } catch (e: NullPointerException) {
+//
+//            throw IllegalArgumentException("you should input non-null type at userID")
+//
+//        }
+
 
     }
 
@@ -349,35 +462,112 @@ class QuestionnaireMainPage : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
+        // 체크상태 표기
 
-        // 다른 페이지에서 뒤로가기 버튼을 눌렀을 때, 만약 날짜가 바뀐 경우라면 해당 fetchData 매서드 적용이 필요
-        viewModel.fetchData()
+        val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)
+        val checkBox2 = findViewById<RadioButton>(R.id.qTypeCheckBox2)
+        val checkBox3 = findViewById<RadioButton>(R.id.qTypeCheckBox3)
+        val checkBox4 = findViewById<RadioButton>(R.id.qTypeCheckBox4)
+        val checkBox5 = findViewById<RadioButton>(R.id.qTypeCheckBox5)
+        val checkBox6 = findViewById<RadioButton>(R.id.qTypeCheckBox6)
+        val checkBox7 = findViewById<RadioButton>(R.id.qTypeCheckBox7)
+        val checkBox8 = findViewById<RadioButton>(R.id.qTypeCheckBox8)
+        val checkBox9 = findViewById<RadioButton>(R.id.qTypeCheckBox9)
+        val checkBox10 = findViewById<RadioButton>(R.id.qTypeCheckBox10)
+        val checkBox11 = findViewById<RadioButton>(R.id.qTypeCheckBox11)
 
-        val surveyDataArray = arrayOf(
-            viewModel.issueCheckingSurveyData,
-            viewModel.selfDiagnosisSurveyData,
-            viewModel.wellBeingScaleSurveyData,
-            viewModel.phq9SurveyData,
-            viewModel.gad7SurveyData,
-            viewModel.pss10SurveyData,
-            viewModel.exerciseSurveyData,
-            viewModel.smokingDrinkingSurveyData,
-            viewModel.stressSurveyData,
-            viewModel.nutritionSurveyData
+        val checkBoxes = arrayOf(
+            checkBox1,
+            checkBox2,
+            checkBox3,
+            checkBox4,
+            checkBox5,
+            checkBox6,
+            checkBox7,
+            checkBox8,
+            checkBox9,
+            checkBox10,
+            checkBox11
         )
 
-        checkBoxes.forEachIndexed { index, buttonBox ->
+        // supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
 
-            if (index != checkBoxes.size - 1) {
+        // 다른 페이지에서 뒤로가기 버튼을 눌렀을 때, 만약 날짜가 바뀐 경우라면 해당 fetchData 매서드 적용이 필요
 
-                buttonBox.isEnabled = false
+//        try {
+//
+//            val resultValue = getData(objectSet.userID!!, objectSet.formattedDate)
+//
+//            val surveyCheckedDataArray =
+//                arrayOf(
+//                    resultValue.issue_checking, resultValue.self_diagnosis,
+//                    resultValue.well_being_scale, resultValue.phq9,
+//                    resultValue.gad7, resultValue.pss10,
+//                    resultValue.exercise, resultValue.smoking_drinking,
+//                    resultValue.stress, resultValue.nutrition
+//                )
+//
+//            checkBoxes.forEachIndexed { index, buttonBox ->
+//
+//                if (index != checkBoxes.size - 1) {
+//
+//                    buttonBox.isEnabled = false
+//
+//                    buttonBox.isChecked = surveyCheckedDataArray[index] == true
+//
+//                }
+//
+//            }
+//
+//        } catch (e: NullPointerException) {
+//
+//            throw IllegalArgumentException("you should input non-null type at userID")
+//
+//        }
 
-                buttonBox.isChecked = surveyDataArray[index] != null
+        fun updateUI(resultValue: GetAllSurveyCheckedOutput) {
+
+            val surveyCheckedDataArray =
+                arrayOf(
+                    resultValue.issue_checking, resultValue.self_diagnosis,
+                    resultValue.well_being_scale, resultValue.phq9,
+                    resultValue.gad7, resultValue.pss10,
+                    resultValue.exercise, resultValue.smoking_drinking,
+                    resultValue.stress, resultValue.nutrition
+                )
+
+            checkBoxes.forEachIndexed { index, buttonBox ->
+
+                if (index != checkBoxes.size - 1) {
+
+                    buttonBox.isEnabled = false
+
+                    buttonBox.isChecked = surveyCheckedDataArray[index] == true
+
+                }
 
             }
 
+//            toQuestionnaireArray.forEachIndexed { index, view ->
+//
+//                view.setOnClickListener {
+//
+//                    startActivityWithAlert(surveyCheckedDataArray, intentArray, index)
+//
+//                }
+//
+//            }
+
         }
+        // LiveData를 관찰하고 데이터가 변경될 때마다 호출되는 Observer
+        val observer = Observer<GetAllSurveyCheckedOutput> { newData ->
+            updateUI(newData)
+        }
+
+        // ViewModel에서 LiveData를 가져와서 현재 엑티비티에서 관찰
+        viewModel.resultLiveData.observe(this, observer)
+
+        viewModel.fetchData(objectSet.userID!!, objectSet.formattedDate)
 
     }
 

@@ -12,7 +12,7 @@ interface UpdateSmokingDrinkingSurveyInterface {
     @POST("hanDtxPrototypeApp/app_update_smoking_drinking_survey/")
     fun requestUpdateSmokingDrinkingSurvey(
         @Field("user_id") user_id: String,
-        @Field("date") date: Date,
+        @Field("date") date: String,
         @Field("smoking_result1") smoking_result1: Int? = 0,
         @Field("smoking_result2") smoking_result2: Int? = null,
         @Field("smoking_result3") smoking_result3: Int? = null,

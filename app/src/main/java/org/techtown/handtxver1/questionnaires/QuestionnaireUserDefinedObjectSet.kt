@@ -12,6 +12,7 @@ import org.techtown.handtxver1.R
 import org.techtown.handtxver1.ApplicationClass
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
 import java.util.*
 
 class QuestionnaireUserDefinedObjectSet {
@@ -21,6 +22,13 @@ class QuestionnaireUserDefinedObjectSet {
 
     // 현재 날짜 가져오기
     private val currentDate = Calendar.getInstance()
+
+    // 날짜 변수를 string 으로 변환하는 과정에서 사용하는 포매터 : 로컬 시간대를 포함
+    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+    // 날짜를 문자열로 변환
+    val formattedDate = dateFormatter.format(currentDate.time)
+
     val date: Date = currentDate.time
 
     // retrofit 객체 생성

@@ -12,7 +12,7 @@ interface GetPHQ9SurveyInterface {
     @POST("hanDtxPrototypeApp/app_get_phq9_survey/")
     fun requestGetPHQ9Survey(
         @Field("user_id") user_id:String,
-        @Field("date") date: Date
+        @Field("date") date: String
     ) : Call<GetPHQ9SurveyOutput>
 
 }

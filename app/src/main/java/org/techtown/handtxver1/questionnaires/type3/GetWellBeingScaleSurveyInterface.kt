@@ -12,7 +12,7 @@ interface GetWellBeingScaleSurveyInterface {
     @POST("hanDtxPrototypeApp/app_get_well_being_scale_survey/")
     fun requestGetWellBeingScaleSurvey(
         @Field("user_id") user_id:String,
-        @Field("date") date: Date
+        @Field("date") date: String
     ) : Call<GetWellBeingScaleSurveyOutput>
 
 }

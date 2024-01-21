@@ -12,7 +12,7 @@ interface GetGAD7SurveyInterface {
     @POST("hanDtxPrototypeApp/app_get_gad7_survey/")
     fun requestGetGAD7Survey(
         @Field("user_id") user_id:String,
-        @Field("date") date: Date
+        @Field("date") date: String
     ) : Call<GetGAD7SurveyOutput>
 
 }

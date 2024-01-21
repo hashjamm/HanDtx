@@ -12,7 +12,7 @@ interface GetIssueCheckingSurveyInterface {
     @POST("hanDtxPrototypeApp/app_get_issue_checking_survey/")
     fun requestGetIssueCheckingSurvey(
         @Field("user_id") user_id:String,
-        @Field("date") date: Date
+        @Field("date") date: String
     ) : Call<GetIssueCheckingSurveyOutput>
 
 }
