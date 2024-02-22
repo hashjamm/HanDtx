@@ -262,7 +262,6 @@ class QuestionnaireMainPage : AppCompatActivity() {
 
         Log.d("err", "${objectSet.userID}")
         Log.d("err", "${objectSet.formattedDate}")
-        Log.d("err", "${objectSet.date}")
 
         // 체크상태 표기
 

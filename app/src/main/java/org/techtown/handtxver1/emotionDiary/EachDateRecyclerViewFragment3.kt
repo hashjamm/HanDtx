@@ -157,7 +157,7 @@ class EachDateRecyclerViewFragment3 : Fragment(), CallBackInterface {
 
         var resultValue: GetEmotionDiaryRecordsOutput? = null
 
-        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID, date)
+        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID, objectSet.formatter(date))
             .enqueue(
                 object :
                     Callback<GetEmotionDiaryRecordsOutput> {
@@ -204,7 +204,7 @@ class EachDateRecyclerViewFragment3 : Fragment(), CallBackInterface {
 
         updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
             userID,
-            date,
+            objectSet.formatter(date),
             updateValue?.score1,
             updateValue?.inputText1,
             updateValue?.score2,

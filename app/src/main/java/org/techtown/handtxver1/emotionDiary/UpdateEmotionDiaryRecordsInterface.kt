@@ -12,7 +12,7 @@ interface UpdateEmotionDiaryRecordsInterface {
     @POST("hanDtxPrototypeApp/app_update_emotion_diary_records/")
     fun requestUpdateEmotionDiaryRecords(
         @Field("user_id") user_id:String,
-        @Field("date") date: Date,
+        @Field("date") date: String,
         @Field("score1") score1: Int?,
         @Field("inputText1") inputText1: String?,
         @Field("score2") score2: Int?,
