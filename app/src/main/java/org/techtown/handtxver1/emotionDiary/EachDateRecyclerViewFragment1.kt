@@ -46,7 +46,6 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
     // Adapter 인스턴스 파라미터로 채워줄 CallBack 클래스 인스턴스 생성
     private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
     private lateinit var adapter: EachDateRecyclerViewAdapter
-    private lateinit var callBack: CallBackInterface
 
     // retrofit 객체 생성
     private var retrofit = Retrofit.Builder()
@@ -340,7 +339,7 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
 
         recyclerView = binding.recyclerView
 
-        adapter = EachDateRecyclerViewAdapter(mutableDataList, callBack)
+        adapter = EachDateRecyclerViewAdapter(mutableDataList, this)
         recyclerView.adapter = adapter
 
         val layoutManager = LinearLayoutManager(context)

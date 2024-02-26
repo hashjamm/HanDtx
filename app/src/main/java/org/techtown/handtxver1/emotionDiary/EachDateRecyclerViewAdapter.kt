@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import org.techtown.handtxver1.CallBackInterface
@@ -31,7 +32,7 @@ class EachDateRecyclerViewAdapter(
             val line1 = holder.itemView.findViewById<ConstraintLayout>(R.id.line1)
             val line2 = holder.itemView.findViewById<ConstraintLayout>(R.id.line2)
             val line1A = holder.itemView.findViewById<AppCompatEditText>(R.id.line1A)
-            val line1B = holder.itemView.findViewById<AppCompatEditText>(R.id.line1B)
+            val line1B = holder.itemView.findViewById<AppCompatTextView>(R.id.line1B)
 
             // positionData 가 바뀐다고 실제로 mutableDataList 에 변화를 바로 줄 수 있지는 않음
             // 이후에 아래의 코드를 추가해줘야 함
@@ -43,11 +44,11 @@ class EachDateRecyclerViewAdapter(
 
             line1A.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    TODO("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    TODO("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
