@@ -2,6 +2,7 @@ package org.techtown.handtxver1.emotionDiary
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,20 +28,28 @@ class EachDateRecyclerViewAdapter(
             false
         )
 
-        return OneDateViewHolder(view).also { holder ->
+        return OneDateViewHolder(view)
+
+    }
+
+    override fun onBindViewHolder(holder: OneDateViewHolder, position: Int) {
+
+        val positionData = mutableDataList.getOrNull(position)
+
+        if (positionData == null) {
+
+            throw NullPointerException("positionData : null variable")
+
+        } else {
+
+            holder.bind(positionData)
 
             val line1 = holder.itemView.findViewById<ConstraintLayout>(R.id.line1)
             val line2 = holder.itemView.findViewById<ConstraintLayout>(R.id.line2)
             val line1A = holder.itemView.findViewById<AppCompatEditText>(R.id.line1A)
             val line1B = holder.itemView.findViewById<AppCompatTextView>(R.id.line1B)
 
-            // positionData 가 바뀐다고 실제로 mutableDataList 에 변화를 바로 줄 수 있지는 않음
-            // 이후에 아래의 코드를 추가해줘야 함
-            // mutableDataList[holder.adapterPosition] = positionData
-
-            val positionData = mutableDataList.getOrNull(holder.adapterPosition)
-
-            val isExpandable = positionData?.isExpandable
+            val isExpandable = positionData.isExpandable
 
             line1A.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -52,20 +61,17 @@ class EachDateRecyclerViewAdapter(
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
-                    positionData?.inputText = p0.toString()
+                    positionData.inputText = p0.toString()
                 }
             })
 
             line1.visibility =
-                if (isExpandable == true) View.VISIBLE else View.GONE
+                if (isExpandable) View.VISIBLE else View.GONE
 
             // 데이터 업데이트 버튼
             line1B.setOnClickListener {
-                if (positionData != null) {
-                    positionData.isExpandable = !positionData.isExpandable
-                } else {
-                    throw IllegalStateException("에러 발생 : there is no data : isExpandable.")
-                }
+
+                positionData.isExpandable = !positionData.isExpandable
 
                 callBackInterface.onCallBackValueChanged(
                     true,
@@ -73,33 +79,23 @@ class EachDateRecyclerViewAdapter(
                     positionData
                 )
 
-                mutableDataList[holder.adapterPosition] = positionData
+                mutableDataList[position] = positionData
 
-                notifyItemChanged(holder.adapterPosition)
+                notifyItemChanged(position)
             }
 
 
             // 기본으로 계속 보여줘야하는 라인
             line2.setOnClickListener {
 
-                if (positionData != null) {
-                    positionData.isExpandable = !positionData.isExpandable
-                } else {
-                    throw IllegalStateException("에러 발생 : there is no data : isExpandable.")
-                }
+                positionData.isExpandable = !positionData.isExpandable
 
-                mutableDataList[holder.adapterPosition] = positionData
+                mutableDataList[position] = positionData
 
-                notifyItemChanged(holder.adapterPosition)
+                notifyItemChanged(position)
             }
 
         }
-
-    }
-
-    override fun onBindViewHolder(holder: OneDateViewHolder, position: Int) {
-
-        holder.bind(mutableDataList[position])
 
     }
 

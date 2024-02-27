@@ -3,6 +3,7 @@ package org.techtown.handtxver1.emotionDiary
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -262,7 +263,8 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
 
             try {
                 val data = getData(userID!!, date!!)
-
+                Log.d("check1", "$data")
+                Log.d("check2", "${viewModel.date}")
                 if (data == null) {
                     optimizingGraphByScore(null)
                 } else {
