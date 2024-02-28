@@ -1,6 +1,7 @@
 package org.techtown.handtxver1.emotionDiary
 
 import android.annotation.SuppressLint
+import androidx.lifecycle.Observer
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -13,13 +14,11 @@ import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEmotionDiaryChart1Binding
-import org.techtown.handtxver1.ApplicationClass
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.NullPointerException
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -70,8 +69,9 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
 
                         if (response.isSuccessful) {
 
+                            Log.d("code","${response.code()}")
                             resultValue = response.body()
-
+                            Log.d("resultValue","$resultValue")
                         }
 
                     }
@@ -213,6 +213,8 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
         // 현재 상태에 맞도록 그래프와 날짜 표기칸을 최적화하는 함수
         fun optimizingGraphByScore(score: Int?) {
 
+            Log.d("score", "$score")
+
             score?.let {
 
                 if (it in 0..9) {
@@ -262,14 +264,16 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
             // val date: Date? = viewModel.date.value?.time
 
             try {
-                val data = getData(userID!!, date!!)
-                Log.d("check1", "$data")
-                Log.d("check2", "${viewModel.date}")
-                if (data == null) {
-                    optimizingGraphByScore(null)
-                } else {
-                    optimizingGraphByScore(data.score1)
+                viewModel.obtainedScore.value = getData(userID!!, date!!)?.score1
+
+                Log.d("viewModel livedata", "${viewModel.obtainedScore.value}")
+
+                val observer = Observer<Int?> { newData ->
+                    optimizingGraphByScore(newData)
                 }
+
+                viewModel.obtainedScore.observe(this, observer)
+
             } catch (e: NullPointerException) {
 
                 throw IllegalArgumentException("you should input non-null type at userID, searchDate")

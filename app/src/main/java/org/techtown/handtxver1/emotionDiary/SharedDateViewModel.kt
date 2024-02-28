@@ -16,6 +16,8 @@ open class SharedDateViewModel : ViewModel() {
     val dateWeekDayString = MutableLiveData<String>()
     val daysInMonth = MutableLiveData<Int>()
 
+    var obtainedScore = MutableLiveData<Int?>()
+
     init {
         date.value = Calendar.getInstance()
         dateString.value = dateFormat.format(Calendar.getInstance().time)
