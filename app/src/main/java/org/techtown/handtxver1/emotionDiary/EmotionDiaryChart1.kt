@@ -57,7 +57,10 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
 
         var resultValue: GetEmotionDiaryRecordsOutput? = null
 
-        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(userID, objectSet.formatter(date))
+        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(
+            userID,
+            objectSet.formatter(date)
+        )
             .enqueue(
                 object :
                     Callback<GetEmotionDiaryRecordsOutput> {
@@ -69,9 +72,9 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
 
                         if (response.isSuccessful) {
 
-                            Log.d("code","${response.code()}")
+                            Log.d("code", "${response.code()}")
                             resultValue = response.body()
-                            Log.d("resultValue","$resultValue")
+                            Log.d("resultValue", "$resultValue")
                         }
 
                     }
@@ -213,8 +216,6 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
         // 현재 상태에 맞도록 그래프와 날짜 표기칸을 최적화하는 함수
         fun optimizingGraphByScore(score: Int?) {
 
-            Log.d("score", "$score")
-
             score?.let {
 
                 if (it in 0..9) {
@@ -257,41 +258,30 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
             }
         }
 
-        fun optimizingGraph(date: Date?) {
-
-            // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
-            val userID = loginSharedPreferences.getString("saveID", null)
-            // val date: Date? = viewModel.date.value?.time
-
-            try {
-                viewModel.obtainedScore.value = getData(userID!!, date!!)?.score1
-
-                Log.d("viewModel livedata", "${viewModel.obtainedScore.value}")
-
-                val observer = Observer<Int?> { newData ->
-                    optimizingGraphByScore(newData)
-                }
-
-                viewModel.obtainedScore.observe(this, observer)
-
-            } catch (e: NullPointerException) {
-
-                throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-
-            }
-
-        }
-
         // 뒤에 updateTextView 메서드 구현
-        updateTextView(viewModel.dateString.value.toString(), viewModel.weekdayString.value.toString())
+        updateTextView(
+            viewModel.dateString.value.toString(),
+            viewModel.weekdayString.value.toString()
+        )
 
         // 초기화가 필요할 때만 실행할 것
         // val editor = sharedPreferences.edit()
         // editor.clear()
         // editor.apply()
 
+        // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
+        val userID = loginSharedPreferences.getString("saveID", null)
+
         // 일단 현재 상태에서 그래프 최적화
-        optimizingGraph(viewModel.date.value?.time)
+        viewModel.obtainedData.postValue(getData(userID!!, viewModel.date.value?.time!!))
+
+        viewModel.obtainedData.observe(this) { newData ->
+
+            Log.d("scoreCheck", "${newData?.score1}")
+
+            optimizingGraphByScore(newData?.score1)
+
+        }
 
         // 이전 날짜로 가는 버튼 누를 때 발생시킬 이벤트
         binding.prevButton.setOnClickListener {
@@ -301,10 +291,12 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
             viewModel.observeDate(viewLifecycleOwner)
 
             // 날짜 표기 부분을 차감된 viewModel 내부의 날짜로 업데이트
-            updateTextView(viewModel.dateString.value.toString(), viewModel.weekdayString.value.toString())
+            updateTextView(
+                viewModel.dateString.value.toString(),
+                viewModel.weekdayString.value.toString()
+            )
 
-            // 그래프 최적화
-            optimizingGraph(viewModel.date.value?.time)
+            viewModel.obtainedData.postValue(getData(userID, viewModel.date.value?.time!!))
 
         }
 
@@ -315,9 +307,12 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
             viewModel.addDate()
             viewModel.observeDate(viewLifecycleOwner)
 
-            updateTextView(viewModel.dateString.value.toString(), viewModel.weekdayString.value.toString())
+            updateTextView(
+                viewModel.dateString.value.toString(),
+                viewModel.weekdayString.value.toString()
+            )
 
-            optimizingGraph(viewModel.date.value?.time)
+            viewModel.obtainedData.postValue(getData(userID, viewModel.date.value?.time!!))
 
         }
 
@@ -342,9 +337,8 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
                         val updateValue: GetEmotionDiaryRecordsOutput?
 
                         try {
-                            val resultValue = getData(userID!!, date!!)
 
-                            if (resultValue == null) {
+                            if (viewModel.obtainedData.value == null) {
 
                                 updateValue = GetEmotionDiaryRecordsOutput(
                                     index,
@@ -357,12 +351,12 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
 
                             } else {
 
-                                updateValue = resultValue.copy()
-                                updateValue.score1 = index
+                                updateValue = viewModel.obtainedData.value
+                                updateValue!!.score1 = index
 
                             }
 
-                            updateData(userID, date, updateValue)
+                            updateData(userID!!, date!!, updateValue)
 
                         } catch (e: NullPointerException) {
 
@@ -384,10 +378,10 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
 
     @SuppressLint("SetTextI18n")
 // textView 의 text 부분을 재정의하는 메서드인 updateTextView 작성
-    private fun updateTextView(dateText: String, weekdayText: String ) {
+    private fun updateTextView(dateText: String, weekdayText: String) {
         binding.date.text =
             "$dateText (${weekdayText})"
-            //"${viewModel.dateString.value.toString()} (${viewModel.weekdayString.value.toString()})"
+        //"${viewModel.dateString.value.toString()} (${viewModel.weekdayString.value.toString()})"
     }
 
     private fun setOnClickListener() {
