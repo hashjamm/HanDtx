@@ -3,10 +3,12 @@ package org.techtown.handtxver1.emotionDiary
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-open class SharedDateViewModel : ViewModel() {
+open class SharedDateViewModel(private val repository: Repository) : ViewModel() {
     val date = MutableLiveData<Calendar>()
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
     private val weekdayFormat: SimpleDateFormat = SimpleDateFormat("E", Locale.KOREA)
@@ -47,6 +49,13 @@ open class SharedDateViewModel : ViewModel() {
         val currentCalendar = date.value
         currentCalendar?.add(Calendar.DAY_OF_YEAR, -1)
         date.value = currentCalendar!!
+    }
+
+    fun getEmotionDiaryData(userID: String, date: String) {
+        viewModelScope.launch {
+            val newData = repository.fetchEmotionDiaryData(userID, date)
+            obtainedData.value = newData
+        }
     }
 
 }
