@@ -1,10 +1,8 @@
 package org.techtown.handtxver1.emotionDiary
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.Observer
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,133 +35,11 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
     // binding 변수 생성
     lateinit var binding: FragmentEmotionDiaryChart1Binding
 
-    // retrofit 객체 생성
-    private var retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8000/") // 연결하고자 하는 서버 주소 입력
-        .addConverterFactory(GsonConverterFactory.create()) // gson 을 통한 javaScript 로의 코드 자동 전환 - Gson 장착
-        .build() // 코드 마무리
-
-    // 감정다이어리 서비스 interface 를 장착한 Retrofit 객체 생성
-    private var getEmotionDiaryRecordsInterface: GetEmotionDiaryRecordsInterface =
-        retrofit.create(GetEmotionDiaryRecordsInterface::class.java)
-
-    private var updateEmotionDiaryRecordsInterface: UpdateEmotionDiaryRecordsInterface =
-        retrofit.create(UpdateEmotionDiaryRecordsInterface::class.java)
-
     // 감정다이어리 구현에서 필요한 객체들 모아둔 클래스 인스턴스 생성
     private val objectSet = EmotionDiaryUserDefinedObjectSet()
 
-    private fun getData(userID: String, date: Date): GetEmotionDiaryRecordsOutput? {
-
-        var resultValue: GetEmotionDiaryRecordsOutput? = null
-
-        getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecords(
-            userID,
-            objectSet.formatter(date)
-        )
-            .enqueue(
-                object :
-                    Callback<GetEmotionDiaryRecordsOutput> {
-
-                    override fun onResponse(
-                        call: Call<GetEmotionDiaryRecordsOutput>,
-                        response: Response<GetEmotionDiaryRecordsOutput>
-                    ) {
-
-                        if (response.isSuccessful) {
-
-                            Log.d("code", "${response.code()}")
-                            resultValue = response.body()
-                            Log.d("resultValue", "$resultValue")
-                        }
-
-                    }
-
-                    override fun onFailure(call: Call<GetEmotionDiaryRecordsOutput>, t: Throwable) {
-
-                        if (!isPopupShowing) {
-
-                            val errorDialog = AlertDialog.Builder(context)
-                            errorDialog.setTitle("통신 오류")
-                            errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
-                            errorDialog.setOnDismissListener {
-                                isPopupShowing = false
-                            }
-                            errorDialog.show()
-
-                            isPopupShowing = true
-
-                        }
-
-                    }
-
-                }
-            )
-
-        return resultValue
-
-    }
-
-    private fun updateData(userID: String, date: Date, updateValue: GetEmotionDiaryRecordsOutput?) {
-
-        updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
-            userID,
-            objectSet.formatter(date),
-            updateValue?.score1,
-            updateValue?.inputText1,
-            updateValue?.score2,
-            updateValue?.inputText2,
-            updateValue?.score2,
-            updateValue?.inputText3
-        )
-            .enqueue(object :
-                Callback<UpdateEmotionDiaryRecordsOutput> {
-
-                override fun onResponse(
-                    call: Call<UpdateEmotionDiaryRecordsOutput>,
-                    response: Response<UpdateEmotionDiaryRecordsOutput>
-                ) {
-
-                    if (!response.isSuccessful) {
-
-                        if (!isPopupShowing) {
-                            val errorDialog = AlertDialog.Builder(context)
-                            errorDialog.setTitle("서버 응답 오류")
-                            errorDialog.setMessage("status code : ${response.code()}")
-                            errorDialog.setOnDismissListener {
-                                isPopupShowing = false
-                            }
-                            errorDialog.show()
-
-                            isPopupShowing = true
-                        }
-
-                    }
-
-                }
-
-                override fun onFailure(
-                    call: Call<UpdateEmotionDiaryRecordsOutput>,
-                    t: Throwable
-                ) {
-
-                    if (!isPopupShowing) {
-                        val errorDialog = AlertDialog.Builder(context)
-                        errorDialog.setTitle("통신 오류")
-                        errorDialog.setMessage("통신에 실패했습니다 : ${t.message}")
-                        errorDialog.setOnDismissListener {
-                            isPopupShowing = false
-                        }
-                        errorDialog.show()
-
-                        isPopupShowing = true
-                    }
-
-                }
-
-            })
-
-    }
+    // repository 인스턴스 생성
+    private val repository = Repository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -192,7 +68,9 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
         setOnClickListener()
 
         // 감정 다이어리의 각 메뉴들이 공유할 날짜를 저장하는 viewModel 인 SharedDateViewModel 에 접근
-        val viewModel: SharedDateViewModel by activityViewModels()
+        val viewModel: SharedDateViewModel by activityViewModels {
+            SharedDateViewModelFactory(repository)
+        }
 
         // 그래프를 이루는 라디오버튼들을 배열로 묶어둔 인스턴스 생성
         val radioGroup = arrayOf(
@@ -273,13 +151,11 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
         val userID = loginSharedPreferences.getString("saveID", null)
 
         // 일단 현재 상태에서 그래프 최적화
-        viewModel.obtainedData.postValue(getData(userID!!, viewModel.date.value?.time!!))
+        viewModel.getEmotionDiaryData(userID!!, viewModel.apiServerDateString.value!!)
 
-        viewModel.obtainedData.observe(this) { newData ->
+        viewModel.score1.observe(this) { newData ->
 
-            Log.d("scoreCheck", "${newData?.score1}")
-
-            optimizingGraphByScore(newData?.score1)
+            optimizingGraphByScore(newData)
 
         }
 
@@ -287,7 +163,7 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
         binding.prevButton.setOnClickListener {
 
             // viewModel 에 저장된 날짜를 하루 차감 및 관련 변수들 업데이트
-            viewModel.substractDate()
+            viewModel.subtractDate()
             viewModel.observeDate(viewLifecycleOwner)
 
             // 날짜 표기 부분을 차감된 viewModel 내부의 날짜로 업데이트
@@ -296,7 +172,7 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
                 viewModel.weekdayString.value.toString()
             )
 
-            viewModel.obtainedData.postValue(getData(userID, viewModel.date.value?.time!!))
+            viewModel.getEmotionDiaryData(userID, viewModel.apiServerDateString.value!!)
 
         }
 
@@ -312,7 +188,7 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
                 viewModel.weekdayString.value.toString()
             )
 
-            viewModel.obtainedData.postValue(getData(userID, viewModel.date.value?.time!!))
+            viewModel.getEmotionDiaryData(userID, viewModel.apiServerDateString.value!!)
 
         }
 
@@ -330,38 +206,43 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
                             }
                         }
 
-                        // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
-                        val userID = loginSharedPreferences.getString("saveID", null)
-                        val date: Date? = viewModel.date.value?.time
+                        viewModel.getEmotionDiaryData(userID, viewModel.apiServerDateString.value!!)
 
-                        val updateValue: GetEmotionDiaryRecordsOutput?
+                        viewModel.obtainedDataNullStatus.observe(this) { newData ->
 
-                        try {
+                            val updateValue: GetEmotionDiaryRecordsOutput?
 
-                            if (viewModel.obtainedData.value == null) {
+                            try {
+                                if (newData == 1) {
 
-                                updateValue = GetEmotionDiaryRecordsOutput(
-                                    index,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null
+                                    updateValue = GetEmotionDiaryRecordsOutput(
+                                        index,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                    )
+
+                                    viewModel.obtainedDataNullStautsReset()
+
+                                } else {
+
+                                    updateValue = viewModel.obtainedData.value
+                                    updateValue!!.score1 = index
+
+                                }
+
+                                repository.updateData(
+                                    userID,
+                                    viewModel.apiServerDateString.value!!, updateValue
                                 )
 
-                            } else {
+                            } catch (e: NullPointerException) {
 
-                                updateValue = viewModel.obtainedData.value
-                                updateValue!!.score1 = index
+                                throw IllegalArgumentException("you should input non-null type at userID, searchDate")
 
                             }
-
-                            updateData(userID!!, date!!, updateValue)
-
-                        } catch (e: NullPointerException) {
-
-                            throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-
                         }
 
                         // 방금 업데이트 된 값을 다시 받아와서 그래프와 말풍선 텍스트 업데이트
@@ -392,98 +273,6 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        // 감정 다이어리의 각 메뉴들이 공유할 날짜를 저장하는 viewModel 인 SharedDateViewModel 에 접근
-        val viewModel: SharedDateViewModel by activityViewModels()
-
-        // 그래프를 이루는 라디오버튼들을 배열로 묶어둔 인스턴스 생성
-        val radioGroup = arrayOf(
-            binding.button0,
-            binding.button1,
-            binding.button2,
-            binding.button3,
-            binding.button4,
-            binding.button5,
-            binding.button6,
-            binding.button7,
-            binding.button8,
-            binding.button9
-        )
-
-        // 현재 상태에 맞도록 그래프와 날짜 표기칸을 최적화하는 함수
-        fun optimizingGraphByScore(score: Int?) {
-
-            score?.let {
-
-                if (it in 0..9) {
-
-                    // 그래프 형태를 점수에 맞게 반영
-                    binding.radioButtonsBackground.background =
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            objectSet.graphBackgroundArray[it]
-                        )
-                    binding.howRU.text = objectSet.graphTextArray1[it]
-
-                    // 라디오 그룹 기능 구현
-                    radioGroup.forEachIndexed { index, radioButton ->
-                        radioButton.isChecked = index == score
-
-                    }
-
-                } else {
-
-                    // 사실상 db 에서 직접적으로 데이터를 잘못 생성하지 않는 한 일어날 수 없는 오류.
-                    throw ArrayIndexOutOfBoundsException("에러 발생 : score range error")
-
-                }
-            } ?: run {
-
-                // 그래프 형태를 default 형태로 변경
-                binding.radioButtonsBackground.background =
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.emotion_graph_image_0
-                    )
-                binding.howRU.text = "오늘 하루 어땠나요?"
-
-                // 라디오 그룹 전체 버튼 초기화
-                radioGroup.forEach { radioButton ->
-                    radioButton.isChecked = false
-                }
-
-            }
-        }
-
-        fun optimizingGraph(date: Date?) {
-
-            // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
-            val userID = loginSharedPreferences.getString("saveID", null)
-            // val date: Date? = viewModel.date.value?.time
-
-            try {
-                val data = getData(userID!!, date!!)
-
-                if (data == null) {
-                    optimizingGraphByScore(null)
-                } else {
-                    optimizingGraphByScore(data.score1)
-                }
-            } catch (e: NullPointerException) {
-
-                throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-
-            }
-
-        }
-
-        // 일단 현재 상태에서 그래프 최적화
-        optimizingGraph(viewModel.date.value?.time)
 
     }
 

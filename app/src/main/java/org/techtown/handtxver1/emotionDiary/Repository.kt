@@ -1,10 +1,11 @@
 package org.techtown.handtxver1.emotionDiary
 
+import android.app.AlertDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.awaitResponse
+import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 class Repository {
 
@@ -17,6 +18,9 @@ class Repository {
     // 감정다이어리 서비스 interface 를 장착한 Retrofit 객체 생성
     private var getEmotionDiaryRecordsInterface: GetEmotionDiaryRecordsInterface =
         retrofit.create(GetEmotionDiaryRecordsInterface::class.java)
+
+    private var updateEmotionDiaryRecordsInterface: UpdateEmotionDiaryRecordsInterface =
+        retrofit.create(UpdateEmotionDiaryRecordsInterface::class.java)
 
     suspend fun fetchEmotionDiaryData(userID: String, date: String): GetEmotionDiaryRecordsOutput? {
 
@@ -32,10 +36,52 @@ class Repository {
                     null
                 }
             } catch (e: Exception) {
-                throw RuntimeException("Unexpected Error at fetchEmotionDiaryData methods.")
+                throw RuntimeException("Unexpected Error at fetchEmotionDiaryData methods: ${e.message}")
             }
         }
     }
+
+    fun updateData(userID: String, date: String, updateValue: GetEmotionDiaryRecordsOutput?) {
+
+        updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
+            userID,
+            date,
+            updateValue?.score1,
+            updateValue?.inputText1,
+            updateValue?.score2,
+            updateValue?.inputText2,
+            updateValue?.score2,
+            updateValue?.inputText3
+        )
+            .enqueue(object :
+                Callback<UpdateEmotionDiaryRecordsOutput> {
+
+                override fun onResponse(
+                    call: Call<UpdateEmotionDiaryRecordsOutput>,
+                    response: Response<UpdateEmotionDiaryRecordsOutput>
+                ) {
+
+                    if (!response.isSuccessful) {
+
+                        throw RuntimeException("Unexpected Error at updateData methods: onResponse - ${response.code()}")
+
+                    }
+
+                }
+
+                override fun onFailure(
+                    call: Call<UpdateEmotionDiaryRecordsOutput>,
+                    t: Throwable
+                ) {
+
+                    throw RuntimeException("Unexpected Error at updateData methods: onFailure")
+
+                }
+
+            })
+
+    }
+
 }
 
 
