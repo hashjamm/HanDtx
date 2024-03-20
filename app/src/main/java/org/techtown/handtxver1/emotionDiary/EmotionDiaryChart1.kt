@@ -1,7 +1,6 @@
 package org.techtown.handtxver1.emotionDiary
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEmotionDiaryChart1Binding
 import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 /**
@@ -25,9 +23,6 @@ import java.util.*
  * create an instance of this fragment.
  */
 class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
-
-    // 오류 팝업 창들에 대하여, 가장 먼저 발생한 오류 팝업 창만을 유지하기 위한 Boolean 변수
-    private var isPopupShowing = false
 
     // loginSharedPreferences -> 로그인 창에서 입력한 내용을 기반으로 user id를 가져오기 위하여 인스턴스 생성
     private val loginSharedPreferences = ApplicationClass.loginSharedPreferences
@@ -86,11 +81,6 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
             binding.button9
         )
 
-        // 기존의 UI 최적화 함수(optimizingGraph)에서는 데이터를 서버에서 받아오고,
-        // 받아온 점수를 바탕으로 UI 를 구현하는 코드로 되어있었음
-        // 하지만 데이터를 받아오고(네트워크 호출) UI 를 구현하는 코드가 함께 있으면, 동기화의 문제가 있을 수 있음
-        // 또한 코드 중복 최소화를 위해 네트워크 호출 함수, UI 최적화 함수를 분리
-
         // 현재 상태에 맞도록 그래프와 날짜 표기칸을 최적화하는 함수
         fun optimizingGraphByScore(score: Int?) {
 
@@ -142,18 +132,13 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
             viewModel.weekdayString.value.toString()
         )
 
-        // 초기화가 필요할 때만 실행할 것
-        // val editor = sharedPreferences.edit()
-        // editor.clear()
-        // editor.apply()
-
         // userID를 로그인 최근 기록 저장 데이터 파일에서 가져오는게 논리적으로 문제가 없을지 판단할 필요 있음
         val userID = loginSharedPreferences.getString("saveID", null)
 
         // 일단 현재 상태에서 그래프 최적화
-        viewModel.getEmotionDiaryData(userID!!, viewModel.apiServerDateString.value!!)
+        viewModel.getEmotionDiaryData(userID!!, viewModel.apiServerDateString.value!!, 1)
 
-        viewModel.score1.observe(this) { newData ->
+        viewModel.score.observe(this) { newData ->
 
             optimizingGraphByScore(newData)
 
@@ -172,10 +157,9 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
                 viewModel.weekdayString.value.toString()
             )
 
-            viewModel.getEmotionDiaryData(userID, viewModel.apiServerDateString.value!!)
+            viewModel.getEmotionDiaryData(userID, viewModel.apiServerDateString.value!!, 1)
 
         }
-
 
         // 이후 날짜로 가는 버튼 후를 때 발생시킬 이벤트
         binding.nextButton.setOnClickListener {
@@ -188,7 +172,7 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
                 viewModel.weekdayString.value.toString()
             )
 
-            viewModel.getEmotionDiaryData(userID, viewModel.apiServerDateString.value!!)
+            viewModel.getEmotionDiaryData(userID, viewModel.apiServerDateString.value!!, 1)
 
         }
 
@@ -206,47 +190,15 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
                             }
                         }
 
-                        viewModel.getEmotionDiaryData(userID, viewModel.apiServerDateString.value!!)
+                        val updateValue = UpdateEmotionDiaryRecordsInput(
+                            userID,
+                            viewModel.apiServerDateString.value!!,
+                            index,
+                            null,
+                            1
+                        )
 
-                        viewModel.obtainedDataNullStatus.observe(this) { newData ->
-
-                            val updateValue: GetEmotionDiaryRecordsOutput?
-
-                            try {
-                                if (newData == 1) {
-
-                                    updateValue = GetEmotionDiaryRecordsOutput(
-                                        index,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null
-                                    )
-
-                                    viewModel.obtainedDataNullStautsReset()
-
-                                } else {
-
-                                    updateValue = viewModel.obtainedData.value
-                                    updateValue!!.score1 = index
-
-                                }
-
-                                repository.updateData(
-                                    userID,
-                                    viewModel.apiServerDateString.value!!, updateValue
-                                )
-
-                            } catch (e: NullPointerException) {
-
-                                throw IllegalArgumentException("you should input non-null type at userID, searchDate")
-
-                            }
-                        }
-
-                        // 방금 업데이트 된 값을 다시 받아와서 그래프와 말풍선 텍스트 업데이트
-                        // optimizingGraph() -> getData 를 중첩해야하기에 직접 구현부분만 적음
+                        repository.updateData(updateValue)
                         optimizingGraphByScore(index)
 
                     }

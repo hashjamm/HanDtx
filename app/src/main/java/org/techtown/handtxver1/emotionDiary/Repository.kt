@@ -1,11 +1,9 @@
 package org.techtown.handtxver1.emotionDiary
 
-import android.app.AlertDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 
 class Repository {
 
@@ -41,17 +39,14 @@ class Repository {
         }
     }
 
-    fun updateData(userID: String, date: String, updateValue: GetEmotionDiaryRecordsOutput?) {
+    fun updateData(updateValue: UpdateEmotionDiaryRecordsInput) {
 
         updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
-            userID,
-            date,
-            updateValue?.score1,
-            updateValue?.inputText1,
-            updateValue?.score2,
-            updateValue?.inputText2,
-            updateValue?.score2,
-            updateValue?.inputText3
+            updateValue.userID,
+            updateValue.date,
+            updateValue.score,
+            updateValue.inputText,
+            updateValue.type
         )
             .enqueue(object :
                 Callback<UpdateEmotionDiaryRecordsOutput> {

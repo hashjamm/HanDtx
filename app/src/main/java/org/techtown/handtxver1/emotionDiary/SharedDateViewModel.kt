@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,15 +20,9 @@ open class SharedDateViewModel(private val repository: Repository) : ViewModel()
     val dateWeekDayString = MutableLiveData<String>()
     val apiServerDateString = MutableLiveData<String>()
     val daysInMonth = MutableLiveData<Int>()
-    
-    var obtainedDataNullStatus = MutableLiveData<Int>()
 
-    var score1 = MutableLiveData<Int?>()
-    var score2 = MutableLiveData<Int?>()
-    var score3 = MutableLiveData<Int?>()
-    var inputText1 = MutableLiveData<String?>()
-    var inputText2 = MutableLiveData<String?>()
-    var inputText3 = MutableLiveData<String?>()
+    var score = MutableLiveData<Int?>()
+    var inputText = MutableLiveData<String?>()
 
     init {
         date.value = Calendar.getInstance()
@@ -36,7 +31,6 @@ open class SharedDateViewModel(private val repository: Repository) : ViewModel()
         dateWeekDayString.value = dateWeekDayFormat.format(Calendar.getInstance().time)
         apiServerDateString.value = apiServerDateFormat.format(Calendar.getInstance().time)
         daysInMonth.value = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
-        obtainedDataNullStatus.value = 0
     }
 
     fun observeDate(lifecycleOwner: LifecycleOwner) {
@@ -63,22 +57,31 @@ open class SharedDateViewModel(private val repository: Repository) : ViewModel()
         date.value = currentCalendar!!
     }
 
-    fun getEmotionDiaryData(userID: String, date: String) {
+    fun getEmotionDiaryData(userID: String, date: String, type: Int) {
         viewModelScope.launch {
             val newData = repository.fetchEmotionDiaryData(userID, date)
-            
-            score1.value = newData?.score1
-            score2.value = newData?.score2
-            score3.value = newData?.score3
-            inputText1.value = newData?.inputText1
-            inputText2.value = newData?.inputText2
-            inputText3.value = newData?.inputText3
 
-            if (newData == null) {
-                obtainedDataNullStatus.value = 1
-            } else {
-                obtainedDataNullStatus.value = 2
+            when (type) {
+                1 -> {
+                    score.value = newData?.score1
+                    inputText.value = newData?.inputText1
+                }
+                2 -> {
+                    score.value = newData?.score2
+                    inputText.value = newData?.inputText2
+                }
+                3 -> {
+                    score.value = newData?.score3
+                    inputText.value = newData?.inputText3
+                }
+                else -> {
+
+                    throw IllegalArgumentException("type range error")
+
+                }
+
             }
+
         }
     }
 
