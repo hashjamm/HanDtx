@@ -1,5 +1,6 @@
 package org.techtown.handtxver1.emotionDiary
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.*
@@ -29,7 +30,10 @@ class Repository {
                         .awaitResponse()
 
                 if (response.isSuccessful) {
+                    Log.d("cheking", "${response.body()}")
+
                     response.body()
+
                 } else {
                     null
                 }

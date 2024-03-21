@@ -2,6 +2,7 @@ package org.techtown.handtxver1.emotionDiary
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -139,6 +140,8 @@ class EmotionDiaryChart1 : Fragment(), View.OnClickListener {
         viewModel.getEmotionDiaryData(userID!!, viewModel.apiServerDateString.value!!, 1)
 
         viewModel.score.observe(this) { newData ->
+
+            Log.d("score Fragment", "$newData")
 
             optimizingGraphByScore(newData)
 

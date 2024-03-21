@@ -1,5 +1,6 @@
 package org.techtown.handtxver1.emotionDiary
 
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -60,6 +61,8 @@ open class SharedDateViewModel(private val repository: Repository) : ViewModel()
     fun getEmotionDiaryData(userID: String, date: String, type: Int) {
         viewModelScope.launch {
             val newData = repository.fetchEmotionDiaryData(userID, date)
+
+            Log.d("check in viewModel", "$newData")
 
             when (type) {
                 1 -> {
