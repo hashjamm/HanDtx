@@ -62,8 +62,6 @@ open class SharedDateViewModel(private val repository: Repository) : ViewModel()
         viewModelScope.launch {
             val newData = repository.fetchEmotionDiaryData(userID, date)
 
-            Log.d("check in viewModel", "$newData")
-
             when (type) {
                 1 -> {
                     score.value = newData?.score1

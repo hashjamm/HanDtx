@@ -2,7 +2,6 @@ package org.techtown.handtxver1.emotionDiary
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.EachDateItemBinding
 
 class EachDateRecyclerViewAdapter(
-    private var mutableDataList: MutableList<EachDateRecordDataClass>,
+    private var viewModel: ViewModelForEachDateViewer,
     private var callBackInterface: CallBackInterface
 ) :
     RecyclerView.Adapter<EachDateRecyclerViewAdapter.OneDateViewHolder>() {
@@ -34,7 +33,7 @@ class EachDateRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: OneDateViewHolder, position: Int) {
 
-        val positionData = mutableDataList.getOrNull(position)
+        val positionData = viewModel.mutableDataList.getOrNull(position)
 
         if (positionData == null) {
 
@@ -73,13 +72,14 @@ class EachDateRecyclerViewAdapter(
 
                 positionData.isExpandable = !positionData.isExpandable
 
-                callBackInterface.onCallBackValueChanged(
+                callBackInterface.callBackEachDateEmotionDiary(
+                    viewModel,
                     true,
                     holder.adapterPosition + 1,
                     positionData
                 )
 
-                mutableDataList[position] = positionData
+                viewModel.mutableDataList[position] = positionData
 
                 notifyItemChanged(position)
             }
@@ -90,7 +90,7 @@ class EachDateRecyclerViewAdapter(
 
                 positionData.isExpandable = !positionData.isExpandable
 
-                mutableDataList[position] = positionData
+                viewModel.mutableDataList[position] = positionData
 
                 notifyItemChanged(position)
             }
@@ -101,7 +101,7 @@ class EachDateRecyclerViewAdapter(
 
     override fun getItemCount(): Int {
 
-        return mutableDataList.count()
+        return viewModel.mutableDataList.count()
 
     }
 

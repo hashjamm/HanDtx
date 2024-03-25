@@ -1,10 +1,14 @@
 package org.techtown.handtxver1.emotionDiary
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel() {
 
@@ -27,11 +31,12 @@ class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel
         this.daysInMonth = daysInMonth
     }
 
-    var score = MutableLiveData<Int?>()
+    private var score = MutableLiveData<Int?>()
     var inputText = MutableLiveData<String?>()
 
-    var oneDateData = MutableLiveData<EachDateRecordDataClass>()
-    private var textByScore = MutableLiveData<String>()
+    // Recycler View 사용을 위한 데이터 클래스 리스트를 생성하기 위해 빈 리스트 선언
+    var mutableDataList = mutableListOf<EachDateRecordDataClass>()
+    var textByScore = MutableLiveData<String>()
 
     fun getEmotionDiaryData(userID: String, date: String, type: Int) {
         viewModelScope.launch {
@@ -85,9 +90,50 @@ class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel
 
             }
 
-            oneDateData.value =
-                EachDateRecordDataClass(date, textByScore.value, inputText.value)
+            val formattedDate =
+                dateFormatChanger(
+                    "yyyy-MM-dd",
+                    "dd일 E",
+                    date
+                )
 
+            val oneDateData =
+                EachDateRecordDataClass(formattedDate, textByScore.value, inputText.value)
+
+            mutableDataList.add(oneDateData)
+
+            Log.d("innnnneer final", "$mutableDataList")
+
+        }
+    }
+
+    fun dateFormatChanger(
+        previousPattern: String,
+        subsequentPattern: String,
+        dateString: String,
+        dayOfMonth: Int? = null
+    ): String? {
+        val standardFormat = SimpleDateFormat(previousPattern, Locale.KOREA)
+
+        try {
+
+            val primaryDate = standardFormat.parse(dateString)
+
+            val calendar = Calendar.getInstance()
+            calendar.time = primaryDate!!
+
+            if (dayOfMonth != null) {
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            }
+
+            val formatter = SimpleDateFormat(subsequentPattern, Locale.KOREA)
+
+            return formatter.format(calendar.time)
+
+        } catch (e: ParseException) {
+            // dateString의 형태와 포맷이 일치하지 않는 경우에 대한 처리
+            e.printStackTrace()
+            return null
         }
     }
 
