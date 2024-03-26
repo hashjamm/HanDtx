@@ -41,6 +41,34 @@ class Repository {
         }
     }
 
+    suspend fun fetchEmotionDiaryDataMonthly(
+        userID: String,
+        month: Int
+    ): List<GetEmotionDiaryRecordsOutput>? {
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val response =
+                    getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecordsMonthly(
+                        userID,
+                        month
+                    )
+                        .awaitResponse()
+
+                if (response.isSuccessful) {
+
+                    response.body()
+
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                throw RuntimeException("Unexpected Error at fetchEmotionDiaryDataMonthly methods: ${e.message}")
+            }
+        }
+
+    }
+
     fun updateData(updateValue: UpdateEmotionDiaryRecordsInput) {
 
         updateEmotionDiaryRecordsInterface.requestUpdateEmotionDiaryRecords(
