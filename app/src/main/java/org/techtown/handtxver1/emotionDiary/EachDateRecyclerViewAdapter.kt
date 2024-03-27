@@ -14,7 +14,8 @@ import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.EachDateItemBinding
 
 class EachDateRecyclerViewAdapter(
-    private var viewModel: ViewModelForEachDateViewer,
+    var viewModel: ViewModelForEachDateViewer,
+    private var mutableDataList: MutableList<EachDateRecordDataClass>,
     private var callBackInterface: CallBackInterface
 ) :
     RecyclerView.Adapter<EachDateRecyclerViewAdapter.OneDateViewHolder>() {
@@ -33,7 +34,7 @@ class EachDateRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: OneDateViewHolder, position: Int) {
 
-        val positionData = viewModel.mutableDataList.getOrNull(position)
+        val positionData = mutableDataList.getOrNull(position)
 
         if (positionData == null) {
 
@@ -79,7 +80,7 @@ class EachDateRecyclerViewAdapter(
                     positionData
                 )
 
-                viewModel.mutableDataList[position] = positionData
+                mutableDataList[position] = positionData
 
                 notifyItemChanged(position)
             }
@@ -90,7 +91,7 @@ class EachDateRecyclerViewAdapter(
 
                 positionData.isExpandable = !positionData.isExpandable
 
-                viewModel.mutableDataList[position] = positionData
+                mutableDataList[position] = positionData
 
                 notifyItemChanged(position)
             }
@@ -101,7 +102,7 @@ class EachDateRecyclerViewAdapter(
 
     override fun getItemCount(): Int {
 
-        return viewModel.mutableDataList.count()
+        return mutableDataList.count()
 
     }
 

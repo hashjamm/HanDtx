@@ -16,7 +16,10 @@ class EmotionDiary : AppCompatActivity() {
         val repository = Repository()
 
         // ViewModel 에 접근 및 로딩
-        val viewModel = ViewModelProvider(this, SharedDateViewModelFactory(repository))[SharedDateViewModel::class.java]
+        val viewModel = ViewModelProvider(
+            this,
+            SharedDateViewModelFactory(repository)
+        )[SharedDateViewModel::class.java]
 
         // Fragment 객체를 선언 및 초기화
         val menuBarFragment = BottomMenuBar(1)
@@ -92,16 +95,18 @@ class EmotionDiary : AppCompatActivity() {
         toEmotionDiaryEachDateViewer.setOnClickListener {
             val intentToEmotionDiaryEachDateViewer =
                 Intent(this, EmotionDiaryEachDateViewer::class.java)
-            intentToEmotionDiaryEachDateViewer.putExtra("dateString", viewModel.dateString.value.toString())
             intentToEmotionDiaryEachDateViewer.putExtra(
-                "weekdayString",
-                viewModel.weekdayString.value.toString()
+                "dateString",
+                viewModel.dateString.value.toString()
             )
             intentToEmotionDiaryEachDateViewer.putExtra(
-                "dateWeekDayString",
-                viewModel.dateWeekDayString.value.toString()
+                "daysInMonth",
+                viewModel.daysInMonth.value.toString()
             )
-            intentToEmotionDiaryEachDateViewer.putExtra("daysInMonth", viewModel.daysInMonth.value.toString())
+            intentToEmotionDiaryEachDateViewer.putExtra(
+                "apiServerDateString",
+                viewModel.apiServerDateString.value.toString()
+            )
 
             startActivity(intentToEmotionDiaryEachDateViewer)
 

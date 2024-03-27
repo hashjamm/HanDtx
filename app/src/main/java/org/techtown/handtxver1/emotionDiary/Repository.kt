@@ -43,7 +43,7 @@ class Repository {
 
     suspend fun fetchEmotionDiaryDataMonthly(
         userID: String,
-        month: Int
+        date: String
     ): List<GetEmotionDiaryRecordsOutput>? {
 
         return withContext(Dispatchers.IO) {
@@ -51,7 +51,7 @@ class Repository {
                 val response =
                     getEmotionDiaryRecordsInterface.requestGetEmotionDiaryRecordsMonthly(
                         userID,
-                        month
+                        date
                     )
                         .awaitResponse()
 

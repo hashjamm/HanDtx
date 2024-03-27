@@ -58,7 +58,8 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
                         "yyyy.MM.dd",
                         "yyyy-MM-dd",
                         viewModel.dateString,
-                        dateNum)
+                        dateNum
+                    )
                 } else {
                     null
                 }
@@ -114,29 +115,20 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
 
         // 각 날짜에 해당하는 데이터 클래스를 생성하는 과정
         // -> 이후 이 데이터 클래스들을 리스트로 묶어서 recycler view 생성 예정
-        for (day in 1..viewModel.daysInMonth) {
 
-            // viewModel 의 dateString 을 java.util.Date 형태로 변환한 값으로 서버에서
-            // 감정다이어리 결과를 가져오고, 해당 결과의 inputText1 을 추출
+        viewModel.getEmotionDiaryData(userID!!, 2)
 
-            val searchDate =
-                viewModel.dateFormatChanger(
-                    "yyyy.MM.dd",
-                    "yyyy-MM-dd",
-                    viewModel.dateString,
-                    day)
+        viewModel.mutableDataList.observe(this) { newData ->
 
-            viewModel.getEmotionDiaryData(userID!!, searchDate!!, 2)
+            recyclerView = binding.recyclerView
+
+            adapter = EachDateRecyclerViewAdapter(viewModel, newData, this)
+            recyclerView.adapter = adapter
+
+            val layoutManager = LinearLayoutManager(context)
+            recyclerView.layoutManager = layoutManager
 
         }
-
-        recyclerView = binding.recyclerView
-
-        adapter = EachDateRecyclerViewAdapter(viewModel, this)
-        recyclerView.adapter = adapter
-
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = layoutManager
 
     }
 }

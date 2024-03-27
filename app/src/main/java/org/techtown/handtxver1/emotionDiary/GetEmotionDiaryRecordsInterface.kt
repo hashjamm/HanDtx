@@ -17,7 +17,7 @@ interface GetEmotionDiaryRecordsInterface {
     @GET("hanDtxPrototypeApp/app_get_emotion_diary_records_monthly/")
     fun requestGetEmotionDiaryRecordsMonthly(
         @Query("user_id") user_id: String,
-        @Query("month") month: Int
+        @Query("date") date: String
     ) : Call<List<GetEmotionDiaryRecordsOutput>>
 
 

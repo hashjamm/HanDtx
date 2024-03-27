@@ -13,8 +13,7 @@ class EmotionDiaryEachDateViewer : AppCompatActivity() {
         setContentView(R.layout.activity_emotion_diary_each_date_viewer)
 
         val dateString = intent.getStringExtra("dateString")
-        val weekdayString = intent.getStringExtra("weekdayString")
-        val dateWeekDayString = intent.getStringExtra("dateWeekDayString")
+        val apiServerDateString = intent.getStringExtra("apiServerDateString")
         val daysInMonth = intent.getStringExtra("daysInMonth")?.toInt()
 
         // repository 인스턴스 생성
@@ -26,7 +25,7 @@ class EmotionDiaryEachDateViewer : AppCompatActivity() {
             ViewModelForEachDateViewerFactory(repository)
         )[ViewModelForEachDateViewer::class.java]
 
-        viewModel.setData(dateString!!, weekdayString!!, dateWeekDayString!!, daysInMonth!!)
+        viewModel.setData(dateString!!, apiServerDateString!!, daysInMonth!!)
 
         val menuBar = BottomMenuBar(1)
         val dateRecord1 = EachDateRecyclerViewFragment1()

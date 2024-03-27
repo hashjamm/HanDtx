@@ -1,19 +1,19 @@
 package org.techtown.handtxver1.emotionDiary
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.CallBackInterface
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEachDateRecyclerView1Binding
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -116,38 +116,19 @@ class EachDateRecyclerViewFragment1 : Fragment(), CallBackInterface {
         // 각 날짜에 해당하는 데이터 클래스를 생성하는 과정
         // -> 이후 이 데이터 클래스들을 리스트로 묶어서 recycler view 생성 예정
 
-        for (day in 1..viewModel.daysInMonth) {
+        viewModel.getEmotionDiaryData(userID!!, 1)
 
-            // viewModel 의 dateString 을 java.util.Date 형태로 변환한 값으로 서버에서
-            // 감정다이어리 결과를 가져오고, 해당 결과의 inputText1 을 추출
+        viewModel.mutableDataList.observe(this) { newData ->
 
-            val searchDate =
-                viewModel.dateFormatChanger(
-                    "yyyy.MM.dd",
-                    "yyyy-MM-dd",
-                    viewModel.dateString,
-                    day)
+            recyclerView = binding.recyclerView
 
-            Log.d("userID", "$userID")
-            Log.d("searchDate", "$searchDate")
-            Log.d("viewModel.dateString", viewModel.dateString)
+            adapter = EachDateRecyclerViewAdapter(viewModel, newData, this)
+            recyclerView.adapter = adapter
 
-            viewModel.getEmotionDiaryData(userID!!, searchDate!!, 1)
-
-            Log.d("inner final1", "${viewModel.mutableDataList}")
-            Log.d("inner final2", "${viewModel.textByScore.value}")
+            val layoutManager = LinearLayoutManager(context)
+            recyclerView.layoutManager = layoutManager
 
         }
-
-        recyclerView = binding.recyclerView
-
-        Log.d("final", "${viewModel.mutableDataList}")
-
-        adapter = EachDateRecyclerViewAdapter(viewModel, this)
-        recyclerView.adapter = adapter
-
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = layoutManager
 
     }
 
