@@ -30,7 +30,7 @@ class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel
         this.daysInMonth = daysInMonth
     }
 
-    fun dateFormatChanger(
+    private fun dateFormatChanger(
         previousPattern: String,
         subsequentPattern: String,
         dateString: String,
@@ -84,10 +84,9 @@ class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel
 
     fun getEmotionDiaryData(userID: String, type: Int) {
         viewModelScope.launch {
+
             val newData = repository.fetchEmotionDiaryDataMonthly(userID, apiServerDateString)
                 ?: throw NullPointerException("response NullPointerException error")
-
-
 
             if (newData.size != daysInMonth) {
 
@@ -96,6 +95,8 @@ class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel
             } else {
 
                 val dateList = getDaysInMonthList()
+
+                val newDataList = mutableListOf<EachDateRecordDataClass>()
 
                 when (type) {
 
@@ -115,7 +116,7 @@ class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel
                             val oneDateData =
                                 EachDateRecordDataClass(oneDateString, textByScore, inputText)
 
-                            mutableDataList.value?.add(oneDateData)
+                            newDataList.add(oneDateData)
 
                         }
                     }
@@ -136,7 +137,7 @@ class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel
                             val oneDateData =
                                 EachDateRecordDataClass(oneDateString, textByScore, inputText)
 
-                            mutableDataList.value?.add(oneDateData)
+                            newDataList.add(oneDateData)
 
                         }
                     }
@@ -157,7 +158,7 @@ class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel
                             val oneDateData =
                                 EachDateRecordDataClass(oneDateString, textByScore, inputText)
 
-                            mutableDataList.value?.add(oneDateData)
+                            newDataList.add(oneDateData)
 
                         }
                     }
@@ -167,6 +168,9 @@ class ViewModelForEachDateViewer(private val repository: Repository) : ViewModel
                     }
 
                 }
+
+                mutableDataList.postValue(newDataList)
+
             }
 
         }

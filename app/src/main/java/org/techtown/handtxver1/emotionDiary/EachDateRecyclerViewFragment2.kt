@@ -40,8 +40,15 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
 
     val objectSet = EmotionDiaryUserDefinedObjectSet()
 
+    // 본 fragment 에서 해당 view model 을 사용
+    val viewModel: ViewModelForEachDateViewer by activityViewModels {
+        ViewModelForEachDateViewerFactory(repository)
+    }
+
+    // 로그인한 유저 아이디 지정
+    val userID = ApplicationClass.loginSharedPreferences.getString("saveID", null)
+
     override fun callBackEachDateEmotionDiary(
-        viewModel: ViewModelForEachDateViewer,
         success: Boolean,
         dateNum: Int?,
         positionData: EachDateRecordDataClass?
@@ -49,24 +56,13 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
 
         if (success) {
 
-            // 로그인한 유저 아이디 지정
-            val userID = ApplicationClass.loginSharedPreferences.getString("saveID", null)
-
             val searchDate =
-                if (dateNum != null) {
-                    viewModel.dateFormatChanger(
-                        "yyyy.MM.dd",
-                        "yyyy-MM-dd",
-                        viewModel.dateString,
-                        dateNum
-                    )
-                } else {
-                    null
-                }
+                viewModel.apiServerDateString.substring(0, 8) +
+                        dateNum.toString().padStart(2, '0')
 
             val updateValue = UpdateEmotionDiaryRecordsInput(
                 userID!!,
-                searchDate!!,
+                searchDate,
                 null,
                 positionData?.inputText,
                 2
@@ -103,30 +99,18 @@ class EachDateRecyclerViewFragment2 : Fragment(), CallBackInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 감정다이어리에서 날짜 값을 지정하고 있는 ViewModel 을
-        // EmotionDiaryEachDateViewer 액티비티에서 사용할 수 있도록 하고
-        // 본 fragment 에서 해당 view model 을 사용
-        val viewModel: ViewModelForEachDateViewer by activityViewModels() {
-            ViewModelForEachDateViewerFactory(repository)
-        }
+        recyclerView = binding.recyclerView
+        adapter = EachDateRecyclerViewAdapter(mutableListOf(), this)
 
-        // 로그인한 유저 아이디 지정
-        val userID = ApplicationClass.loginSharedPreferences.getString("saveID", null)
-
-        // 각 날짜에 해당하는 데이터 클래스를 생성하는 과정
-        // -> 이후 이 데이터 클래스들을 리스트로 묶어서 recycler view 생성 예정
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
 
         viewModel.getEmotionDiaryData(userID!!, 2)
 
-        viewModel.mutableDataList.observe(this) { newData ->
+        viewModel.mutableDataList.observe(viewLifecycleOwner) { newData ->
 
-            recyclerView = binding.recyclerView
-
-            adapter = EachDateRecyclerViewAdapter(viewModel, newData, this)
-            recyclerView.adapter = adapter
-
-            val layoutManager = LinearLayoutManager(context)
-            recyclerView.layoutManager = layoutManager
+            adapter.setData(newData)
 
         }
 

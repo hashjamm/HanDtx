@@ -1,7 +1,9 @@
 package org.techtown.handtxver1.emotionDiary
 
+import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +16,6 @@ import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.EachDateItemBinding
 
 class EachDateRecyclerViewAdapter(
-    var viewModel: ViewModelForEachDateViewer,
     private var mutableDataList: MutableList<EachDateRecordDataClass>,
     private var callBackInterface: CallBackInterface
 ) :
@@ -74,7 +75,6 @@ class EachDateRecyclerViewAdapter(
                 positionData.isExpandable = !positionData.isExpandable
 
                 callBackInterface.callBackEachDateEmotionDiary(
-                    viewModel,
                     true,
                     holder.adapterPosition + 1,
                     positionData
@@ -83,6 +83,8 @@ class EachDateRecyclerViewAdapter(
                 mutableDataList[position] = positionData
 
                 notifyItemChanged(position)
+
+                Log.d("check", "${mutableDataList[position]}")
             }
 
 
@@ -122,6 +124,13 @@ class EachDateRecyclerViewAdapter(
 
         }
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(newData: MutableList<EachDateRecordDataClass>) {
+        mutableDataList.clear()
+        mutableDataList.addAll(newData)
+        notifyDataSetChanged()
     }
 
 }

@@ -60,6 +60,7 @@ open class SharedDateViewModel(private val repository: Repository) : ViewModel()
 
     fun getEmotionDiaryData(userID: String, date: String, type: Int) {
         viewModelScope.launch {
+
             val newData = repository.fetchEmotionDiaryData(userID, date)
 
             when (type) {
