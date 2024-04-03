@@ -1,7 +1,6 @@
 package org.techtown.handtxver1.emotionDiary
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,6 @@ import org.techtown.handtxver1.ApplicationClass
 import org.techtown.handtxver1.CallBackInterface
 import org.techtown.handtxver1.R
 import org.techtown.handtxver1.databinding.FragmentEachDateRecyclerView1Binding
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match

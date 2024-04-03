@@ -3,7 +3,6 @@ package org.techtown.handtxver1.emotionDiary
 import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,11 +34,7 @@ class EachDateRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: OneDateViewHolder, position: Int) {
 
-        Log.d("step 3", "${mutableDataList.getOrNull(position)}")
-
         val positionData = mutableDataList.getOrNull(position)
-
-        Log.d("step 4", "$positionData")
 
         if (positionData == null) {
 
@@ -56,30 +51,27 @@ class EachDateRecyclerViewAdapter(
 
             val isExpandable = positionData.isExpandable
 
+            holder.textWatcher?.let {
+                line1A.removeTextChangedListener(it)
+            }
+
             val line1ATextWatcher =
                 object : TextWatcher {
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         //TODO("Not yet implemented")
-
-                        Log.d("TextWatcher before", "${line1A.text}")
-
                     }
 
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                         //TODO("Not yet implemented")
-
-                        Log.d("TextWatcher onChanged", "${line1A.text}")
                     }
 
                     override fun afterTextChanged(p0: Editable?) {
                         positionData.inputText = p0.toString()
-
-                        Log.d("TextWatcher after", "${line1A.text}")
-
                     }
                 }
 
             line1A.addTextChangedListener(line1ATextWatcher)
+            holder.textWatcher = line1ATextWatcher
 
             line1.visibility =
                 if (isExpandable) View.VISIBLE else View.GONE
@@ -107,11 +99,7 @@ class EachDateRecyclerViewAdapter(
 
                 positionData.isExpandable = !positionData.isExpandable
 
-                Log.d("step 1", "$positionData")
-
                 mutableDataList[position] = positionData
-
-                Log.d("step 2", "${mutableDataList.getOrNull(position)}")
 
                 notifyItemChanged(position)
             }
@@ -128,6 +116,8 @@ class EachDateRecyclerViewAdapter(
 
     inner class OneDateViewHolder(private val binding: EachDateItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        var textWatcher: TextWatcher? = null // ViewHolder 내에 TextWatcher 참조를 추가
 
         fun bind(oneDateRecord: EachDateRecordDataClass) {
 
@@ -154,8 +144,12 @@ class EachDateRecyclerViewAdapter(
     override fun onViewRecycled(holder: OneDateViewHolder) {
         super.onViewRecycled(holder)
 
-        holder.itemView.findViewById<AppCompatEditText>(R.id.line1A)
-            .removeTextChangedListener(holder.itemView.)
+        val line1A = holder.itemView.findViewById<AppCompatEditText>(R.id.line1A)
+
+        holder.textWatcher?.let {
+            line1A.removeTextChangedListener(it)
+        }
+
     }
 
 }

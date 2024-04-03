@@ -91,7 +91,7 @@
             android:name=".PreviousMainMenu"
             android:exported="false" />
         <activity
-            android:name=".LifeLogData1"
+            android:name=".lifeLog.LifeLogData1"
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
