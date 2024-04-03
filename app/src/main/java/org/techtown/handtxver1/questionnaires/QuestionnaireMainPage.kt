@@ -260,10 +260,6 @@ class QuestionnaireMainPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire_page1)
 
-        Log.d("err", "${objectSet.userID}")
-        Log.d("err", "${objectSet.formattedDate}")
-        Log.d("err", "${objectSet.date}")
-
         // 체크상태 표기
 
         val checkBox1 = findViewById<RadioButton>(R.id.qTypeCheckBox1)

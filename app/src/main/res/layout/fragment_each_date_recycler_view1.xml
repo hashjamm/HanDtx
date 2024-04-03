@@ -51,7 +51,6 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lineBox"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:listitem="@layout/each_date_item">
 
         </androidx.recyclerview.widget.RecyclerView>

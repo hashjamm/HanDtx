@@ -13,22 +13,31 @@ class EmotionDiaryEachDateViewer : AppCompatActivity() {
         setContentView(R.layout.activity_emotion_diary_each_date_viewer)
 
         val dateString = intent.getStringExtra("dateString")
-        val weekdayString = intent.getStringExtra("weekdayString")
-        val dateWeekDayString = intent.getStringExtra("dateWeekDayString")
+        val apiServerDateString = intent.getStringExtra("apiServerDateString")
         val daysInMonth = intent.getStringExtra("daysInMonth")?.toInt()
 
+        // repository 인스턴스 생성
+        val repository = Repository()
+
         // ViewModel 에 접근 및 로딩
-        val viewModel = ViewModelProvider(this)[ViewModelForEachDateViewer::class.java]
-        viewModel.setData(dateString!!, weekdayString!!, dateWeekDayString!!, daysInMonth!!)
+        val viewModel = ViewModelProvider(
+            this,
+            ViewModelForEachDateViewerFactory(repository)
+        )[ViewModelForEachDateViewer::class.java]
+
+        viewModel.setData(dateString!!, apiServerDateString!!, daysInMonth!!)
 
         val menuBar = BottomMenuBar(1)
         val dateRecord1 = EachDateRecyclerViewFragment1()
         val dateRecord2 = EachDateRecyclerViewFragment2()
         val dateRecord3 = EachDateRecyclerViewFragment3()
 
-        val toEmotionDiaryEachDateViewer1 = findViewById<AppCompatTextView>(R.id.toEmotionDiaryEachDateViewer1)
-        val toEmotionDiaryEachDateViewer2 = findViewById<AppCompatTextView>(R.id.toEmotionDiaryEachDateViewer2)
-        val toEmotionDiaryEachDateViewer3 = findViewById<AppCompatTextView>(R.id.toEmotionDiaryEachDateViewer3)
+        val toEmotionDiaryEachDateViewer1 =
+            findViewById<AppCompatTextView>(R.id.toEmotionDiaryEachDateViewer1)
+        val toEmotionDiaryEachDateViewer2 =
+            findViewById<AppCompatTextView>(R.id.toEmotionDiaryEachDateViewer2)
+        val toEmotionDiaryEachDateViewer3 =
+            findViewById<AppCompatTextView>(R.id.toEmotionDiaryEachDateViewer3)
 
         supportFragmentManager.beginTransaction().add(R.id.menuBar, menuBar).commit()
         supportFragmentManager.beginTransaction().add(R.id.dateRecord, dateRecord1).commit()

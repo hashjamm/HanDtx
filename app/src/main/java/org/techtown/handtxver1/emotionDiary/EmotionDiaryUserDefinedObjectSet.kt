@@ -1,6 +1,8 @@
 package org.techtown.handtxver1.emotionDiary
 
 import org.techtown.handtxver1.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 class EmotionDiaryUserDefinedObjectSet {
 
@@ -63,5 +65,14 @@ class EmotionDiaryUserDefinedObjectSet {
         "8점 내용",
         "9점 내용"
     )
+
+    // date: Date 를 requestGetEmotionDiaryRecords 함수에 사용하기 위한 formatted String 으로 전환하는 함수
+    fun formatter(date: Date): String {
+        // 날짜 변수를 string 으로 변환하는 과정에서 사용하는 포매터 : 로컬 시간대를 포함
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        // 날짜를 문자열로 변환
+        return dateFormatter.format(date.time)
+    }
 
 }

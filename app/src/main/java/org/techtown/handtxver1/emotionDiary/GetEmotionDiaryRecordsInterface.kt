@@ -1,18 +1,26 @@
 package org.techtown.handtxver1.emotionDiary
 
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
-import java.util.*
+import retrofit2.http.*
 
 interface GetEmotionDiaryRecordsInterface {
 
-    @FormUrlEncoded
-    @POST("hanDtxPrototypeApp/app_get_emotion_diary_records/")
+
+    // 감정다이어리를 위한 Retrofit 인터페이스 함수
+    @GET("hanDtxPrototypeApp/app_get_emotion_diary_records/")
     fun requestGetEmotionDiaryRecords(
-        @Field("user_id") user_id:String,
-        @Field("date") date: Date
+        @Query("user_id") user_id:String,
+        @Query("date") date: String,
+        @Query("code") code: Int = 1
     ) : Call<GetEmotionDiaryRecordsOutput>
+
+    // 매일 감정다이어리를 위한 Retrofit 인터페이스 함수
+    @GET("hanDtxPrototypeApp/app_get_emotion_diary_records_monthly/")
+    fun requestGetEmotionDiaryRecordsMonthly(
+        @Query("user_id") user_id: String,
+        @Query("date") date: String,
+        @Query("code") code: Int = 2
+    ) : Call<List<GetEmotionDiaryRecordsOutput>>
+
 
 }
