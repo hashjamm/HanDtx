@@ -132,7 +132,7 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_emotion_diary_menu_setting.xml" value="0.5" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_first_page.xml" value="0.534375" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_going_to_main.xml" value="0.5" />
-        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_life_log_data1.xml" value="0.5" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_life_log_data1.xml" value="0.3416666666666667" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_login.xml" value="0.5" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_main_menu.xml" value="0.33" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/activity_main_menu_side_bar.xml" value="0.5" />
@@ -188,9 +188,9 @@
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_emotion_diary_each_date_record2.xml" value="0.534375" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_emotion_diary_each_date_record3.xml" value="0.47109375" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_life_log1_frag1.xml" value="0.674591381872214" />
-        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_life_log_data1_frag1.xml" value="0.5055555555555555" />
-        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_life_log_data1_frag1_frag1.xml" value="0.4706896551724138" />
-        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_life_log_data1_frag1_frag2.xml" value="0.7796875" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_life_log_data1_frag1.xml" value="0.33791208791208793" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_life_log_data1_frag1_frag1.xml" value="0.36283185840707965" />
+        <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_life_log_data1_frag1_frag2.xml" value="0.29854368932038833" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_life_log_data1_frag2.xml" value="0.934375" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_life_log_data1_frag3.xml" value="0.934375" />
         <entry key="..\:/Users/HashJam/AndroidStudioProjects/HanDtxVer1/app/src/main/res/layout/fragment_main_menu.xml" value="0.50859375" />
